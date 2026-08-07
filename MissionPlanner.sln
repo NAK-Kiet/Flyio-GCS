@@ -199,10 +199,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xamarin.Forms.Platform.WinF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Drawing.android", "ExtLibs\System.Drawing.android\System.Drawing.android.csproj", "{B66F428C-0419-438F-9303-C20A5E925257}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Accessibility-net_4_x", "ExtLibs\mono\mcs\class\Accessibility\Accessibility-net_4_x.csproj", "{E51283DC-7090-479E-B723-01C0953F18EA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Runtime.Serialization.Formatters.Soap-net_4_x", "ExtLibs\mono\mcs\class\System.Runtime.Serialization.Formatters.Soap\System.Runtime.Serialization.Formatters.Soap-net_4_x.csproj", "{A157AD69-59D4-49DE-94B3-DB883B2BEAA5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Onvif", "ExtLibs\Onvif\Onvif.csproj", "{CA8C83FC-FCDC-4F8F-9384-A2C9C5B2F7DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MissionPlanner.WebAPIs", "ExtLibs\WebAPIs\MissionPlanner.WebAPIs.csproj", "{9A702625-FB81-4400-ADAC-053553109F64}"
