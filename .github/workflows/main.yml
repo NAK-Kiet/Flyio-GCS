@@ -92,7 +92,7 @@ jobs:
           python -m pip install --disable-pip-version-check --upgrade pip
           python -m pip install --disable-pip-version-check dronecan empy==3.3.4
           Push-Location ExtLibs\DroneCAN\canard_dsdlc
-          python canard_dsdlc.py ..\dsdl\dronecan ..\dsdl\com ..\dsdl\ardupilot ..\dsdl\cuav ..\dsdl\mppt ..\out
+          python canard_dsdlc.py ..\dsdl\dronecan ..\dsdl\com ..\dsdl\ardupilot ..\dsdl\cuav ..\dsdl\uavcan ..\dsdl\mppt ..\out
           Pop-Location
 
       - name: Build
