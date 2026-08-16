@@ -1832,7 +1832,10 @@ namespace MissionPlanner
                     log.Warn(ex2);
                 }
 
-                CustomMessageBox.Show($"Can not establish a connection\n\n{ex.Message}");
+                CustomMessageBox.Show(
+                    "Can not establish a connection\n\n" +
+                    ex.ToString(),
+                    "Connection Error");
                 return;
             }
         }
