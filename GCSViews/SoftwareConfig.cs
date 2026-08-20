@@ -119,6 +119,11 @@ namespace MissionPlanner.GCSViews
         public SoftwareConfig()
         {
             InitializeComponent();
+            // BackstageViewPage creates CONFIG controls lazily. Wire its existing
+            // decoupled theme hook so pages are themed after construction and again
+            // after IActivate has populated dynamic controls.
+            BackstageViewPage.ApplyTheme -= ThemeManager.ApplyThemeTo;
+            BackstageViewPage.ApplyTheme += ThemeManager.ApplyThemeTo;
         }
 
         public void Activate()

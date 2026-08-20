@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -109,7 +109,7 @@ namespace MissionPlanner.GeoRef
             // 
             resources.ApplyResources(this.BUT_Geotagimages, "BUT_Geotagimages");
             this.BUT_Geotagimages.Name = "BUT_Geotagimages";
-            this.BUT_Geotagimages.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_Geotagimages.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_Geotagimages.UseVisualStyleBackColor = true;
             this.BUT_Geotagimages.Click += new System.EventHandler(this.BUT_Geotagimages_Click);
             // 
@@ -117,7 +117,7 @@ namespace MissionPlanner.GeoRef
             // 
             resources.ApplyResources(this.BUT_estoffset, "BUT_estoffset");
             this.BUT_estoffset.Name = "BUT_estoffset";
-            this.BUT_estoffset.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_estoffset.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_estoffset.UseVisualStyleBackColor = true;
             this.BUT_estoffset.Click += new System.EventHandler(this.BUT_estoffset_Click);
             // 
@@ -125,7 +125,7 @@ namespace MissionPlanner.GeoRef
             // 
             resources.ApplyResources(this.BUT_doit, "BUT_doit");
             this.BUT_doit.Name = "BUT_doit";
-            this.BUT_doit.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_doit.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_doit.UseVisualStyleBackColor = true;
             this.BUT_doit.Click += new System.EventHandler(this.BUT_doit_Click);
             // 
@@ -133,7 +133,7 @@ namespace MissionPlanner.GeoRef
             // 
             resources.ApplyResources(this.BUT_browsedir, "BUT_browsedir");
             this.BUT_browsedir.Name = "BUT_browsedir";
-            this.BUT_browsedir.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_browsedir.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_browsedir.UseVisualStyleBackColor = true;
             this.BUT_browsedir.Click += new System.EventHandler(this.BUT_browsedir_Click);
             // 
@@ -141,7 +141,7 @@ namespace MissionPlanner.GeoRef
             // 
             resources.ApplyResources(this.BUT_browselog, "BUT_browselog");
             this.BUT_browselog.Name = "BUT_browselog";
-            this.BUT_browselog.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_browselog.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_browselog.UseVisualStyleBackColor = true;
             this.BUT_browselog.Click += new System.EventHandler(this.BUT_browselog_Click);
             // 
@@ -149,7 +149,7 @@ namespace MissionPlanner.GeoRef
             // 
             resources.ApplyResources(this.BUT_networklinkgeoref, "BUT_networklinkgeoref");
             this.BUT_networklinkgeoref.Name = "BUT_networklinkgeoref";
-            this.BUT_networklinkgeoref.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_networklinkgeoref.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_networklinkgeoref.UseVisualStyleBackColor = true;
             this.BUT_networklinkgeoref.Click += new System.EventHandler(this.BUT_networklinkgeoref_Click);
             // 

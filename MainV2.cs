@@ -1175,9 +1175,9 @@ namespace MissionPlanner
 
             displayicons = icons;
 
-            MainMenu.BackColor = SystemColors.MenuBar;
+            MainMenu.BackColor = ThemeManager.BGColor;
 
-            MainMenu.BackgroundImage = displayicons.bg;
+            MainMenu.BackgroundImage = null;
 
             MenuFlightData.Image = displayicons.fd;
             MenuFlightPlanner.Image = displayicons.fp;
@@ -4639,7 +4639,7 @@ namespace MissionPlanner
                     try
                     {
                         item.BackColor = Color.Transparent;
-                        item.BackgroundImage = displayicons.bg; //.BackColor = Color.Black;
+                        item.BackgroundImage = null;
                     }
                     catch
                     {

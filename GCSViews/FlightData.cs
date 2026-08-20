@@ -5171,8 +5171,8 @@ namespace MissionPlanner.GCSViews
             // Define the default color of the brush as black.
             Brush myBrush = Brushes.Black;
 
-            LinearGradientBrush linear = new LinearGradientBrush(e.Bounds, Color.FromArgb(0x94, 0xc1, 0x1f),
-                Color.FromArgb(0xcd, 0xe2, 0x96), LinearGradientMode.Vertical);
+            LinearGradientBrush linear = new LinearGradientBrush(e.Bounds, Color.FromArgb(0xD7, 0x19, 0x20),
+                Color.FromArgb(0xE5, 0x2B, 0x32), LinearGradientMode.Vertical);
 
             e.Graphics.FillRectangle(linear, e.Bounds);
 

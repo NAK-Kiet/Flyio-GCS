@@ -65,29 +65,29 @@ namespace MissionPlanner.Utilities
             terminalTheming = true;
             strThemeName = "BurntKermit.mpsystheme";
 
-            colors.Add("Background", Color.FromArgb(0x26, 0x27, 0x28), "BGColor");						// This changes the colour of the main menu background
-            colors.Add("Control Background", Color.FromArgb(0x43, 0x44, 0x45), "ControlBGColor");		// This changes the colour of the sub menu backgrounds
-            colors.Add("Text", Color.White, "TextColor");										// This changes the colour of text
-            colors.Add("TextBox Background", Color.FromArgb(0x43, 0x44, 0x45), "BGColorTextBox");		// This changes the colour of the background of textboxes
-            colors.Add("Button Text", Color.FromArgb(64, 87, 4), "ButtonTextColor");				// This changes the colour of button text
-            colors.Add("Button Background top", Color.FromArgb(148, 193, 31), "ButBG");								// This changes the colour of button backgrounds (Top)
-            colors.Add("Button Background bottom", Color.FromArgb(205, 226, 150), "ButBGBot");						// This changes the colour of button backgrounds (Bot)
-            colors.Add("ProgressBar Top", Color.FromArgb(102, 139, 26), "ProgressBarColorTop");	// These three variables change the colours of progress bars
-            colors.Add("ProgressBar Bottom", Color.FromArgb(124, 164, 40), "ProgressBarColorBot");
-            colors.Add("ProgressBar Outline", Color.FromArgb(150, 174, 112), "ProgressBarOutlineColor");
-            colors.Add("BannerColor1", Color.FromArgb(0x40, 0x57, 0x04), "BannerColor1");			// These two variables change the colours of banners such as "planner" umder configuration
-            colors.Add("BannerColor2", Color.FromArgb(0x94, 0xC1, 0x1F), "BannerColor2");
-            colors.Add("Disabled Button", Color.FromArgb(150, 43, 58, 3), "ColorNotEnabled");		// This changes the background color of buttons when not enabled
-            colors.Add("Button Mouseover", Color.FromArgb(73, 43, 58, 3), "ColorMouseOver");			// This changes the background color of buttons when the mouse is hovering over a button
-            colors.Add("Button Mousedown", Color.FromArgb(73, 43, 58, 3), "ColorMouseDown");			// This changes the background color of buttons when the mouse is clicked down on a button
+            colors.Add("Background", Color.FromArgb(0x0B, 0x1F, 0x3A), "BGColor");						// This changes the colour of the main menu background
+            colors.Add("Control Background", Color.FromArgb(0x13, 0x2B, 0x4F), "ControlBGColor");		// This changes the colour of the sub menu backgrounds
+            colors.Add("Text", Color.FromArgb(0xF2, 0xF5, 0xF8), "TextColor");										// This changes the colour of text
+            colors.Add("TextBox Background", Color.FromArgb(0x13, 0x2B, 0x4F), "BGColorTextBox");		// This changes the colour of the background of textboxes
+            colors.Add("Button Text", Color.FromArgb(0xF2, 0xF5, 0xF8), "ButtonTextColor");				// This changes the colour of button text
+            colors.Add("Button Background top", Color.FromArgb(0xD7, 0x19, 0x20), "ButBG");								// This changes the colour of button backgrounds (Top)
+            colors.Add("Button Background bottom", Color.FromArgb(0xE5, 0x2B, 0x32), "ButBGBot");						// This changes the colour of button backgrounds (Bot)
+            colors.Add("ProgressBar Top", Color.FromArgb(0xD7, 0x19, 0x20), "ProgressBarColorTop");	// These three variables change the colours of progress bars
+            colors.Add("ProgressBar Bottom", Color.FromArgb(0xE5, 0x2B, 0x32), "ProgressBarColorBot");
+            colors.Add("ProgressBar Outline", Color.FromArgb(0x26, 0x3B, 0x56), "ProgressBarOutlineColor");
+            colors.Add("BannerColor1", Color.FromArgb(0x0B, 0x1F, 0x3A), "BannerColor1");			// These two variables change the colours of banners such as "planner" umder configuration
+            colors.Add("BannerColor2", Color.FromArgb(0xD7, 0x19, 0x20), "BannerColor2");
+            colors.Add("Disabled Button", Color.FromArgb(100, 25, 32, 3), "ColorNotEnabled");		// This changes the background color of buttons when not enabled
+            colors.Add("Button Mouseover", Color.FromArgb(73, 25, 32, 3), "ColorMouseOver");			// This changes the background color of buttons when the mouse is hovering over a button
+            colors.Add("Button Mousedown", Color.FromArgb(73, 25, 32, 3), "ColorMouseDown");			// This changes the background color of buttons when the mouse is clicked down on a button
             colors.Add("CurrentPPM Background", Color.Green, "CurrentPPMBackground");					// This changes the background colour of the current PPM setting in the flight modes tab
-            colors.Add("Graph Chart Fill", Color.FromArgb(0x1F, 0x1F, 0x20), "ZedGraphChartFill"); 	// These three variables change the fill colours of Zed Graphs
-            colors.Add("Graph Pane Fill", Color.FromArgb(0x37, 0x37, 0x38), "ZedGraphPaneFill");
-            colors.Add("Graph Legend Fill", Color.FromArgb(0x85, 0x84, 0x83), "ZedGraphLegendFill");
-            colors.Add("Rich Text Box text", Color.WhiteSmoke, "RTBForeColor");							// This changes the colour of text in rich text boxes
-            colors.Add("BackStageView Button Area", Color.Black, "BSVButtonAreaBGColor");					// This changes the colour of a backstageview button area
-            colors.Add("BSV Unselected Text", Color.WhiteSmoke, "UnselectedTextColour");			// This changes the colour of unselected text in a BSV button
-            colors.Add("Horizontal ProgressBar", Color.FromArgb(148, 193, 31), "HorizontalPBValueColor"); // This changes the colour of the horizontal progressbar
+            colors.Add("Graph Chart Fill", Color.FromArgb(0x07, 0x14, 0x26), "ZedGraphChartFill"); 	// These three variables change the fill colours of Zed Graphs
+            colors.Add("Graph Pane Fill", Color.FromArgb(0x0B, 0x1F, 0x3A), "ZedGraphPaneFill");
+            colors.Add("Graph Legend Fill", Color.FromArgb(0x26, 0x3B, 0x56), "ZedGraphLegendFill");
+            colors.Add("Rich Text Box text", Color.FromArgb(0xF2, 0xF5, 0xF8), "RTBForeColor");							// This changes the colour of text in rich text boxes
+            colors.Add("BackStageView Button Area", Color.FromArgb(0x07, 0x14, 0x26), "BSVButtonAreaBGColor");					// This changes the colour of a backstageview button area
+            colors.Add("BSV Unselected Text", Color.FromArgb(0xAA, 0xB7, 0xC7), "UnselectedTextColour");			// This changes the colour of unselected text in a BSV button
+            colors.Add("Horizontal ProgressBar", Color.FromArgb(0xD7, 0x19, 0x20), "HorizontalPBValueColor"); // This changes the colour of the horizontal progressbar
             colors.Add("HUD text and drawings", Color.LightGray, "HudText");                       
             colors.Add("HUD Ground top", Color.FromArgb(0x9b, 0xb8, 0x24), "HudGroundTop");
             colors.Add("HUD Ground bottom", Color.FromArgb(0x41, 0x4f, 0x07), "HudGroundBot");
@@ -162,9 +162,9 @@ namespace MissionPlanner.Utilities
             LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // Initialize to the default theme (BurntKermit)
-        public static Color BGColor = Color.FromArgb(0x26, 0x27, 0x28);
-        public static Color ControlBGColor = Color.FromArgb(0x43, 0x44, 0x45);
-        public static Color TextColor = Color.White;
+        public static Color BGColor = Color.FromArgb(0x0B, 0x1F, 0x3A);
+        public static Color ControlBGColor = Color.FromArgb(0x13, 0x2B, 0x4F);
+        public static Color TextColor = Color.FromArgb(0xF2, 0xF5, 0xF8);
         public static Color BGColorTextBox;
         public static Color ButBG;
         public static Color ButBGBot;
@@ -192,6 +192,25 @@ namespace MissionPlanner.Utilities
         public static Color HudGroundBot;
         public static Color HudSkyTop;
         public static Color HudSkyBot;
+
+        // Semantic colors used by the recursive renderer.  The legacy fields above
+        // remain available to themes and status/HUD controls, while all ordinary UI
+        // controls use this single, contrast-aware palette.
+        public static Color PanelBackground;
+        public static Color ControlBackground;
+        public static Color ControlBorder;
+        public static Color TextPrimary;
+        public static Color TextSecondary;
+        public static Color TextDisabled;
+        public static Color TextOnAccent;
+        public static Color Accent;
+        public static Color AccentHover;
+        public static Color AccentPressed;
+        public static Color SelectedBackground;
+        public static Color SelectedText;
+        public static Color ErrorColor = Color.FromArgb(220, 70, 70);
+        public static Color WarningColor = Color.FromArgb(245, 180, 55);
+        public static Color SuccessColor = Color.FromArgb(65, 190, 125);
 
         public static ThemeColorTable thmColor;
 
@@ -314,7 +333,182 @@ namespace MissionPlanner.Utilities
             if (control.GetType().IsDefined(typeof(PreventThemingAttribute)))
                 return;
 
-            ApplyTheme(control, 0);
+            ApplyConsistentTheme(control);
+        }
+
+        private static Color ContrastText(Color background)
+        {
+            // WCAG-oriented luminance choice; avoids white-on-light and black-on-dark.
+            double lum = (0.2126 * background.R + 0.7152 * background.G + 0.0722 * background.B) / 255.0;
+            return lum > 0.52 ? Color.FromArgb(24, 32, 42) : Color.FromArgb(242, 246, 250);
+        }
+
+        private static Color Mix(Color a, Color b, double amount)
+        {
+            return Color.FromArgb(
+                (int)(a.R + (b.R - a.R) * amount),
+                (int)(a.G + (b.G - a.G) * amount),
+                (int)(a.B + (b.B - a.B) * amount));
+        }
+
+        private static void ConfigureGrid(DataGridView grid)
+        {
+            grid.EnableHeadersVisualStyles = false;
+            grid.BorderStyle = BorderStyle.FixedSingle;
+            grid.BackgroundColor = PanelBackground;
+            grid.GridColor = ControlBorder;
+            grid.ForeColor = TextPrimary;
+            grid.DefaultCellStyle.BackColor = ControlBackground;
+            grid.DefaultCellStyle.ForeColor = TextPrimary;
+            grid.DefaultCellStyle.SelectionBackColor = SelectedBackground;
+            grid.DefaultCellStyle.SelectionForeColor = SelectedText;
+            grid.RowsDefaultCellStyle.BackColor = ControlBackground;
+            grid.RowsDefaultCellStyle.ForeColor = TextPrimary;
+            grid.RowsDefaultCellStyle.SelectionBackColor = SelectedBackground;
+            grid.RowsDefaultCellStyle.SelectionForeColor = SelectedText;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Mix(ControlBackground, PanelBackground, 0.45);
+            grid.AlternatingRowsDefaultCellStyle.ForeColor = TextPrimary;
+            grid.AlternatingRowsDefaultCellStyle.SelectionBackColor = SelectedBackground;
+            grid.AlternatingRowsDefaultCellStyle.SelectionForeColor = SelectedText;
+            grid.ColumnHeadersDefaultCellStyle.BackColor = Accent;
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = TextOnAccent;
+            grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = AccentHover;
+            grid.ColumnHeadersDefaultCellStyle.SelectionForeColor = TextOnAccent;
+            grid.RowHeadersDefaultCellStyle.BackColor = PanelBackground;
+            grid.RowHeadersDefaultCellStyle.ForeColor = TextSecondary;
+            grid.RowHeadersDefaultCellStyle.SelectionBackColor = SelectedBackground;
+            grid.RowHeadersDefaultCellStyle.SelectionForeColor = SelectedText;
+            grid.CellFormatting -= GridCellFormatting;
+            grid.CellFormatting += GridCellFormatting;
+            foreach (DataGridViewColumn column in grid.Columns)
+            {
+                column.DefaultCellStyle.BackColor = ControlBackground;
+                column.DefaultCellStyle.ForeColor = TextPrimary;
+                column.DefaultCellStyle.SelectionBackColor = SelectedBackground;
+                column.DefaultCellStyle.SelectionForeColor = SelectedText;
+                column.HeaderCell.Style = grid.ColumnHeadersDefaultCellStyle;
+            }
+        }
+
+        private static void GridCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            var grid = sender as DataGridView;
+            if (grid == null || e.RowIndex < 0 || e.RowIndex >= grid.Rows.Count) return;
+            if (grid.Rows[e.RowIndex].ReadOnly)
+            {
+                e.CellStyle.BackColor = Mix(ControlBackground, PanelBackground, 0.18);
+                e.CellStyle.ForeColor = TextSecondary;
+                e.CellStyle.SelectionBackColor = SelectedBackground;
+                e.CellStyle.SelectionForeColor = SelectedText;
+            }
+        }
+
+        private static void DrawTreeNode(object sender, DrawTreeNodeEventArgs e)
+        {
+            TreeView tree = sender as TreeView;
+            if (tree == null) return;
+            Color back = (e.State & TreeNodeStates.Selected) != 0 ? SelectedBackground : tree.BackColor;
+            Color fore = (e.State & TreeNodeStates.Selected) != 0 ? SelectedText : (e.Node.ForeColor.IsEmpty ? TextPrimary : e.Node.ForeColor);
+            using (var brush = new SolidBrush(back))
+                e.Graphics.FillRectangle(brush, new Rectangle(0, e.Bounds.Y, tree.ClientSize.Width, e.Bounds.Height));
+            TextRenderer.DrawText(e.Graphics, e.Node.Text, tree.Font, e.Bounds, fore,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix);
+        }
+
+        private static void ApplyConsistentTheme(Control root)
+        {
+            PanelBackground = BGColor;
+            ControlBackground = BGColorTextBox.IsEmpty ? ControlBGColor : BGColorTextBox;
+            ControlBorder = Mix(BGColor, TextColor, 0.35);
+            TextPrimary = ContrastText(PanelBackground);
+            TextSecondary = Mix(TextPrimary, PanelBackground, 0.28);
+            TextDisabled = Mix(TextPrimary, PanelBackground, 0.42);
+            Accent = ButBG.IsEmpty ? Color.FromArgb(215, 25, 32) : ButBG;
+            AccentHover = ButBGBot.IsEmpty ? Mix(Accent, TextPrimary, 0.18) : ButBGBot;
+            AccentPressed = Color.FromArgb(Math.Max(0, Accent.R - 25), Math.Max(0, Accent.G - 25), Math.Max(0, Accent.B - 25));
+            TextOnAccent = ContrastText(Accent);
+            SelectedBackground = Mix(Accent, PanelBackground, 0.22);
+            SelectedText = ContrastText(SelectedBackground);
+
+            ApplyConsistentThemeRecursive(root);
+        }
+
+        private static void ApplyConsistentThemeRecursive(Control control)
+        {
+            if (control.GetType().IsDefined(typeof(PreventThemingAttribute), true)) return;
+            control.BackColor = PanelBackground;
+            control.ForeColor = TextPrimary;
+
+            var grid = control as DataGridView;
+            if (grid != null) ConfigureGrid(grid);
+            var tree = control as TreeView;
+            if (tree != null)
+            {
+                tree.BackColor = PanelBackground;
+                tree.ForeColor = TextPrimary;
+                tree.LineColor = TextSecondary;
+                tree.DrawMode = TreeViewDrawMode.OwnerDrawText;
+                tree.DrawNode -= DrawTreeNode;
+                tree.DrawNode += DrawTreeNode;
+            }
+            var strip = control as ToolStrip;
+            if (strip != null)
+            {
+                strip.BackColor = PanelBackground;
+                strip.ForeColor = TextPrimary;
+                strip.Renderer = new FlyToolStripRenderer();
+            }
+            var button = control as MyButton;
+            if (button != null)
+            {
+                button.BGGradTop = Accent;
+                button.BGGradBot = AccentHover;
+                button.TextColor = TextOnAccent;
+                button.TextColorNotEnabled = TextDisabled;
+                button.Outline = ControlBorder;
+                button.ColorMouseOver = AccentHover;
+                button.ColorMouseDown = AccentPressed;
+                button.ColorNotEnabled = Mix(PanelBackground, ControlBackground, 0.5);
+            }
+            else if (control is Button)
+            {
+                control.BackColor = Accent;
+                control.ForeColor = TextOnAccent;
+                ((Button)control).FlatStyle = FlatStyle.Flat;
+                ((Button)control).FlatAppearance.BorderColor = ControlBorder;
+                ((Button)control).FlatAppearance.MouseOverBackColor = AccentHover;
+                ((Button)control).FlatAppearance.MouseDownBackColor = AccentPressed;
+                ((Button)control).FlatAppearance.CheckedBackColor = AccentPressed;
+            }
+            else if (control is TextBoxBase || control is ComboBox || control is NumericUpDown || control is DomainUpDown)
+            {
+                control.BackColor = ControlBackground;
+                control.ForeColor = TextPrimary;
+            }
+            else if (control is DataGridView || control is ListBox || control is CheckedListBox || control is ListView)
+            {
+                control.BackColor = ControlBackground;
+                control.ForeColor = TextPrimary;
+            }
+            else if (control is LinkLabel)
+            {
+                var link = (LinkLabel)control;
+                link.LinkColor = AccentHover;
+                link.ActiveLinkColor = TextOnAccent;
+                link.VisitedLinkColor = AccentHover;
+            }
+            if (!control.Enabled) control.ForeColor = TextDisabled;
+            foreach (Control child in control.Controls) ApplyConsistentThemeRecursive(child);
+        }
+
+        private sealed class FlyToolStripRenderer : ToolStripProfessionalRenderer
+        {
+            protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
+            { using (var brush = new SolidBrush(PanelBackground)) e.Graphics.FillRectangle(brush, e.AffectedBounds); }
+            protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+            { e.TextColor = e.Item.Enabled ? TextPrimary : TextDisabled; base.OnRenderItemText(e); }
+            protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
+            { if (e.Item.Selected || e.Item.Pressed) using (var brush = new SolidBrush(e.Item.Pressed ? AccentPressed : SelectedBackground)) e.Graphics.FillRectangle(brush, new Rectangle(Point.Empty, e.Item.Size)); }
         }
 
 
@@ -1034,8 +1228,8 @@ mc:Ignorable=""d""
 
                     bsv.BackColor = BGColor;
                     bsv.ButtonsAreaBgColor = ControlBGColor;
-                    bsv.HighlightColor2 = Color.FromArgb(0x94, 0xc1, 0x1f);
-                    bsv.HighlightColor1 = Color.FromArgb(0x40, 0x57, 0x04);
+                    bsv.HighlightColor2 = Color.FromArgb(0xD7, 0x19, 0x20);
+                    bsv.HighlightColor1 = Color.FromArgb(0x0B, 0x1F, 0x3A);
                     bsv.SelectedTextColor = Color.White;
                     bsv.UnSelectedTextColor = Color.Gray;
                     bsv.ButtonsAreaPencilColor = Color.DarkGray;
@@ -1044,7 +1238,7 @@ mc:Ignorable=""d""
                          ctl.GetType() == typeof(VerticalProgressBar2))
                 {
                     ((HorizontalProgressBar2)ctl).BackgroundColor = ControlBGColor;
-                    ((HorizontalProgressBar2)ctl).ValueColor = Color.FromArgb(148, 193, 31);
+                    ((HorizontalProgressBar2)ctl).ValueColor = Color.FromArgb(0xD7, 0x19, 0x20);
                 }
                 else if (ctl.GetType() == typeof(MyProgressBar))
                 {

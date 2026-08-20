@@ -37,6 +37,15 @@ namespace MissionPlanner
                 Logo2 = new Bitmap(logo2Path);
             IconFile = File.Exists(iconPath) ? new Bitmap(iconPath) : Properties.Resources.mpdesktop.ToBitmap();
 
+            if (Utilities.Settings.Instance["theme"] == null)
+            {
+                if (File.Exists($"{runningDirectory}custom.mpsystheme"))
+                    Utilities.Settings.Instance["theme"] = "custom.mpsystheme";
+                else
+                    Utilities.Settings.Instance["theme"] = "BurntKermit.mpsystheme";
+            }
+            Utilities.ThemeManager.LoadTheme(Utilities.Settings.Instance["theme"]);
+
             Splash = new Splash();
             Splash.Show();
 
