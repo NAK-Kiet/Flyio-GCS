@@ -37,7 +37,7 @@
             // 
             // cmb_Baud
             // 
-            this.cmb_Baud.BackColor = System.Drawing.Color.Black;
+            this.cmb_Baud.BackColor = System.Drawing.Color.FromArgb(0x13, 0x2B, 0x4F);
             this.cmb_Baud.DropDownWidth = 110;
             this.cmb_Baud.ForeColor = System.Drawing.Color.White;
             resources.ApplyResources(this.cmb_Baud, "cmb_Baud");
@@ -62,7 +62,7 @@
             // 
             // cmb_Connection
             // 
-            this.cmb_Connection.BackColor = System.Drawing.Color.Black;
+            this.cmb_Connection.BackColor = System.Drawing.Color.FromArgb(0x13, 0x2B, 0x4F);
             this.cmb_Connection.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cmb_Connection.DropDownWidth = 230;
             this.cmb_Connection.ForeColor = System.Drawing.Color.White;
@@ -81,7 +81,7 @@
             // 
             // cmb_sysid
             // 
-            this.cmb_sysid.BackColor = System.Drawing.Color.Black;
+            this.cmb_sysid.BackColor = System.Drawing.Color.FromArgb(0x13, 0x2B, 0x4F);
             this.cmb_sysid.DropDownWidth = 200;
             this.cmb_sysid.ForeColor = System.Drawing.Color.White;
             this.cmb_sysid.FormattingEnabled = true;
@@ -92,7 +92,7 @@
             // 
             // ConnectionControl
             // 
-            this.BackgroundImage = global::MissionPlanner.Properties.Resources.bgdark;
+            this.BackgroundImage = null;
             this.Controls.Add(this.cmb_sysid);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.cmb_Connection);

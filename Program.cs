@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -25,8 +26,51 @@ namespace MissionPlanner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            var runningDirectory = Utilities.Settings.GetRunningDirectory();
+            var logoPath = Path.Combine(runningDirectory, "logo.png");
+            var logo2Path = Path.Combine(runningDirectory, "logo2.png");
+            var iconPath = Path.Combine(runningDirectory, "icon.png");
+
+            if (File.Exists(logoPath))
+                Logo = new Bitmap(logoPath);
+            if (File.Exists(logo2Path))
+                Logo2 = new Bitmap(logo2Path);
+            IconFile = File.Exists(iconPath) ? new Bitmap(iconPath) : Properties.Resources.mpdesktop.ToBitmap();
+
+            if (Utilities.Settings.Instance["theme"] == null)
+            {
+                if (File.Exists($"{runningDirectory}custom.mpsystheme"))
+                    Utilities.Settings.Instance["theme"] = "custom.mpsystheme";
+                else
+                    Utilities.Settings.Instance["theme"] = "BurntKermit.mpsystheme";
+            }
+            Utilities.ThemeManager.LoadTheme(Utilities.Settings.Instance["theme"]);
+
             Splash = new Splash();
             Splash.Show();
+
+            MAVLinkInterface.CreateIProgressReporterDialogue += title =>
+            {
+                var dialog = new Controls.ProgressReporterDialogue
+                {
+                    StartPosition = FormStartPosition.CenterScreen,
+                    Text = title
+                };
+                Utilities.ThemeManager.ApplyThemeTo(dialog);
+                return dialog;
+            };
+
+            // Initialize CustomMessageBox for the Windows desktop application
+            CustomMessageBox.ShowEvent += (text, caption, buttons, icon, yestext, notext) =>
+            {
+                return (CustomMessageBox.DialogResult)(int)MsgBox.CustomMessageBox.Show(
+                    text,
+                    caption,
+                    (MessageBoxButtons)(int)buttons,
+                    (MessageBoxIcon)(int)icon,
+                    yestext,
+                    notext);
+            };
 
             Application.Run(new MainV2());
         }

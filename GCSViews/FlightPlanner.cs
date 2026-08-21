@@ -63,6 +63,9 @@ namespace MissionPlanner.GCSViews
         {
             InitializeComponent();
             Init();
+            // FlightPlanner is constructed lazily after MainV2's initial theme pass.
+            // Theme the fully initialized designer tree, including Commands columns.
+            ThemeManager.ApplyThemeTo(this);
         }
 
 
@@ -335,6 +338,10 @@ namespace MissionPlanner.GCSViews
                 CustomMessageBox.Show("Please fix your default alt value");
                 TXT_DefaultAlt.Text = (50 * CurrentState.multiplieralt).ToString("0");
             }
+
+            // Activation repopulates controls and can restore designer/system styles.
+            // Reapply the shared theme after that work without touching map imagery.
+            ThemeManager.ApplyThemeTo(this);
         }
 
         public void Deactivate()
@@ -2357,8 +2364,8 @@ namespace MissionPlanner.GCSViews
                 var temp = ((ComboBox) e.Control);
                 ((ComboBox) e.Control).SelectionChangeCommitted -= Commands_SelectionChangeCommitted;
                 ((ComboBox) e.Control).SelectionChangeCommitted += Commands_SelectionChangeCommitted;
-                ((ComboBox) e.Control).ForeColor = Color.White;
-                ((ComboBox) e.Control).BackColor = Color.FromArgb(0x43, 0x44, 0x45);
+                ((ComboBox) e.Control).ForeColor = ThemeManager.TextPrimary;
+                ((ComboBox) e.Control).BackColor = ThemeManager.ControlBackground;
                 Debug.WriteLine("Setting event handle");
             }
         }
@@ -2497,7 +2504,7 @@ namespace MissionPlanner.GCSViews
         private void Commands_SelectionChangeCommitted(object sender, EventArgs e)
         {
             // update row headers
-            ((ComboBox) sender).ForeColor = Color.White;
+            ((ComboBox) sender).ForeColor = ThemeManager.TextPrimary;
             ChangeColumnHeader(((ComboBox) sender).Text);
                 try
             {
@@ -5907,7 +5914,7 @@ namespace MissionPlanner.GCSViews
                     {
                         StreamWriter sw = new StreamWriter(sf.OpenFile());
 
-                        sw.WriteLine("#saved by Mission Planner " + Application.ProductVersion);
+                        sw.WriteLine("#saved by Fly.io " + Application.ProductVersion);
 
                         if (drawnpolygon.Points.Count > 0)
                         {
@@ -6043,7 +6050,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
                         using (StreamWriter sw = new StreamWriter(sf.OpenFile()))
                         {
-                            sw.WriteLine("#saved by Mission Planner " + Application.ProductVersion);
+                            sw.WriteLine("#saved by Fly.io " + Application.ProductVersion);
 
 
                             foreach (GMapMarkerRallyPt mark in rallypointoverlay.Markers)

@@ -454,24 +454,6 @@ namespace MissionPlanner.GCSViews.ConfigurationView
 
                     _updatePending = true;
                 }
-                else if (msg.GetType() == typeof(DroneCAN.DroneCAN.uavcan_protocol_debug_LogMessage))
-                {
-                    var debug = msg as DroneCAN.DroneCAN.uavcan_protocol_debug_LogMessage;
-
-                    this.BeginInvoke((Action)delegate ()
-                    {
-                        DGDebug.Rows.Insert(0, new object[]
-                        {
-                            frame.SourceNode, debug.level.value,
-                            ASCIIEncoding.ASCII.GetString(debug.source, 0, debug.source_len),
-                            ASCIIEncoding.ASCII.GetString(debug.text, 0, debug.text_len)
-                        });
-                        if (DGDebug.Rows.Count > 100)
-                        {
-                            DGDebug.Rows.RemoveAt(DGDebug.Rows.Count - 1);
-                        }
-                    });
-                }
             };
         }
 
@@ -910,7 +892,6 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                 DroneCAN.DroneCAN.uavcan_protocol_file_GetInfo_req.UAVCAN_PROTOCOL_FILE_GETINFO_REQ_DT_ID,
                 DroneCAN.DroneCAN.uavcan_protocol_dynamic_node_id_Allocation
                     .UAVCAN_PROTOCOL_DYNAMIC_NODE_ID_ALLOCATION_DT_ID,
-                DroneCAN.DroneCAN.uavcan_protocol_debug_LogMessage.UAVCAN_PROTOCOL_DEBUG_LOGMESSAGE_DT_ID,
             };
 
             var list = DroneCAN.DroneCAN.MSG_INFO.Select(a => (a.msgid, a.type.Name)).OrderBy(a => a.Name.ToLower());

@@ -1175,9 +1175,9 @@ namespace MissionPlanner
 
             displayicons = icons;
 
-            MainMenu.BackColor = SystemColors.MenuBar;
+            MainMenu.BackColor = ThemeManager.BGColor;
 
-            MainMenu.BackgroundImage = displayicons.bg;
+            MainMenu.BackgroundImage = null;
 
             MenuFlightData.Image = displayicons.fd;
             MenuFlightPlanner.Image = displayicons.fp;
@@ -1832,7 +1832,10 @@ namespace MissionPlanner
                     log.Warn(ex2);
                 }
 
-                CustomMessageBox.Show($"Can not establish a connection\n\n{ex.Message}");
+                CustomMessageBox.Show(
+                    "Can not establish a connection\n\n" +
+                    ex.ToString(),
+                    "Connection Error");
                 return;
             }
         }
@@ -4636,7 +4639,7 @@ namespace MissionPlanner
                     try
                     {
                         item.BackColor = Color.Transparent;
-                        item.BackgroundImage = displayicons.bg; //.BackColor = Color.Black;
+                        item.BackgroundImage = null;
                     }
                     catch
                     {

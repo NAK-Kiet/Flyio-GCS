@@ -1,4 +1,4 @@
-﻿using log4net;
+using log4net;
 using MissionPlanner.ArduPilot;
 using MissionPlanner.Controls;
 using System;
@@ -144,7 +144,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
 
                             thisctl.Enabled = true;
 
-                            thisctl.BackColor = Color.FromArgb(0x43, 0x44, 0x45);
+                            thisctl.BackColor = Color.FromArgb(0x13, 0x2B, 0x4F);
                             thisctl.Validated += null;
                             if (tooltips[value] != null)
                             {
@@ -230,7 +230,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                         var textControls = Controls.Find(value, true);
                         if (textControls.Length > 0)
                         {
-                            textControls[0].BackColor = Color.FromArgb(0x43, 0x44, 0x45);
+                            textControls[0].BackColor = Color.FromArgb(0x13, 0x2B, 0x4F);
                         }
                     }
                     catch
