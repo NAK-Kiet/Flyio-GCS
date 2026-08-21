@@ -71,7 +71,7 @@ def build_message(msg_name):
         
         output_file = os.path.join(build_dir, em.expand('@{from canard_dsdlc_helpers import *}'+template['output_file'], msg=msglocal))
         mkdir_p(os.path.dirname(output_file))
-        print(f'Doing {msg_name} {template['source_file']} {output_file} ')
+        print(f"Doing {msg_name} {template['source_file']} {output_file} ")
         with open(output_file, 'w') as f:
             f.write(output)
     print(f'Done {msg_name}')
@@ -114,4 +114,3 @@ if __name__ == '__main__':
         f.write('using System;using System.Reflection;\nnamespace DroneCAN {\npublic partial class DroneCAN {\n    public static (Type type,UInt16 msgid, ulong crcseed, Func<Byte[],int, bool, object> convert)[] MSG_INFO = { \n%s};}}' % (message_names_enum))
 
     #print (message_names_enum)
-
