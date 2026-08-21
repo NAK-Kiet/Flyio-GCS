@@ -191,9 +191,11 @@ namespace MissionPlanner.GCSViews
                     mand);
             }
 
-            if (MainV2.DisplayConfiguration.displayAccelCalibration)
+            if (MainV2.DisplayConfiguration.displayRadioCalibration ||
+                MainV2.DisplayConfiguration.displayAccelCalibration)
             {
-                AddBackstageViewPage(typeof(ConfigAccelerometerCalibration), rm.GetString("backstageViewPageaccel.Text"), isConnected && gotAllParams, mand);
+                AddBackstageViewPage(typeof(ConfigRadioAccelCombined), "Radio & Accel Calibration",
+                    isConnected && gotAllParams, mand);
             }
 
 
@@ -206,14 +208,11 @@ namespace MissionPlanner.GCSViews
                     AddBackstageViewPage(typeof(ConfigHWCompass), rm.GetString("backstageViewPagecompass.Text"),
                         isConnected && gotAllParams, mand);
             }
-            if (MainV2.DisplayConfiguration.displayRadioCalibration)
+            if (MainV2.DisplayConfiguration.displayServoOutput ||
+                MainV2.DisplayConfiguration.displayMotorTest)
             {
-                AddBackstageViewPage(typeof(ConfigRadioInput), rm.GetString("backstageViewPageradio.Text"), isConnected && gotAllParams, mand);
-            }
-            if (MainV2.DisplayConfiguration.displayServoOutput)
-            {
-                AddBackstageViewPage(typeof(ConfigRadioOutput), "Servo Output", isConnected && gotAllParams, mand);
-
+                AddBackstageViewPage(typeof(ConfigMotorServoCombined), "Motor & Servo Output",
+                    isConnected && gotAllParams, mand);
             }
             if (MainV2.DisplayConfiguration.displaySerialPorts)
             {
@@ -311,10 +310,6 @@ namespace MissionPlanner.GCSViews
             if (MainV2.DisplayConfiguration.displayAntennaTracker)
             {
                 AddBackstageViewPage(typeof(ConfigAntennaTracker), rm.GetString("backstageViewPageAntTrack.Text"), isTracker, opt);
-            }
-            if (MainV2.DisplayConfiguration.displayMotorTest)
-            {
-                AddBackstageViewPage(typeof(ConfigMotorTest), rm.GetString("backstageViewPageMotorTest.Text"), isConnected && gotAllParams, opt);
             }
             if (MainV2.DisplayConfiguration.displayBluetooth)
             {
