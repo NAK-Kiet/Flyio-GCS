@@ -436,7 +436,7 @@
 </value>
   </data>
   <data name="MenuFlightPlanner.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>White</value>
+    <value>Magenta</value>
   </data>
   <data name="MenuFlightPlanner.Size" type="System.Drawing.Size, System.Drawing">
     <value>49, 47</value>

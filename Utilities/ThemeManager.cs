@@ -439,6 +439,10 @@ namespace MissionPlanner.Utilities
             control.BackColor = PanelBackground;
             control.ForeColor = TextPrimary;
 
+            var form = control as Form;
+            if (form != null && Program.IconFile != null)
+                form.Icon = Icon.FromHandle(((Bitmap)Program.IconFile).GetHicon());
+
             var grid = control as DataGridView;
             if (grid != null) ConfigureGrid(grid);
             var tree = control as TreeView;
@@ -458,6 +462,24 @@ namespace MissionPlanner.Utilities
                 strip.ForeColor = TextPrimary;
                 strip.Renderer = new FlyToolStripRenderer();
             }
+            var progress = control as MyProgressBar;
+            if (progress != null)
+            {
+                progress.BackColor = ControlBackground;
+                progress.BGGradTop = Accent;
+                progress.BGGradBot = AccentHover;
+                progress.TextColor = TextPrimary;
+                progress.Outline = ControlBorder;
+                progress.Invalidate();
+            }
+            else if (control is ProgressBar)
+            {
+                // Native progress bars may be rendered by Windows, but these colors
+                // are honored when visual styles are unavailable or disabled.
+                control.BackColor = ControlBackground;
+                control.ForeColor = Accent;
+            }
+
             var button = control as MyButton;
             if (button != null)
             {

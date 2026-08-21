@@ -29,13 +29,12 @@ namespace MissionPlanner
             var runningDirectory = Utilities.Settings.GetRunningDirectory();
             var logoPath = Path.Combine(runningDirectory, "logo.png");
             var logo2Path = Path.Combine(runningDirectory, "logo2.png");
-            var iconPath = Path.Combine(runningDirectory, "icon.png");
 
             if (File.Exists(logoPath))
                 Logo = new Bitmap(logoPath);
             if (File.Exists(logo2Path))
                 Logo2 = new Bitmap(logo2Path);
-            IconFile = File.Exists(iconPath) ? new Bitmap(iconPath) : Properties.Resources.mpdesktop.ToBitmap();
+            IconFile = Icon.ExtractAssociatedIcon(Application.ExecutablePath).ToBitmap();
 
             if (Utilities.Settings.Instance["theme"] == null)
             {
@@ -45,6 +44,10 @@ namespace MissionPlanner
                     Utilities.Settings.Instance["theme"] = "BurntKermit.mpsystheme";
             }
             Utilities.ThemeManager.LoadTheme(Utilities.Settings.Instance["theme"]);
+
+            // Theme shared desktop dialogs created outside the main form hierarchy.
+            MsgBox.CustomMessageBox.ApplyTheme -= Utilities.ThemeManager.ApplyThemeTo;
+            MsgBox.CustomMessageBox.ApplyTheme += Utilities.ThemeManager.ApplyThemeTo;
 
             Splash = new Splash();
             Splash.Show();

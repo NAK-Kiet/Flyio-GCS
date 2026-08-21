@@ -49,14 +49,19 @@ namespace MissionPlanner
             this.MenuConfigTune = new System.Windows.Forms.ToolStripButton();
             this.MenuSimulation = new System.Windows.Forms.ToolStripButton();
             this.MenuHelp = new System.Windows.Forms.ToolStripButton();
+            this.MenuDRDCGCS = new System.Windows.Forms.ToolStripButton();
             this.MenuConnect = new System.Windows.Forms.ToolStripButton();
             this.toolStripConnectionControl = new MissionPlanner.Controls.ToolStripConnectionControl();
-            this.MenuArduPilot = new System.Windows.Forms.ToolStripButton();
+            this.MenuArduPilotPanel = new MissionPlanner.LogoPanel();
+            this.MenuArduPilot = new MissionPlanner.LogoPictureBox();
+            this.MenuArduPilotHost = new System.Windows.Forms.ToolStripControlHost(this.MenuArduPilotPanel);
             this.menu = new MissionPlanner.Controls.MyButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.status1 = new MissionPlanner.Controls.Status();
             this.MainMenu.SuspendLayout();
             this.CTX_mainmenu.SuspendLayout();
+            this.MenuArduPilotPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MenuArduPilot)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,10 +78,13 @@ namespace MissionPlanner
             this.MenuConfigTune,
             this.MenuSimulation,
             this.MenuHelp,
+            this.MenuDRDCGCS,
             this.MenuConnect,
             this.toolStripConnectionControl,
-            this.MenuArduPilot});
+            this.MenuArduPilotHost});
             this.MainMenu.Name = "MainMenu";
+            this.MainMenu.AutoSize = false;
+            this.MainMenu.Size = new System.Drawing.Size(923, 60);
             this.MainMenu.ShowItemToolTips = true;
             this.MainMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.MainMenu_ItemClicked);
             this.MainMenu.MouseLeave += new System.EventHandler(this.MainMenu_MouseLeave);
@@ -173,6 +181,17 @@ namespace MissionPlanner
             this.MenuHelp.Name = "MenuHelp";
             this.MenuHelp.Click += new System.EventHandler(this.MenuHelp_Click);
             // 
+            // MenuDRDCGCS
+            // 
+            this.MenuDRDCGCS.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.MenuDRDCGCS.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.MenuDRDCGCS.Margin = new System.Windows.Forms.Padding(0);
+            this.MenuDRDCGCS.Name = "MenuDRDCGCS";
+            this.MenuDRDCGCS.Size = new System.Drawing.Size(72, 56);
+            this.MenuDRDCGCS.Text = "DRDC GCS";
+            this.MenuDRDCGCS.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.MenuDRDCGCS.Click += new System.EventHandler(this.MenuDRDCGCS_Click);
+            // 
             // MenuConnect
             // 
             this.MenuConnect.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -191,17 +210,38 @@ namespace MissionPlanner
             this.toolStripConnectionControl.Name = "toolStripConnectionControl";
             this.toolStripConnectionControl.MouseLeave += new System.EventHandler(this.MainMenu_MouseLeave);
             // 
+            // MenuArduPilotPanel
+            // 
+            this.MenuArduPilotPanel.BackColor = System.Drawing.Color.White;
+            this.MenuArduPilotPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MenuArduPilotPanel.Controls.Add(this.MenuArduPilot);
+            this.MenuArduPilotPanel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.MenuArduPilotPanel.LogoBackgroundColor = System.Drawing.Color.White;
+            this.MenuArduPilotPanel.Name = "MenuArduPilotPanel";
+            this.MenuArduPilotPanel.Padding = new System.Windows.Forms.Padding(6);
+            this.MenuArduPilotPanel.Size = new System.Drawing.Size(240, 60);
+            this.MenuArduPilotPanel.Click += new System.EventHandler(this.MenuArduPilot_Click);
+            // 
             // MenuArduPilot
             // 
-            this.MenuArduPilot.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            resources.ApplyResources(this.MenuArduPilot, "MenuArduPilot");
-            this.MenuArduPilot.BackColor = System.Drawing.Color.Transparent;
-            this.MenuArduPilot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.MenuArduPilot.ForeColor = System.Drawing.Color.White;
+            this.MenuArduPilot.BackColor = System.Drawing.Color.White;
+            this.MenuArduPilot.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.MenuArduPilot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MenuArduPilot.Image = global::MissionPlanner.Properties.Resources._0d92fed790a3a70170e61a86db103f399a595c70;
-            this.MenuArduPilot.Margin = new System.Windows.Forms.Padding(0);
             this.MenuArduPilot.Name = "MenuArduPilot";
+            this.MenuArduPilot.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.MenuArduPilot.TabStop = false;
             this.MenuArduPilot.Click += new System.EventHandler(this.MenuArduPilot_Click);
+            // 
+            // MenuArduPilotHost
+            // 
+            this.MenuArduPilotHost.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.MenuArduPilotHost.AutoSize = false;
+            this.MenuArduPilotHost.BackColor = System.Drawing.Color.White;
+            this.MenuArduPilotHost.Margin = new System.Windows.Forms.Padding(0);
+            this.MenuArduPilotHost.Name = "MenuArduPilotHost";
+            this.MenuArduPilotHost.Padding = new System.Windows.Forms.Padding(0);
+            this.MenuArduPilotHost.Size = new System.Drawing.Size(240, 60);
             // 
             // menu
             // 
@@ -215,6 +255,7 @@ namespace MissionPlanner
             this.panel1.Controls.Add(this.status1);
             this.panel1.Controls.Add(this.MainMenu);
             resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Size = new System.Drawing.Size(923, 60);
             this.panel1.Name = "panel1";
             this.panel1.MouseLeave += new System.EventHandler(this.MainMenu_MouseLeave);
             // 
@@ -238,6 +279,8 @@ namespace MissionPlanner
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
             this.CTX_mainmenu.ResumeLayout(false);
+            this.MenuArduPilotPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MenuArduPilot)).EndInit();
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -262,7 +305,10 @@ namespace MissionPlanner
         private System.Windows.Forms.ToolStripMenuItem connectionOptionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectionListToolStripMenuItem;
         public System.Windows.Forms.ToolStripButton MenuHelp;
-        public System.Windows.Forms.ToolStripButton MenuArduPilot;
+        public System.Windows.Forms.ToolStripButton MenuDRDCGCS;
+        private MissionPlanner.LogoPanel MenuArduPilotPanel;
+        private System.Windows.Forms.ToolStripControlHost MenuArduPilotHost;
+        public MissionPlanner.LogoPictureBox MenuArduPilot;
         public Controls.Status status1;
     }
 }
