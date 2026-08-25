@@ -1,4 +1,4 @@
-﻿using MissionPlanner.Controls;
+using MissionPlanner.Controls;
 using MissionPlanner.Properties;
 using MissionPlanner.Utilities;
 using System;
@@ -10,6 +10,9 @@ namespace MissionPlanner.GCSViews
 {
     public partial class Help : MyUserControl, IActivate
     {
+        private const string GitHubUrl = "https://github.com/NAK-Kiet/Flyio-GCS";
+        private const string GitLabRemote = "git@192.168.100.120:Kaine/flyio-gcs.git";
+
         public Help()
         {
             InitializeComponent();
@@ -18,14 +21,7 @@ namespace MissionPlanner.GCSViews
 
         public void Activate()
         {
-            try
-            {
-                CHK_showconsole.Checked = Settings.Instance.GetBoolean("showconsole");
-            }
-            catch
-            {
-            }
-
+            try { CHK_showconsole.Checked = Settings.Instance.GetBoolean("showconsole"); } catch { }
             if (Program.WindowsStoreApp)
             {
                 BUT_betaupdate.Visible = false;
@@ -37,16 +33,10 @@ namespace MissionPlanner.GCSViews
         {
             try
             {
-                if (Program.WindowsStoreApp)
-                {
-                    return;
-                }
+                if (Program.WindowsStoreApp) return;
                 Utilities.Update.CheckForUpdate(true);
             }
-            catch (Exception ex)
-            {
-                CustomMessageBox.Show(ex.ToString(), Strings.ERROR);
-            }
+            catch (Exception ex) { CustomMessageBox.Show(ex.ToString(), Strings.ERROR); }
         }
 
         private void CHK_showconsole_CheckedChanged(object sender, EventArgs e)
@@ -54,14 +44,11 @@ namespace MissionPlanner.GCSViews
             Settings.Instance["showconsole"] = CHK_showconsole.Checked.ToString();
         }
 
-        private void Help_Load(object sender, EventArgs e)
-        {
-            ApplyHelpTheme();
-        }
+        private void Help_Load(object sender, EventArgs e) { ApplyHelpTheme(); }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://firmware.ardupilot.org/Tools/MissionPlanner/upgrade/ChangeLog.txt");
+            OpenUrl("https://firmware.ardupilot.org/Tools/MissionPlanner/upgrade/ChangeLog.txt");
         }
 
         private void BUT_betaupdate_Click(object sender, EventArgs e)
@@ -74,194 +61,293 @@ namespace MissionPlanner.GCSViews
                     Utilities.Update.domaster = true;
                     CustomMessageBox.Show("This will update to MASTER release");
                 }
-
                 Utilities.Update.DoUpdate();
             }
-            catch (Exception ex)
-            {
-                CustomMessageBox.Show(ex.ToString(), Strings.ERROR);
-            }
+            catch (Exception ex) { CustomMessageBox.Show(ex.ToString(), Strings.ERROR); }
         }
 
         private void BuildHelpPage()
         {
             contentLayout.SuspendLayout();
-
-            var overview = CreateCard("FLY.IO / DRDC GCS");
-            AddText(overview, "Welcome to Fly.io", 20F, FontStyle.Bold, ThemeManager.TextPrimary);
-            AddText(overview,
-                "Ground control software for Unmanned Aerial Vehicles (UAV) and Unmanned Ground Vehicles (UGV).\n\n" +
-                "Fly.io provides vehicle monitoring, mission planning, configuration, telemetry, and system integration tools.",
-                11F, FontStyle.Regular, ThemeManager.TextSecondary);
-
-            var services = CreateCard("ONLINE SERVICES");
-            var serviceCards = CreateHorizontalPanel();
-            serviceCards.Margin = new Padding(0);
-            var dashboardCard = CreateServiceCard(
-                "DRDC GCS Dashboard",
-                "Monitor UAV fleets, manage missions, access system services,\nand use DRDC GCS web-based monitoring tools.",
-                "OPEN DASHBOARD", OpenDashboard_Click);
-            var partnershipsCard = CreateServiceCard(
-                "Brands & Collaborative Partnerships",
-                "Explore collaborative projects, products, partnerships,\nand related services.",
-                "VIEW PARTNERSHIPS", OpenPartnerships_Click);
-            serviceCards.Controls.Add(dashboardCard);
-            serviceCards.Controls.Add(partnershipsCard);
-            serviceCards.SizeChanged += (sender, args) => LayoutServiceCards(serviceCards, dashboardCard, partnershipsCard);
-            AddRow(services, serviceCards);
-
-            var shortcuts = CreateCard("QUICK HELP & KEYBOARD SHORTCUTS");
-            AddShortcutGroup(shortcuts, "MAIN SCREEN", new[]
-            {
-                "F2|Flight Data", "F3|Flight Planner", "F4|Tuning", "F5|Refresh Full Parameter List",
-                "Ctrl+F|Temp Screen", "Ctrl+T|Blind Connect"
-            });
-            AddShortcutGroup(shortcuts, "FLIGHT DATA", new[]
-            {
-                "Ctrl+1|Tab 1", "Ctrl+2|Tab 2", "Ctrl+3|Tab 3", "Ctrl+4|Tab 4", "Ctrl+5|Tab 5",
-                "Ctrl+6|Tab 6", "Ctrl+7|Tab 7", "Ctrl+8|Tab 8", "Ctrl+9|Tab 9", "Ctrl+0|Tab 10"
-            });
-            AddShortcutGroup(shortcuts, "FLIGHT PLANNER", new[]
-            {
-                "Ctrl+Z|Undo", "Ctrl+O|Open waypoint file", "Ctrl+S|Save waypoint file"
-            });
-            AddShortcutGroup(shortcuts, "AUTOWP GRID", new[]
-            {
-                "Ctrl+O|Open grid file", "Ctrl+S|Save grid file"
-            });
-
-            var updates = CreateCard("SYSTEM & UPDATES");
-            var updateActions = CreateHorizontalPanel();
-            updateActions.Controls.Add(BUT_updatecheck);
-            updateActions.Controls.Add(BUT_betaupdate);
-            updateActions.Controls.Add(CHK_showconsole);
-            AddRow(updates, updateActions);
-            AddRow(updates, linkLabel1);
-
-            var about = CreateCard("ABOUT & OPEN SOURCE", true);
-            AddKeyValue(about, "Product", "Fly.io");
-            AddKeyValue(about, "Based on", "ArduPilot Mission Planner");
-            AddLinkRow(about, "Mission Planner upstream", "https://github.com/ArduPilot/MissionPlanner");
-            AddLinkRow(about, "Upstream contributors", "https://github.com/ArduPilot/MissionPlanner/graphs/contributors");
-            AddText(about,
-                "Historical and upstream contributors include Andrew Radford, Marooned, Ryan Beall, Tom Pittenger, and the wider Mission Planner contributor community. Design: Samantha Nelson. ArduCopter illustrations: Max Levine.",
-                9F, FontStyle.Regular, ThemeManager.TextSecondary);
-            AddText(about, "Libraries", 9F, FontStyle.Bold, ThemeManager.TextSecondary, new Padding(0, 3, 0, 2));
-            AddText(about,
-                "GMap.NET  •  SharpKML  •  SharpZipLib  •  IronPython  •  KMLib  •  OpenTK  •  ZedGraph  •  alglib  •  BouncyCastle  •  DotSpatial  •  LibVLC  •  netDXF",
-                9F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 0, 0, 4));
-            AddText(about, "Organizations that contributed to the upstream Mission Planner ecosystem include:  3D Robotics  •  Falcon Unmanned  •  UAV Solutions",
-                9F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 2, 0, 4));
-            AddInlineLinks(about, new[]
-            {
-                new LinkItem("ArduPlane documentation", "http://ardupilot.org/plane"),
-                new LinkItem("ArduCopter documentation", "http://ardupilot.org/copter"),
-                new LinkItem("ArduRover documentation", "http://ardupilot.org/rover")
-            });
-
+            contentLayout.Controls.Clear();
+            contentLayout.RowStyles.Clear();
+            contentLayout.RowCount = 0;
+            BuildHero();
+            BuildOnlineServices();
+            BuildShortcutSection();
+            BuildUpdatesSection();
+            BuildAboutSection();
             contentLayout.ResumeLayout(true);
-            LayoutServiceCards(serviceCards, dashboardCard, partnershipsCard);
             ApplyHelpTheme();
         }
 
-        private HelpCard CreateCard(string title, bool secondary = false)
+        private void BuildHero()
+        {
+            var hero = CreateSurface(new Padding(24, 22, 24, 22), new Padding(0, 0, 0, 14));
+            var copy = new TableLayoutPanel
+            {
+                AutoSize = true, BackColor = Color.Transparent, ColumnCount = 1,
+                Dock = DockStyle.Fill, Margin = new Padding(0)
+            };
+            copy.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            AddText(copy, "FLY.IO / DRDC GCS", 10F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 0, 0, 7));
+            AddText(copy, "Welcome to Fly.io", 24F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 0, 0, 8));
+            AddText(copy, "Ground Control Station for UAV and UGV systems.", 12F, FontStyle.Bold,
+                ThemeManager.TextPrimary, new Padding(0, 0, 0, 9));
+            AddText(copy,
+                "Fly.io provides vehicle monitoring, mission planning, configuration, telemetry, embedded DRDC services, and system integration tools.",
+                10.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0));
+            hero.Controls.Add(copy, 0, 0);
+            AddContent(hero);
+        }
+
+        private void BuildOnlineServices()
+        {
+            var section = CreateSection("ONLINE SERVICES", "Connected Fly.io services and collaboration resources.");
+            var host = CreateWrapPanel();
+            host.AutoSize = false;
+            host.Height = 155;
+            var dashboard = CreateServiceCard("DRDC GCS Dashboard",
+                "Monitor UAV fleets, manage missions, and access embedded DRDC system services.",
+                "OPEN DASHBOARD", OpenDashboard_Click);
+            var partnerships = CreateServiceCard("Brands & Partnerships",
+                "Explore collaborative projects, products, partnerships, and related services.",
+                "VIEW PARTNERSHIPS", OpenPartnerships_Click);
+            var cards = new Control[] { dashboard, partnerships };
+            host.Controls.Add(dashboard);
+            host.Controls.Add(partnerships);
+            host.SizeChanged += delegate { LayoutCards(host, cards, 2, 330); };
+            AddRow(section, host);
+            LayoutCards(host, cards, 2, 330);
+        }
+
+        private void BuildShortcutSection()
+        {
+            var section = CreateSection("QUICK HELP & KEYBOARD SHORTCUTS",
+                "Frequently used navigation and mission workflow commands.");
+            var host = CreateWrapPanel();
+            host.AutoSize = false;
+            host.Height = 364;
+            var cards = new Control[]
+            {
+                CreateShortcutCard("MAIN SCREEN", new[] { "F2|Flight Data", "F3|Flight Planner", "F4|Tuning",
+                    "F5|Refresh Parameters", "Ctrl+F|Temp Screen", "Ctrl+T|Blind Connect" }),
+                CreateShortcutCard("FLIGHT DATA", new[] { "Ctrl+1|Tab 1", "Ctrl+2|Tab 2", "Ctrl+3|Tab 3",
+                    "Ctrl+4|Tab 4", "Ctrl+5|Tab 5", "Ctrl+6|Tab 6", "Ctrl+7|Tab 7", "Ctrl+8|Tab 8",
+                    "Ctrl+9|Tab 9", "Ctrl+0|Tab 10" }),
+                CreateShortcutCard("FLIGHT PLANNER", new[] { "Ctrl+Z|Undo", "Ctrl+O|Open waypoint file",
+                    "Ctrl+S|Save waypoint file" }),
+                CreateShortcutCard("AUTOWP GRID", new[] { "Ctrl+O|Open grid file", "Ctrl+S|Save grid file" })
+            };
+            foreach (var card in cards) host.Controls.Add(card);
+            host.SizeChanged += delegate { LayoutCards(host, cards, 2, 300); };
+            AddRow(section, host);
+            LayoutCards(host, cards, 2, 300);
+        }
+
+        private void BuildUpdatesSection()
+        {
+            var section = CreateSection("SYSTEM & UPDATES", "Application maintenance and diagnostics.", true);
+            var actions = CreateWrapPanel();
+            BUT_updatecheck.Size = new Size(170, 34);
+            BUT_betaupdate.Size = new Size(190, 34);
+            CHK_showconsole.Margin = new Padding(4, 8, 18, 4);
+            actions.Controls.Add(BUT_updatecheck);
+            actions.Controls.Add(BUT_betaupdate);
+            actions.Controls.Add(CHK_showconsole);
+            AddRow(section, actions);
+            linkLabel1.Text = "View Upstream Mission Planner Changelog";
+            linkLabel1.Margin = new Padding(0, 2, 0, 0);
+            AddRow(section, linkLabel1);
+        }
+
+        private void BuildAboutSection()
+        {
+            var section = CreateSection("ABOUT & OPEN SOURCE",
+                "Product information, repositories, and upstream acknowledgements.");
+            var facts = new TableLayoutPanel
+            {
+                AutoSize = true, BackColor = Color.Transparent, ColumnCount = 2,
+                Dock = DockStyle.Top, Margin = new Padding(0, 2, 0, 12)
+            };
+            facts.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F));
+            facts.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            AddFact(facts, "Product", "Fly.io Ground Control Station");
+            AddFact(facts, "Based on", "ArduPilot Mission Planner");
+            AddRow(section, facts);
+
+            AddSubheading(section, "PROJECT REPOSITORIES");
+            AddLinkRow(section, "Project Repository — GitHub", GitHubUrl);
+            AddText(section, "Project Repository — GitLab (SSH remote)", 9.5F, FontStyle.Bold,
+                ThemeManager.TextPrimary, new Padding(0, 5, 0, 2));
+            AddText(section, GitLabRemote, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 0, 0, 3));
+            AddText(section,
+                "A browser URL is not shown because the configured private GitLab host does not provide a confirmed HTTP/HTTPS mapping in this repository.",
+                8.5F, FontStyle.Italic, ThemeManager.TextSecondary, new Padding(0, 0, 0, 12));
+
+            AddSubheading(section, "UPSTREAM MISSION PLANNER");
+            AddLinkRow(section, "Upstream Mission Planner", "https://github.com/ArduPilot/MissionPlanner");
+            AddLinkRow(section, "Upstream Contributors", "https://github.com/ArduPilot/MissionPlanner/graphs/contributors");
+            AddText(section,
+                "Upstream Mission Planner contributors and community acknowledgements include Andrew Radford, Marooned, Ryan Beall, Tom Pittenger, and the Mission Planner contributor community.",
+                9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 5, 0, 8));
+            AddSubheading(section, "OPEN-SOURCE ECOSYSTEM ACKNOWLEDGEMENTS");
+            AddText(section,
+                "Libraries used by the upstream Mission Planner ecosystem include GMap.NET, SharpKML, SharpZipLib, IronPython, KMLib, OpenTK, ZedGraph, alglib, BouncyCastle, DotSpatial, LibVLC, and netDXF.",
+                9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 3, 0, 7));
+            AddText(section,
+                "Organizations historically contributing to the upstream Mission Planner ecosystem include 3D Robotics, Falcon Unmanned, and UAV Solutions. These acknowledgements do not imply direct contribution to Fly.io.",
+                9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 0, 0, 12));
+            AddSubheading(section, "ARDUPILOT DOCUMENTATION");
+            AddInlineLinks(section, new[]
+            {
+                new LinkItem("ArduPlane documentation", "https://ardupilot.org/plane"),
+                new LinkItem("ArduCopter documentation", "https://ardupilot.org/copter"),
+                new LinkItem("ArduRover documentation", "https://ardupilot.org/rover")
+            });
+        }
+
+        private HelpCard CreateSurface(Padding padding, Padding margin)
         {
             var card = new HelpCard
             {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                BackColor = ThemeManager.ControlBackground,
-                Dock = DockStyle.Top,
-                Margin = new Padding(0, 0, 0, 12),
-                Padding = secondary ? new Padding(16) : new Padding(18),
-                ColumnCount = 1
+                AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                BackColor = ThemeManager.ControlBackground, Dock = DockStyle.Top,
+                Margin = margin, Padding = padding, ColumnCount = 1
             };
             card.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            AddText(card, title, secondary ? 11F : 14F, FontStyle.Bold,
-                secondary ? ThemeManager.TextSecondary : ThemeManager.TextPrimary);
-            var accent = new Panel { BackColor = ThemeManager.Accent, Dock = DockStyle.Top, Height = secondary ? 1 : 2, Margin = new Padding(0, 3, 0, secondary ? 8 : 10) };
-            AddRow(card, accent);
-            contentLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            contentLayout.Controls.Add(card, 0, contentLayout.RowCount++);
             return card;
+        }
+
+        private HelpCard CreateSection(string title, string description, bool compact = false)
+        {
+            var section = CreateSurface(compact ? new Padding(18, 15, 18, 15) : new Padding(20), new Padding(0, 0, 0, 14));
+            var heading = CreateLabel(title, compact ? 11F : 13F, FontStyle.Bold, ThemeManager.TextPrimary);
+            heading.Name = "SectionHeading";
+            heading.Margin = new Padding(0, 0, 0, 3);
+            AddRow(section, heading);
+            var intro = CreateLabel(description, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary);
+            intro.Name = "SectionIntro";
+            intro.Margin = new Padding(0, 0, 0, compact ? 9 : 13);
+            AddRow(section, intro);
+            AddContent(section);
+            return section;
         }
 
         private HelpCard CreateServiceCard(string title, string description, string buttonText, EventHandler handler)
         {
-            var card = new HelpCard
-            {
-                BackColor = ThemeManager.PanelBackground,
-                ColumnCount = 1,
-                Height = 150,
-                Margin = new Padding(0, 0, 0, 8),
-                Padding = new Padding(16)
-            };
-            card.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            var card = CreateSurface(new Padding(16), new Padding(0, 0, 12, 10));
+            card.AutoSize = false;
+            card.Dock = DockStyle.None;
+            card.Height = 145;
+            card.BackColor = ThemeManager.PanelBackground;
             card.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             card.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             card.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            card.Controls.Add(CreateLabel(title, 12F, FontStyle.Bold, ThemeManager.TextPrimary), 0, 0);
-            var descriptionLabel = CreateLabel(description, 10F, FontStyle.Regular, ThemeManager.TextSecondary);
+            card.Controls.Add(CreateLabel(title, 11.5F, FontStyle.Bold, ThemeManager.TextPrimary), 0, 0);
+            var descriptionLabel = CreateLabel(description, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary);
             descriptionLabel.Dock = DockStyle.Fill;
-            descriptionLabel.Margin = new Padding(0, 8, 0, 8);
+            descriptionLabel.Margin = new Padding(0, 7, 0, 8);
             card.Controls.Add(descriptionLabel, 0, 1);
-            card.Controls.Add(CreateActionButton(buttonText, handler, 180), 0, 2);
+            card.Controls.Add(CreateActionButton(buttonText, handler, 175), 0, 2);
             return card;
         }
 
-        private void LayoutServiceCards(FlowLayoutPanel host, Control first, Control second)
+        private HelpCard CreateShortcutCard(string title, string[] shortcuts)
         {
-            var availableWidth = host.ClientSize.Width;
-            if (availableWidth <= 0)
-                return;
-
-            const int gap = 12;
-            var sideBySide = availableWidth >= 700;
-            var cardWidth = sideBySide ? (availableWidth - gap) / 2 : availableWidth;
-            first.Margin = sideBySide ? new Padding(0, 0, gap, 8) : new Padding(0, 0, 0, 8);
-            second.Margin = new Padding(0, 0, 0, 8);
-            first.Width = Math.Max(260, cardWidth);
-            second.Width = Math.Max(260, cardWidth);
+            var card = CreateSurface(new Padding(14), new Padding(0, 0, 12, 10));
+            card.AutoSize = false;
+            card.Dock = DockStyle.None;
+            card.Height = 172;
+            card.BackColor = ThemeManager.PanelBackground;
+            AddText(card, title, 9.5F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 0, 0, 7));
+            var useTwoPairs = shortcuts.Length > 6;
+            var grid = new TableLayoutPanel
+            {
+                AutoSize = true, BackColor = Color.Transparent, ColumnCount = useTwoPairs ? 4 : 2,
+                Dock = DockStyle.Top, Margin = new Padding(0)
+            };
+            if (useTwoPairs)
+            {
+                grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+                grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+                grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+                grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            }
+            else
+            {
+                grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
+                grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            }
+            var rowsPerPair = useTwoPairs ? (shortcuts.Length + 1) / 2 : shortcuts.Length;
+            for (var index = 0; index < shortcuts.Length; index++)
+            {
+                var parts = shortcuts[index].Split('|');
+                var column = useTwoPairs && index >= rowsPerPair ? 2 : 0;
+                var row = useTwoPairs ? index % rowsPerPair : index;
+                grid.Controls.Add(CreateLabel(parts[0], 8.5F, FontStyle.Bold, ThemeManager.TextPrimary), column, row);
+                grid.Controls.Add(CreateLabel(parts[1], 8.5F, FontStyle.Regular, ThemeManager.TextSecondary), column + 1, row);
+            }
+            AddRow(card, grid);
+            return card;
         }
 
-        private void AddKeyValue(TableLayoutPanel card, string key, string value)
+        private FlowLayoutPanel CreateWrapPanel()
         {
-            AddText(card, key + ":  " + value, 10F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 2, 0, 4));
+            return new FlowLayoutPanel
+            {
+                AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, BackColor = Color.Transparent,
+                Dock = DockStyle.Top, FlowDirection = FlowDirection.LeftToRight, Margin = new Padding(0), WrapContents = true
+            };
+        }
+
+        private void LayoutCards(FlowLayoutPanel host, Control[] cards, int maximumColumns, int minimumWidth)
+        {
+            var available = host.ClientSize.Width;
+            if (available <= 0) return;
+            const int gap = 12;
+            var columns = Math.Min(maximumColumns, Math.Max(1, (available + gap) / (minimumWidth + gap)));
+            var width = Math.Max(240, (available - gap * (columns - 1)) / columns);
+            for (var index = 0; index < cards.Length; index++)
+            {
+                cards[index].Width = width;
+                cards[index].Margin = new Padding(0, 0, (index % columns == columns - 1) ? 0 : gap, 10);
+            }
+            var maximumHeight = 0;
+            foreach (var card in cards)
+                maximumHeight = Math.Max(maximumHeight, card.Height + card.Margin.Vertical);
+            host.Height = ((cards.Length + columns - 1) / columns) * maximumHeight;
+        }
+
+        private void AddFact(TableLayoutPanel facts, string key, string value)
+        {
+            var row = facts.RowCount++;
+            facts.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            facts.Controls.Add(CreateLabel(key, 9.5F, FontStyle.Bold, ThemeManager.TextPrimary), 0, row);
+            facts.Controls.Add(CreateLabel(value, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary), 1, row);
+        }
+
+        private void AddSubheading(TableLayoutPanel section, string text)
+        {
+            AddText(section, text, 9F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 5, 0, 7));
         }
 
         private void AddLinkRow(TableLayoutPanel card, string key, string url)
         {
-            var row = CreateHorizontalPanel();
-            row.Controls.Add(CreateLabel(key + ":", 10F, FontStyle.Bold, ThemeManager.TextPrimary));
+            var row = CreateWrapPanel();
+            row.Controls.Add(CreateLabel(key + ":", 9.5F, FontStyle.Bold, ThemeManager.TextPrimary));
             row.Controls.Add(CreateLink(url, url));
             AddRow(card, row);
         }
 
         private void AddInlineLinks(TableLayoutPanel card, LinkItem[] links)
         {
-            var row = CreateHorizontalPanel();
-            foreach (var item in links)
-                row.Controls.Add(CreateLink(item.Text, item.Url));
+            var row = CreateWrapPanel();
+            foreach (var item in links) row.Controls.Add(CreateLink(item.Text, item.Url));
             AddRow(card, row);
         }
 
-        private void AddShortcutGroup(TableLayoutPanel card, string heading, string[] shortcuts)
-        {
-            AddText(card, heading, 10F, FontStyle.Bold, ThemeManager.AccentHover, new Padding(0, 6, 0, 3));
-            var grid = new TableLayoutPanel { AutoSize = true, Dock = DockStyle.Top, ColumnCount = 2, Margin = new Padding(0, 0, 0, 4) };
-            grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 105F));
-            grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            foreach (var shortcut in shortcuts)
-            {
-                var parts = shortcut.Split('|');
-                grid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                grid.Controls.Add(CreateLabel(parts[0], 10F, FontStyle.Bold, ThemeManager.TextPrimary), 0, grid.RowCount);
-                grid.Controls.Add(CreateLabel(parts[1], 10F, FontStyle.Regular, ThemeManager.TextSecondary), 1, grid.RowCount++);
-            }
-            AddRow(card, grid);
-        }
-
-        private void AddText(TableLayoutPanel card, string text, float size, FontStyle style, Color color, Padding? margin = null)
+        private void AddText(TableLayoutPanel card, string text, float size, FontStyle style, Color color, Padding? margin)
         {
             var label = CreateLabel(text, size, style, color);
             label.Dock = DockStyle.Fill;
@@ -273,12 +359,8 @@ namespace MissionPlanner.GCSViews
         {
             return new Label
             {
-                AutoSize = true,
-                BackColor = Color.Transparent,
-                Font = new Font("Segoe UI", size, style),
-                ForeColor = color,
-                Margin = new Padding(0, 2, 10, 2),
-                Text = text
+                AutoSize = true, BackColor = Color.Transparent, Font = new Font("Segoe UI", size, style),
+                ForeColor = color, Margin = new Padding(0, 2, 10, 2), Text = text
             };
         }
 
@@ -286,37 +368,17 @@ namespace MissionPlanner.GCSViews
         {
             var link = new LinkLabel
             {
-                AutoSize = true,
-                BackColor = Color.Transparent,
-                Font = new Font("Segoe UI", 10F, FontStyle.Regular),
-                LinkColor = ThemeManager.AccentHover,
-                ActiveLinkColor = ThemeManager.TextOnAccent,
-                VisitedLinkColor = ThemeManager.AccentHover,
-                Margin = new Padding(0, 2, 22, 6),
-                Text = text,
-                Tag = url
+                AutoSize = true, BackColor = Color.Transparent, Font = new Font("Segoe UI", 9.5F, FontStyle.Regular),
+                LinkColor = ThemeManager.TextPrimary, ActiveLinkColor = ThemeManager.TextSecondary,
+                VisitedLinkColor = ThemeManager.TextPrimary, Margin = new Padding(0, 2, 22, 5), Text = text, Tag = url
             };
             link.LinkClicked += ExternalLink_LinkClicked;
             return link;
         }
 
-        private FlowLayoutPanel CreateHorizontalPanel()
-        {
-            return new FlowLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                BackColor = Color.Transparent,
-                Dock = DockStyle.Top,
-                FlowDirection = FlowDirection.LeftToRight,
-                Margin = new Padding(0, 2, 0, 8),
-                WrapContents = true
-            };
-        }
-
         private MyButton CreateActionButton(string text, EventHandler handler, int width)
         {
-            var button = new MyButton { Text = text, Size = new Size(width, 38), Margin = new Padding(0, 0, 12, 0) };
+            var button = new MyButton { Text = text, Size = new Size(width, 34), Margin = new Padding(0, 0, 12, 0) };
             button.Click += handler;
             StyleActionButton(button);
             return button;
@@ -335,6 +397,12 @@ namespace MissionPlanner.GCSViews
             button.TextColorNotEnabled = ThemeManager.TextSecondary;
         }
 
+        private void AddContent(Control control)
+        {
+            contentLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            contentLayout.Controls.Add(control, 0, contentLayout.RowCount++);
+        }
+
         private void AddRow(TableLayoutPanel panel, Control control)
         {
             panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -348,40 +416,41 @@ namespace MissionPlanner.GCSViews
             contentLayout.BackColor = ThemeManager.PanelBackground;
             CHK_showconsole.BackColor = Color.Transparent;
             CHK_showconsole.ForeColor = ThemeManager.TextSecondary;
-            linkLabel1.LinkColor = ThemeManager.AccentHover;
-            linkLabel1.ActiveLinkColor = ThemeManager.TextOnAccent;
-            linkLabel1.VisitedLinkColor = ThemeManager.AccentHover;
+            linkLabel1.LinkColor = ThemeManager.TextPrimary;
+            linkLabel1.ActiveLinkColor = ThemeManager.TextSecondary;
+            linkLabel1.VisitedLinkColor = ThemeManager.TextPrimary;
             StyleActionButton(BUT_updatecheck);
             StyleActionButton(BUT_betaupdate);
         }
 
-        private void OpenDashboard_Click(object sender, EventArgs e)
-        {
-            OpenUrl("https://drdt-dev-gcs-frontend.drsys.asia/en/login");
-        }
-
-        private void OpenPartnerships_Click(object sender, EventArgs e)
-        {
-            OpenUrl("https://aerobyte-dev-customer.drsys.asia/");
-        }
+        private void OpenDashboard_Click(object sender, EventArgs e) { OpenUrl("https://drdt-dev-gcs-frontend.drsys.asia/en/login"); }
+        private void OpenPartnerships_Click(object sender, EventArgs e) { OpenUrl("https://aerobyte-dev-customer.drsys.asia/"); }
 
         private void ExternalLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var link = sender as LinkLabel;
-            if (link != null && link.Tag is string)
-                OpenUrl((string)link.Tag);
+            if (link != null && link.Tag is string) OpenUrl((string)link.Tag);
         }
 
         private void OpenUrl(string url)
         {
+            Uri uri;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri) ||
+                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            {
+                CustomMessageBox.Show("Only HTTP and HTTPS web links can be opened.", Strings.ERROR);
+                return;
+            }
+
             try
             {
-                Process.Start(url);
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = uri.AbsoluteUri,
+                    UseShellExecute = true
+                });
             }
-            catch (Exception ex)
-            {
-                CustomMessageBox.Show("Failed to open URL:\n" + url + "\n\n" + ex.Message, Strings.ERROR);
-            }
+            catch (Exception ex) { CustomMessageBox.Show("Failed to open URL:\n" + url + "\n\n" + ex.Message, Strings.ERROR); }
         }
 
         private sealed class LinkItem

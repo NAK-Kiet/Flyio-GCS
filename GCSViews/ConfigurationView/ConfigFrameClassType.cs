@@ -31,6 +31,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             radioButtonHeli.Image = new Bitmap(radioButtonHeli.Image, 60, 60);
             radioButtonTri.Image = new Bitmap(radioButtonTri.Image, 60, 60);
             radioButtonOctaQuad.Image = new Bitmap(radioButtonOctaQuad.Image, 60, 60);
+            ThemeFrameSelectors();
         }
 
         public void Activate()
@@ -333,6 +334,19 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                 DoClass(motor_frame_class.MOTOR_FRAME_HELI);
             if (sender == radioButtonTri)
                 DoClass(motor_frame_class.MOTOR_FRAME_TRI);
+            ThemeFrameSelectors();
+        }
+
+        private void ThemeFrameSelectors()
+        {
+            var selectors = new[] { radioButtonUndef, radioButtonQuad, radioButtonHexa, radioButtonOcta,
+                radioButtonOctaQuad, radioButtonY6, radioButtonHeli, radioButtonTri };
+            foreach (var selector in selectors)
+            {
+                selector.UseVisualStyleBackColor = false;
+                selector.BackColor = selector.Checked ? ThemeManager.SelectedBackground : ThemeManager.ControlBackground;
+                selector.ForeColor = selector.Enabled ? ThemeManager.TextPrimary : ThemeManager.TextDisabled;
+            }
         }
     }
 }

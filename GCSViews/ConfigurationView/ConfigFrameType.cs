@@ -1,6 +1,7 @@
 ﻿using log4net;
 using MissionPlanner.ArduPilot;
 using MissionPlanner.Controls;
+using MissionPlanner.Utilities;
 using System;
 using System.Reflection;
 using System.Windows.Forms;
@@ -20,6 +21,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             InitializeComponent();
 
             configDefaultSettings1.OnChange += configDefaultSettings1_OnChange;
+            ThemeFrameSelectors();
         }
 
         public void Activate()
@@ -176,11 +178,13 @@ namespace MissionPlanner.GCSViews.ConfigurationView
         private void radioButton_Plus_CheckedChanged(object sender, EventArgs e)
         {
             DoChange(Frame.Plus);
+            ThemeFrameSelectors();
         }
 
         private void radioButton_X_CheckedChanged(object sender, EventArgs e)
         {
             DoChange(Frame.X);
+            ThemeFrameSelectors();
         }
 
         private void pictureBoxPlus_Click(object sender, EventArgs e)
@@ -201,6 +205,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
         private void radioButton_V_CheckedChanged(object sender, EventArgs e)
         {
             DoChange(Frame.V);
+            ThemeFrameSelectors();
         }
 
         private void pictureBoxH_Click(object sender, EventArgs e)
@@ -211,6 +216,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
         private void radioButton_H_CheckedChanged(object sender, EventArgs e)
         {
             DoChange(Frame.H);
+            ThemeFrameSelectors();
         }
 
         private void pictureBoxY_Click(object sender, EventArgs e)
@@ -221,16 +227,30 @@ namespace MissionPlanner.GCSViews.ConfigurationView
         private void radioButton_Y_CheckedChanged(object sender, EventArgs e)
         {
             DoChange(Frame.Y);
+            ThemeFrameSelectors();
         }
 
         private void radioButton_VTail_CheckedChanged(object sender, EventArgs e)
         {
             DoChange(Frame.VTail);
+            ThemeFrameSelectors();
         }
 
         private void pictureBoxVTail_Click(object sender, EventArgs e)
         {
             DoChange(Frame.VTail);
+        }
+
+        private void ThemeFrameSelectors()
+        {
+            var selectors = new[] { radioButton_Plus, radioButton_X, radioButton_V,
+                radioButton_H, radioButton_Y, radioButton_VTail };
+            foreach (var selector in selectors)
+            {
+                selector.UseVisualStyleBackColor = false;
+                selector.BackColor = selector.Checked ? ThemeManager.SelectedBackground : ThemeManager.ControlBackground;
+                selector.ForeColor = selector.Enabled ? ThemeManager.TextPrimary : ThemeManager.TextDisabled;
+            }
         }
     }
 }

@@ -119,6 +119,7 @@ namespace MissionPlanner
             public abstract Image sim { get; }
             public abstract Image terminal { get; }
             public abstract Image help { get; }
+            public abstract Image drdc { get; }
             public abstract Image donate { get; }
             public abstract Image connect { get; }
             public abstract Image disconnect { get; }
@@ -167,7 +168,12 @@ namespace MissionPlanner
 
             public override Image help
             {
-                get { return ToolbarResource("fly_toolbar_help"); }
+                get { return ToolbarResource("fly_toolbar_help_icon"); }
+            }
+
+            public override Image drdc
+            {
+                get { return ToolbarResource("fly_toolbar_drdc_icon"); }
             }
 
             public override Image donate
@@ -256,7 +262,12 @@ namespace MissionPlanner
 
             public override Image help
             {
-                get { return ToolbarResource("fly_toolbar_help"); }
+                get { return ToolbarResource("fly_toolbar_help_icon"); }
+            }
+
+            public override Image drdc
+            {
+                get { return ToolbarResource("fly_toolbar_drdc_icon"); }
             }
 
             public override Image donate
@@ -1172,7 +1183,7 @@ namespace MissionPlanner
             MenuConfigTune.Image = displayicons.config_tuning;
             SetConnectButtonAppearance(comPort != null && comPort.BaseStream != null && comPort.BaseStream.IsOpen);
             MenuHelp.Image = displayicons.help;
-            MenuDRDCGCS.Image = displayicons.help;
+            MenuDRDCGCS.Image = displayicons.drdc;
 
 
             MenuFlightData.ForeColor = ThemeManager.TextColor;
