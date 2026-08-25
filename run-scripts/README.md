@@ -13,13 +13,13 @@
 After a successful Release build, the executable is here:
 
 ```
-bin/Release/net461/MissionPlanner.exe
+bin/Release/net461/Flyio-GCS.exe
 ```
 
 Full path from Windows:
 
 ```
-C:\Users\Alien\Flyio-GCS\bin\Release\net461\MissionPlanner.exe
+C:\Users\Alien\Flyio-GCS\bin\Release\net461\Flyio-GCS.exe
 ```
 
 > Note: the output folder is `net461`, not `net10.0` — `MissionPlanner.csproj`
@@ -64,7 +64,7 @@ dotnet build MissionPlanner.csproj -c Release
 ### Option B — Direct execution
 
 ```bash
-./bin/Release/net461/MissionPlanner.exe
+./bin/Release/net461/Flyio-GCS.exe
 ```
 
 ### Option C — Windows-native launch (detached)
@@ -72,7 +72,7 @@ dotnet build MissionPlanner.csproj -c Release
 Run from PowerShell or Command Prompt:
 
 ```powershell
-Start-Process -FilePath 'C:\Users\Alien\Flyio-GCS\bin\Release\net461\MissionPlanner.exe'
+Start-Process -FilePath 'C:\Users\Alien\Flyio-GCS\bin\Release\net461\Flyio-GCS.exe'
 ```
 
 ---

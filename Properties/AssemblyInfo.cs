@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Mission Planner")]
-[assembly: AssemblyDescription("Mission Planner ground control station for ardupilot")]
+[assembly: AssemblyTitle("Fly.io")]
+[assembly: AssemblyDescription("Fly.io ground control station for ArduPilot")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Michael Oborne")]
-[assembly: AssemblyProduct("Mission Planner")]
-[assembly: AssemblyCopyright("Copyright ©  2010-2024")]
+[assembly: AssemblyCompany("Fly.io")]
+[assembly: AssemblyProduct("Fly.io")]
+[assembly: AssemblyCopyright("Copyright © Fly.io")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

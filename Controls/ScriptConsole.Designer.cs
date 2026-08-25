@@ -64,11 +64,11 @@
             // BUT_clear
             // 
             resources.ApplyResources(this.BUT_clear, "BUT_clear");
-            this.BUT_clear.BGGradBot = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(226)))), ((int)(((byte)(150)))));
-            this.BUT_clear.BGGradTop = System.Drawing.Color.FromArgb(((int)(((byte)(148)))), ((int)(((byte)(193)))), ((int)(((byte)(31)))));
+            this.BUT_clear.BGGradBot = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(43)))), ((int)(((byte)(50)))));
+            this.BUT_clear.BGGradTop = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(25)))), ((int)(((byte)(32)))));
             this.BUT_clear.Name = "BUT_clear";
-            this.BUT_clear.Outline = System.Drawing.Color.FromArgb(((int)(((byte)(121)))), ((int)(((byte)(148)))), ((int)(((byte)(41)))));
-            this.BUT_clear.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_clear.Outline = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(59)))), ((int)(((byte)(86)))));
+            this.BUT_clear.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(245)))), ((int)(((byte)(248)))));
             this.BUT_clear.UseVisualStyleBackColor = true;
             this.BUT_clear.Click += new System.EventHandler(this.BUT_clear_Click);
             // 

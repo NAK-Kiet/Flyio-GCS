@@ -1,86 +1,204 @@
 # Fly.io GCS
 
-Fly.io GCS is a customized Ground Control Station based on ArduPilot Mission Planner. It preserves Mission Planner's established MAVLink vehicle connectivity, telemetry, mission-planning, and configuration capabilities while adding Fly.io-specific branding, user-interface improvements, configuration workflow improvements, and a foundation for UAV and UGV development.
+Fly.io GCS is a customized Ground Control Station derived from [ArduPilot Mission Planner](https://github.com/ArduPilot/MissionPlanner). It preserves Mission Planner's established MAVLink connectivity, telemetry, mission-planning, vehicle-configuration, and firmware workflows while adding Fly.io branding, interface improvements, and DRDC integration for UAV and UGV development.
 
-## Current Features
+The project respects upstream Mission Planner functionality, authorship, licensing, and the wider ArduPilot open-source ecosystem. Fly.io-specific changes do not imply authorship of upstream Mission Planner components.
 
-- ArduPilot and MAVLink vehicle connectivity
-- Live vehicle telemetry and Flight Data tools
-- Mission planning
-- Vehicle configuration tools
-- Full Parameter List viewing and editing
-- Fly.io dark navy and red theme
-- Fly.io splash screen
-- Fly.io application and dialog icons
-- Improved configuration navigation
-- Improved parameter navigation
-- COM and MAVLink connection fixes
+## Features
 
-## Full Parameter List Improvements
+- MAVLink vehicle connectivity over supported communication transports
+- DATA workspace for live Flight Data and telemetry
+- PLAN workspace for mission planning
+- SETUP workspace for vehicle and hardware setup
+- CONFIG workspace, including the Full Parameter List
+- SIMULATION workspace for SITL workflows
+- Separate Install Firmware and Install Firmware Legacy workflows
+- Fly.io dark-navy interface, blue/cyan interaction states, and branding
+- HELP workspace with project and upstream information
+- Embedded DRDC GCS integration
+- UAV and UGV support
 
-The Full Parameter List provides consolidated navigation for related parameter families while preserving every real ArduPilot parameter name and value. Supported grouped families include:
+The Full Parameter List preserves real ArduPilot parameter names and values while providing organized navigation for large parameter families such as GPS, OSD, RC, SERIAL, SERVO, and others.
 
-- `BARO`
-- `BATT`
-- `CAM`
-- `FLTMODE`
-- `GPS`
-- `MAV`
-- `OSD`
-- `RC`, including `RCMAP` and `RC1` through `RC16`
-- `RELAY`
-- `RNGFND`
-- `RPM`
-- `SERIAL`
-- `SERVO`, including `SERVO1` through `SERVO16`
+## Fly.io Theme
 
-Large families such as RC and SERVO use a stable, wrapped selector layout. This keeps available channel selectors visible, avoids horizontal overflow, and makes parameter groups easier to navigate without changing parameter behavior.
+The Fly.io interface uses a centralized dark-navy palette with these interaction accents:
 
-## Fly.io UI and Branding
+- Primary: `#00ADEE`
+- Hover: `#25BEF4`
+- Pressed: `#0083B8`
 
-Fly.io GCS includes a dark navy interface with Fly.io red accents, an updated splash screen, updated application and warning-dialog icons, improved parameter-grid readability, and clearer tab and selector layouts.
+Operational and semantic colors are intentionally preserved. For example, green may still indicate healthy GPS, sensor, connection, calibration, or other successful status information; graph and map colors also retain their technical meaning.
 
-## Build Instructions
+## Requirements
 
-From PowerShell:
+Development and Release builds are supported on Windows. Based on the current project files, a developer needs:
+
+- Git
+- A .NET SDK capable of building SDK-style .NET Framework projects
+- .NET Framework 4.7.2 targeting/reference assemblies (`MissionPlanner.csproj` targets `net472`)
+- PowerShell or another terminal capable of running the documented commands
+- Network access during the initial NuGet restore
+
+Visual Studio with the .NET desktop development tools and the .NET Framework 4.7.2 developer/targeting pack is an optional development environment. The main project is WinForms-based and includes multiple referenced projects and NuGet packages; use the repository project files rather than installing dependencies manually.
+
+Although the project targets .NET Framework 4.7.2, its existing Release configuration writes the application to the historical `bin\Release\net461` output directory.
+
+## Clone from GitHub
+
+Clone the development branch after cloning the repository:
 
 ```powershell
-cd C:\Users\rotha\Flyio-GCS
+git clone https://github.com/NAK-Kiet/Flyio-GCS.git
+cd Flyio-GCS
+git switch fix/missing-dependencies
+```
+
+Alternatively, clone only the development branch:
+
+```powershell
+git clone --branch fix/missing-dependencies --single-branch https://github.com/NAK-Kiet/Flyio-GCS.git
+cd Flyio-GCS
+```
+
+## Clone from GitLab
+
+The configured GitLab repository uses SSH:
+
+```powershell
+git clone git@192.168.100.120:Kaine/flyio-gcs.git
+cd flyio-gcs
+git switch fix/missing-dependencies
+```
+
+An SSH key authorized for this GitLab repository and network access to its host are required. The SSH remote is a Git transport address, not a browser URL.
+
+## Build
+
+For a fresh clone, restore packages and build the Release configuration:
+
+```powershell
+dotnet restore .\MissionPlanner.csproj
 dotnet build .\MissionPlanner.csproj -c Release --no-restore
 ```
 
-Run the Release build with:
+For an already-restored working copy:
 
 ```powershell
-.\bin\Release\net461\MissionPlanner.exe
+dotnet build .\MissionPlanner.csproj -c Release --no-restore
 ```
 
-## Repository Branches
+The application is produced at:
 
-- `main` — integrated and stable branch
-- `fix/missing-dependencies` — development branch used for current Fly.io GCS development
+```text
+bin\Release\net461\Flyio-GCS.exe
+```
 
-## ArduPilot Upstream
+## Run
 
-Fly.io GCS is based on [ArduPilot Mission Planner](https://github.com/ArduPilot/MissionPlanner).
+From the repository root in PowerShell:
 
-Upstream Mission Planner changes should be reviewed carefully before integration. This helps prevent Fly.io-specific UI, configuration, branding, and connection changes from being accidentally overwritten.
+```powershell
+.\bin\Release\net461\Flyio-GCS.exe
+```
 
-## Future / Integration Areas
+You can also open `bin\Release\net461` in File Explorer and double-click `Flyio-GCS.exe`.
 
-Fly.io GCS is intended to support continued UAV and UGV development. Planned integration targets include:
+## Basic Usage
 
-- AI Vision
-- LiDAR
-- ROS 2
-- MQTT and AIoT systems
+1. Start Fly.io GCS.
+2. Select the communication port appropriate for the connected vehicle.
+3. Select the appropriate baud rate for that connection.
+4. Select **CONNECT**.
+5. Use **DATA** for telemetry and live Flight Data.
+6. Use **PLAN** to create and manage missions.
+7. Use **SETUP** for vehicle, hardware, calibration, and firmware setup.
+8. Use **CONFIG** for parameters and other vehicle configuration.
+9. Use **SIMULATION** for supported SITL workflows.
+10. Use **HELP** for Fly.io project information, upstream resources, and shortcuts.
+11. Use **DRDC GCS** for the embedded DRDC integration.
+12. Select **DISCONNECT** before ending the connection or disconnecting hardware.
 
-These items are integration targets and should not be considered fully implemented unless explicitly documented in a release.
+Always follow the documentation for the specific flight controller, vehicle, firmware, and connection being used. Verify configuration and safety-critical behavior before operating a vehicle.
 
-## License
+## Firmware
 
-Fly.io GCS is derived from ArduPilot Mission Planner and retains all applicable upstream and open-source licensing requirements. Review the repository's license files and upstream licensing terms before redistribution or modification.
+Fly.io GCS retains two separate firmware workflows:
+
+- **Install Firmware** provides the current firmware selection and installation workflow.
+- **Install Firmware Legacy** preserves the legacy firmware workflow for supported use cases.
+
+They are intentionally separate. Firmware server selection, board detection, flashing behavior, and supported vehicle choices remain part of the underlying Mission Planner/ArduPilot workflows.
+
+## Simulation
+
+The SIMULATION workspace supports SITL selection for:
+
+- Plane
+- Rover
+- Multirotor
+- Helicopter
+
+Vehicle selectors retain light neutral icons in their normal state and use the centralized Fly.io cyan/blue palette for hover, selected, and pressed states.
+
+## Updating
+
+From an existing clone on the development branch:
+
+```powershell
+git switch fix/missing-dependencies
+git pull
+dotnet restore .\MissionPlanner.csproj
+dotnet build .\MissionPlanner.csproj -c Release --no-restore
+```
+
+If package inputs have not changed and the repository has already been restored, the restore step may be omitted.
+
+## Troubleshooting
+
+### Build files are locked
+
+If a build reports that `Flyio-GCS.exe` or one of its DLLs cannot be copied because it is in use, close Fly.io GCS before rebuilding. If necessary, stop the process from PowerShell:
+
+```powershell
+Get-Process -Name 'Flyio-GCS' -ErrorAction SilentlyContinue | Stop-Process -Force
+```
+
+Then rerun the Release build.
+
+### COM port is already in use
+
+Close other ground-control, serial-terminal, or device-management software using the port. Confirm the correct port and baud rate before reconnecting.
+
+### .NET Framework reference assemblies are missing
+
+Install the .NET Framework 4.7.2 developer/targeting pack or the corresponding Visual Studio individual component, then rebuild. Installing only a runtime may not provide the reference assemblies required for compilation.
+
+### Restore or build fails
+
+Run restore without `--no-restore`, confirm NuGet sources and network access are available, and inspect the first reported error:
+
+```powershell
+dotnet restore .\MissionPlanner.csproj
+dotnet build .\MissionPlanner.csproj -c Release
+```
+
+Do not delete or replace repository dependencies merely to suppress a restore or reference error.
+
+## Upstream
+
+- [ArduPilot Mission Planner](https://github.com/ArduPilot/MissionPlanner)
+- [Mission Planner contributors](https://github.com/ArduPilot/MissionPlanner/graphs/contributors)
+- [ArduPilot documentation](https://ardupilot.org/ardupilot/)
+
+Upstream changes should be reviewed carefully before integration so Fly.io-specific UI, branding, configuration, and connection changes are not overwritten unintentionally.
+
+## License / Attribution
+
+Fly.io GCS is derived from ArduPilot Mission Planner and retains all applicable upstream and third-party open-source licensing and attribution requirements. Review [LICENSE](LICENSE), repository notices, dependency licenses, and upstream Mission Planner licensing terms before modification or redistribution.
+
+Mission Planner and ArduPilot remain the work of their respective upstream authors and contributors. Fly.io does not claim authorship of upstream components.
 
 ## Project Status
 
-Fly.io GCS is under active development.
+Fly.io GCS is under active development on the `fix/missing-dependencies` branch.

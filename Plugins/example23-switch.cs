@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using MissionPlanner.Controls;
 using MissionPlanner.GCSViews;
 using MissionPlanner.Plugin;
+using MissionPlanner.Utilities;
 using log4net;
 using System.Linq;
 using DeviceProgramming;
@@ -253,6 +254,26 @@ namespace MissionPlanner.plugins
                 if(item is CheckBox)
                 {
                     SetDefaultFromConfig((CheckBox)item);
+                }
+            }
+
+            // These controls are created after the page constructor/theme pass.
+            // Reuse the shared theme so labels, disabled states, and MyButton controls
+            // match the rest of the CONFIG pages.
+            ThemeManager.ApplyThemeTo(tableLayoutPanel1);
+
+            // Apply the final state after SetDefaultFromConfig and the device read.  The
+            // WinForms disabled-state renderer otherwise falls back to a dark system
+            // foreground on this navy page, and MyButton keeps its own text palette.
+            foreach (Control control in tableLayoutPanel1.Controls)
+            {
+                var enabled = Enabled && control.Enabled;
+                control.ForeColor = enabled ? ThemeManager.TextPrimary : ThemeManager.TextDisabled;
+
+                if (control is MyButton button)
+                {
+                    button.TextColor = ThemeManager.TextOnAccent;
+                    button.TextColorNotEnabled = ThemeManager.TextDisabled;
                 }
             }
         }

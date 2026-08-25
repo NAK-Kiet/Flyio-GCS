@@ -28,12 +28,12 @@
     </ThemeColor>
     <ThemeColor>
       <strColorItemName>Button Background top</strColorItemName>
-      <clrColor Web="#FFFF99" />
+      <clrColor Web="#D71920" />
       <strVariableName>ButBG</strVariableName>
     </ThemeColor>
     <ThemeColor>
       <strColorItemName>Button Background bottom</strColorItemName>
-      <clrColor Web="#CCCC66" />
+      <clrColor Web="#E52B32" />
       <strVariableName>ButBGBot</strVariableName>
     </ThemeColor>
     <ThemeColor>
@@ -53,12 +53,12 @@
     </ThemeColor>
     <ThemeColor>
       <strColorItemName>BannerColor1</strColorItemName>
-      <clrColor Web="#405704" />
+      <clrColor Web="#D71920" />
       <strVariableName>BannerColor1</strVariableName>
     </ThemeColor>
     <ThemeColor>
       <strColorItemName>BannerColor2</strColorItemName>
-      <clrColor Web="#94C11F" />
+      <clrColor Web="#D71920" />
       <strVariableName>BannerColor2</strVariableName>
     </ThemeColor>
     <ThemeColor>
@@ -113,7 +113,7 @@
     </ThemeColor>
     <ThemeColor>
       <strColorItemName>Horizontal ProgressBar</strColorItemName>
-      <clrColor Web="#94C11F" />
+      <clrColor Web="#D71920" />
       <strVariableName>HorizontalPBValueColor</strVariableName>
     </ThemeColor>
     <ThemeColor>

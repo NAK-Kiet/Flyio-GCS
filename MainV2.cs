@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
@@ -59,6 +60,58 @@ namespace MissionPlanner
 
         public abstract class menuicons
         {
+            protected static Image ToolbarResource(string name)
+            {
+                return PrepareToolbarImage(
+                    (Image)global::MissionPlanner.Properties.Resources.ResourceManager.GetObject(name));
+            }
+
+            protected static Image PrepareToolbarImage(Image source)
+            {
+                var sourceBitmap = source as Bitmap ?? new Bitmap(source);
+                var minX = sourceBitmap.Width;
+                var minY = sourceBitmap.Height;
+                var maxX = -1;
+                var maxY = -1;
+
+                for (var y = 0; y < sourceBitmap.Height; y++)
+                {
+                    for (var x = 0; x < sourceBitmap.Width; x++)
+                    {
+                        if (sourceBitmap.GetPixel(x, y).A == 0)
+                            continue;
+
+                        minX = Math.Min(minX, x);
+                        minY = Math.Min(minY, y);
+                        maxX = Math.Max(maxX, x);
+                        maxY = Math.Max(maxY, y);
+                    }
+                }
+
+                var bounds = maxX >= minX && maxY >= minY
+                    ? Rectangle.FromLTRB(minX, minY, maxX + 1, maxY + 1)
+                    : new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height);
+                var scale = Math.Min(45F / bounds.Width, 39F / bounds.Height);
+                var width = Math.Max(1, (int)Math.Round(bounds.Width * scale));
+                var height = Math.Max(1, (int)Math.Round(bounds.Height * scale));
+                var destination = new Bitmap(45, 39, PixelFormat.Format32bppArgb);
+
+                using (var graphics = Graphics.FromImage(destination))
+                {
+                    graphics.Clear(Color.Transparent);
+                    graphics.CompositingMode = CompositingMode.SourceCopy;
+                    graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    graphics.DrawImage(source,
+                        new Rectangle((45 - width) / 2, (39 - height) / 2, width, height),
+                        bounds, GraphicsUnit.Pixel);
+                }
+
+                return destination;
+            }
+
             public abstract Image fd { get; }
             public abstract Image fp { get; }
             public abstract Image initsetup { get; }
@@ -66,6 +119,7 @@ namespace MissionPlanner
             public abstract Image sim { get; }
             public abstract Image terminal { get; }
             public abstract Image help { get; }
+            public abstract Image drdc { get; }
             public abstract Image donate { get; }
             public abstract Image connect { get; }
             public abstract Image disconnect { get; }
@@ -78,57 +132,27 @@ namespace MissionPlanner
         {
             public override Image fd
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_flightdata_icon.png"))
-                        return Image.FromFile($"{running_directory}light_flightdata_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_flightdata_icon;
-                }
+                get { return ToolbarResource("fly_data_white"); }
             }
 
             public override Image fp
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_flightplan_icon.png"))
-                        return Image.FromFile($"{running_directory}light_flightplan_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_flightplan_icon;
-                }
+                get { return ToolbarResource("fly_plan_white"); }
             }
 
             public override Image initsetup
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_initialsetup_icon.png"))
-                        return Image.FromFile($"{running_directory}light_initialsetup_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_initialsetup_icon;
-                }
+                get { return ToolbarResource("fly_setup_white"); }
             }
 
             public override Image config_tuning
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_tuningconfig_icon.png"))
-                        return Image.FromFile($"{running_directory}light_tuningconfig_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_tuningconfig_icon;
-                }
+                get { return ToolbarResource("fly_config_white"); }
             }
 
             public override Image sim
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_simulation_icon.png"))
-                        return Image.FromFile($"{running_directory}light_simulation_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_simulation_icon;
-                }
+                get { return ToolbarResource("fly_simulation_white"); }
             }
 
             public override Image terminal
@@ -144,13 +168,12 @@ namespace MissionPlanner
 
             public override Image help
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_help_icon.png"))
-                        return Image.FromFile($"{running_directory}light_help_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_help_icon;
-                }
+                get { return ToolbarResource("fly_toolbar_help_icon"); }
+            }
+
+            public override Image drdc
+            {
+                get { return ToolbarResource("fly_toolbar_drdc_icon"); }
             }
 
             public override Image donate
@@ -166,24 +189,12 @@ namespace MissionPlanner
 
             public override Image connect
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_connect_icon.png"))
-                        return Image.FromFile($"{running_directory}light_connect_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_connect_icon;
-                }
+                get { return ToolbarResource("fly_toolbar_connect"); }
             }
 
             public override Image disconnect
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}light_disconnect_icon.png"))
-                        return Image.FromFile($"{running_directory}light_disconnect_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.light_disconnect_icon;
-                }
+                get { return ToolbarResource("fly_toolbar_disconnect"); }
             }
 
             public override Image bg
@@ -215,57 +226,27 @@ namespace MissionPlanner
 
             public override Image fd
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_flightdata_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_flightdata_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_flightdata_icon;
-                }
+                get { return ToolbarResource("fly_data_white"); }
             }
 
             public override Image fp
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_flightplan_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_flightplan_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_flightplan_icon;
-                }
+                get { return ToolbarResource("fly_plan_white"); }
             }
 
             public override Image initsetup
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_initialsetup_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_initialsetup_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_initialsetup_icon;
-                }
+                get { return ToolbarResource("fly_setup_white"); }
             }
 
             public override Image config_tuning
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_tuningconfig_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_tuningconfig_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_tuningconfig_icon;
-                }
+                get { return ToolbarResource("fly_config_white"); }
             }
 
             public override Image sim
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_simulation_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_simulation_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_simulation_icon;
-                }
+                get { return ToolbarResource("fly_simulation_white"); }
             }
 
             public override Image terminal
@@ -281,13 +262,12 @@ namespace MissionPlanner
 
             public override Image help
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_help_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_help_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_help_icon;
-                }
+                get { return ToolbarResource("fly_toolbar_help_icon"); }
+            }
+
+            public override Image drdc
+            {
+                get { return ToolbarResource("fly_toolbar_drdc_icon"); }
             }
 
             public override Image donate
@@ -303,24 +283,12 @@ namespace MissionPlanner
 
             public override Image connect
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_connect_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_connect_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_connect_icon;
-                }
+                get { return ToolbarResource("fly_toolbar_connect"); }
             }
 
             public override Image disconnect
             {
-                get
-                {
-                    if (File.Exists($"{running_directory}dark_disconnect_icon.png"))
-                        return Image.FromFile($"{running_directory}dark_disconnect_icon.png");
-                    else
-                        return global::MissionPlanner.Properties.Resources.dark_disconnect_icon;
-                }
+                get { return ToolbarResource("fly_toolbar_disconnect"); }
             }
 
             public override Image bg
@@ -572,6 +540,7 @@ namespace MissionPlanner
         /// update the connect button UTC
         /// </summary>
         DateTime connectButtonUpdate = DateTime.UtcNow;
+        private bool? connectButtonConnectedAppearance;
 
         /// <summary>
         /// declared here if i want a "single" instance of the form
@@ -1090,12 +1059,11 @@ namespace MissionPlanner
                 this.Icon = Icon.FromHandle(((Bitmap) Program.IconFile).GetHicon());
             }
 
-            MenuArduPilot.Image = new Bitmap(Properties.Resources._0d92fed790a3a70170e61a86db103f399a595c70,
-                (int) (200), 31);
-            MenuArduPilot.Width = MenuArduPilot.Image.Width;
+            MenuArduPilot.Image = TrimTransparentPadding(
+                Properties.Resources._0d92fed790a3a70170e61a86db103f399a595c70);
 
             if (Program.Logo2 != null)
-                MenuArduPilot.Image = Program.Logo2;
+                MenuArduPilot.Image = TrimTransparentPadding(Program.Logo2);
 
             Application.DoEvents();
 
@@ -1110,6 +1078,35 @@ namespace MissionPlanner
         void cmb_sysid_Click(object sender, EventArgs e)
         {
             MainV2._connectionControl.UpdateSysIDS();
+        }
+
+        private static Bitmap TrimTransparentPadding(Image source)
+        {
+            var sourceBitmap = source as Bitmap ?? new Bitmap(source);
+            var minX = sourceBitmap.Width;
+            var minY = sourceBitmap.Height;
+            var maxX = -1;
+            var maxY = -1;
+
+            for (var y = 0; y < sourceBitmap.Height; y++)
+            {
+                for (var x = 0; x < sourceBitmap.Width; x++)
+                {
+                    if (sourceBitmap.GetPixel(x, y).A == 0)
+                        continue;
+
+                    minX = Math.Min(minX, x);
+                    minY = Math.Min(minY, y);
+                    maxX = Math.Max(maxX, x);
+                    maxY = Math.Max(maxY, y);
+                }
+            }
+
+            if (maxX < minX || maxY < minY)
+                return new Bitmap(source);
+
+            var bounds = Rectangle.FromLTRB(minX, minY, maxX + 1, maxY + 1);
+            return sourceBitmap.Clone(bounds, PixelFormat.Format32bppArgb);
         }
 
         void comPort_MavChanged(object sender, EventArgs e)
@@ -1175,17 +1172,18 @@ namespace MissionPlanner
 
             displayicons = icons;
 
-            MainMenu.BackColor = SystemColors.MenuBar;
+            MainMenu.BackColor = ThemeManager.BGColor;
 
-            MainMenu.BackgroundImage = displayicons.bg;
+            MainMenu.BackgroundImage = null;
 
             MenuFlightData.Image = displayicons.fd;
-            MenuFlightPlanner.Image = displayicons.fp;
+            SetPlanToolbarIcon();
             MenuInitConfig.Image = displayicons.initsetup;
             MenuSimulation.Image = displayicons.sim;
             MenuConfigTune.Image = displayicons.config_tuning;
-            MenuConnect.Image = displayicons.connect;
+            SetConnectButtonAppearance(comPort != null && comPort.BaseStream != null && comPort.BaseStream.IsOpen);
             MenuHelp.Image = displayicons.help;
+            MenuDRDCGCS.Image = displayicons.drdc;
 
 
             MenuFlightData.ForeColor = ThemeManager.TextColor;
@@ -1195,6 +1193,14 @@ namespace MissionPlanner
             MenuConfigTune.ForeColor = ThemeManager.TextColor;
             MenuConnect.ForeColor = ThemeManager.TextColor;
             MenuHelp.ForeColor = ThemeManager.TextColor;
+            MenuDRDCGCS.ForeColor = ThemeManager.TextColor;
+        }
+
+        private void SetPlanToolbarIcon()
+        {
+            // White is the PLAN artwork color, not its transparency key.
+            MenuFlightPlanner.ImageTransparentColor = Color.Magenta;
+            MenuFlightPlanner.Image = displayicons.fp;
         }
 
         void adsb_UpdatePlanePosition(object sender, MissionPlanner.Utilities.adsb.PointLatLngAltHdg adsb)
@@ -1442,7 +1448,7 @@ namespace MissionPlanner
             {
             }
 
-            this.MenuConnect.Image = global::MissionPlanner.Properties.Resources.light_connect_icon;
+            SetConnectButtonAppearance(false);
         }
 
         public void doConnect(MAVLinkInterface comPort, string portname, string baud, bool getparams = true, bool showui = true)
@@ -1814,8 +1820,8 @@ namespace MissionPlanner
                     //Add HUD custom items source
                     HUD.Custom.src = MainV2.comPort.MAV.cs;
 
-                    // set connected icon
-                    this.MenuConnect.Image = displayicons.disconnect;
+                    // set connected appearance
+                    SetConnectButtonAppearance(true);
                 });
             }
             catch (Exception ex)
@@ -1832,7 +1838,10 @@ namespace MissionPlanner
                     log.Warn(ex2);
                 }
 
-                CustomMessageBox.Show($"Can not establish a connection\n\n{ex.Message}");
+                CustomMessageBox.Show(
+                    "Can not establish a connection\n\n" +
+                    ex.ToString(),
+                    "Connection Error");
                 return;
             }
         }
@@ -2463,26 +2472,22 @@ namespace MissionPlanner
                 //                        Console.WriteLine(DateTime.Now.Millisecond);
                 if (comPort.BaseStream.IsOpen)
                 {
-                    if (this.MenuConnect.Image == null || (string) this.MenuConnect.Image.Tag != "Disconnect")
+                    if (this.MenuConnect.Image == null || connectButtonConnectedAppearance != true)
                     {
                         this.BeginInvoke((MethodInvoker) delegate
                         {
-                            this.MenuConnect.Image = displayicons.disconnect;
-                            this.MenuConnect.Image.Tag = "Disconnect";
-                            this.MenuConnect.Text = Strings.DISCONNECTc;
+                            SetConnectButtonAppearance(true);
                             _connectionControl.IsConnected(true);
                         });
                     }
                 }
                 else
                 {
-                    if (this.MenuConnect.Image != null && (string) this.MenuConnect.Image.Tag != "Connect")
+                    if (this.MenuConnect.Image == null || connectButtonConnectedAppearance != false)
                     {
                         this.BeginInvoke((MethodInvoker) delegate
                         {
-                            this.MenuConnect.Image = displayicons.connect;
-                            this.MenuConnect.Image.Tag = "Connect";
-                            this.MenuConnect.Text = Strings.CONNECTc;
+                            SetConnectButtonAppearance(false);
                             _connectionControl.IsConnected(false);
                             if (_connectionStats != null)
                             {
@@ -2499,6 +2504,13 @@ namespace MissionPlanner
 
                 connectButtonUpdate = DateTime.UtcNow;
             }
+        }
+
+        private void SetConnectButtonAppearance(bool connected)
+        {
+            MenuConnect.Image = connected ? displayicons.disconnect : displayicons.connect;
+            MenuConnect.Text = connected ? Strings.DISCONNECTc : Strings.CONNECTc;
+            connectButtonConnectedAppearance = connected;
         }
 
         ManualResetEvent PluginThreadrunner = new ManualResetEvent(false);
@@ -3180,6 +3192,7 @@ namespace MissionPlanner
             MyView.AddScreen(new MainSwitcher.Screen("SWConfig", typeof(GCSViews.SoftwareConfig), false));
             MyView.AddScreen(new MainSwitcher.Screen("Simulation", Simulation, true));
             MyView.AddScreen(new MainSwitcher.Screen("Help", typeof(GCSViews.Help), false));
+            MyView.AddScreen(new MainSwitcher.Screen("DRDCGCS", typeof(GCSViews.DRDCWebView), true));
 
             try
             {
@@ -4057,6 +4070,11 @@ namespace MissionPlanner
             MyView.ShowScreen("Help");
         }
 
+        private void MenuDRDCGCS_Click(object sender, EventArgs e)
+        {
+            MyView.ShowScreen("DRDCGCS");
+        }
+
 
         /// <summary>
         /// keyboard shortcuts override
@@ -4636,7 +4654,7 @@ namespace MissionPlanner
                     try
                     {
                         item.BackColor = Color.Transparent;
-                        item.BackgroundImage = displayicons.bg; //.BackColor = Color.Black;
+                        item.BackgroundImage = null;
                     }
                     catch
                     {
@@ -4677,13 +4695,15 @@ namespace MissionPlanner
 
         private void MenuArduPilot_Click(object sender, EventArgs e)
         {
+            const string drdtGcsUrl = "https://drdt-dev-gcs-frontend.drsys.asia/en/login";
+
             try
             {
-                System.Diagnostics.Process.Start("https://ardupilot.org/?utm_source=Menu&utm_campaign=MP");
+                System.Diagnostics.Process.Start(drdtGcsUrl);
             }
             catch
             {
-                CustomMessageBox.Show("Failed to open url https://ardupilot.org");
+                CustomMessageBox.Show("Failed to open url " + drdtGcsUrl);
             }
         }
 
@@ -4822,5 +4842,41 @@ namespace MissionPlanner
                 }
             }
         }
+    }
+
+    [PreventTheming]
+    internal sealed class LogoPanel : Panel
+    {
+        private Color logoBackgroundColor = Color.Transparent;
+
+        [DefaultValue(typeof(Color), "Transparent")]
+        public Color LogoBackgroundColor
+        {
+            get { return logoBackgroundColor; }
+            set
+            {
+                if (logoBackgroundColor == value)
+                    return;
+
+                logoBackgroundColor = value;
+                Invalidate();
+            }
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            if (logoBackgroundColor == Color.Transparent)
+            {
+                base.OnPaintBackground(e);
+                return;
+            }
+
+            e.Graphics.Clear(logoBackgroundColor);
+        }
+    }
+
+    [PreventTheming]
+    public sealed class LogoPictureBox : PictureBox
+    {
     }
 }

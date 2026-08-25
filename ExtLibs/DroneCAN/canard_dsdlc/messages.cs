@@ -122,8 +122,6 @@ public partial class DroneCAN {
 	(typeof(uavcan_protocol_RestartNode_res), 5, 0x569E05394A3017F0, (b,s,fd) => uavcan_protocol_RestartNode_res.ByteArrayToDroneCANMsg(b,s,fd)),
 	(typeof(uavcan_protocol_AccessCommandShell_req), 6, 0x59276B5921C9246E, (b,s,fd) => uavcan_protocol_AccessCommandShell_req.ByteArrayToDroneCANMsg(b,s,fd)),
 	(typeof(uavcan_protocol_AccessCommandShell_res), 6, 0x59276B5921C9246E, (b,s,fd) => uavcan_protocol_AccessCommandShell_res.ByteArrayToDroneCANMsg(b,s,fd)),
-	(typeof(uavcan_protocol_debug_KeyValue), 16370, 0xE02F25D6E0C98AE0, (b,s,fd) => uavcan_protocol_debug_KeyValue.ByteArrayToDroneCANMsg(b,s,fd)),
-	(typeof(uavcan_protocol_debug_LogMessage), 16383, 0xD654A48E0C049D75, (b,s,fd) => uavcan_protocol_debug_LogMessage.ByteArrayToDroneCANMsg(b,s,fd)),
 	(typeof(uavcan_protocol_dynamic_node_id_Allocation), 1, 0xB2A812620A11D40, (b,s,fd) => uavcan_protocol_dynamic_node_id_Allocation.ByteArrayToDroneCANMsg(b,s,fd)),
 	(typeof(uavcan_protocol_dynamic_node_id_server_AppendEntries_req), 30, 0x8032C7097B48A3CC, (b,s,fd) => uavcan_protocol_dynamic_node_id_server_AppendEntries_req.ByteArrayToDroneCANMsg(b,s,fd)),
 	(typeof(uavcan_protocol_dynamic_node_id_server_AppendEntries_res), 30, 0x8032C7097B48A3CC, (b,s,fd) => uavcan_protocol_dynamic_node_id_server_AppendEntries_res.ByteArrayToDroneCANMsg(b,s,fd)),

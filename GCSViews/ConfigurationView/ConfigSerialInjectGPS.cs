@@ -446,8 +446,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             }
             catch (Exception ex)
             {
-                CustomMessageBox.Show("Error Connecting\nif using com0com please rename the ports to COM??\n" +
-                                      ex.ToString());
+                ShowConnectionError(ex);
                 return;
             }
 
@@ -520,6 +519,33 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             bytes = 0;
             invalidateRTCMStatus();
             panel1.Controls.Clear();
+        }
+
+        private void ShowConnectionError(Exception ex)
+        {
+            var ntrip = comPort as CommsNTRIP;
+            var message = ex == null ? "The connection could not be opened." : ex.Message;
+            if (message.IndexOf("404", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                message.IndexOf("Not Found", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                status_line3 = "NTRIP endpoint unavailable";
+                var endpoint = ntrip == null ? null : ntrip.RemoteEndpoint;
+                var details = string.IsNullOrEmpty(endpoint)
+                    ? "Endpoint requires user configuration / external service."
+                    : "Endpoint: " + endpoint;
+                CustomMessageBox.Show(
+                    "The requested NTRIP service endpoint returned HTTP 404 (Not Found).\n\n" +
+                    "Check the configured caster URL and mount point.\n" + details,
+                    "RTK/GPS Service Error");
+                return;
+            }
+
+            if (ntrip != null)
+                status_line3 = "NTRIP connection failed";
+            CustomMessageBox.Show(
+                "The RTK/GPS connection could not be opened.\n\n" +
+                message + "\n\nIf using com0com, verify that the ports are named COM??.",
+                "RTK/GPS Connection Error");
         }
 
         private async Task ConfigureUnicoreReceiver()
@@ -603,13 +629,23 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                     (MethodInvoker)
                         delegate
                         {
-                            this.lbl_status1.Text = line1;
-                            this.lbl_status2.Text = line2;
-                            this.lbl_status3.Text = line3;
-                            this.labelmsgseen.Text = line4;
+                            this.lbl_status1.Text = SanitizeStatusLine(line1);
+                            this.lbl_status2.Text = SanitizeStatusLine(line2);
+                            this.lbl_status3.Text = SanitizeStatusLine(line3);
+                            this.labelmsgseen.Text = SanitizeStatusLine(line4);
                         }
                     );
             }
+        }
+
+        private static string SanitizeStatusLine(string line)
+        {
+            if (string.IsNullOrEmpty(line)) return line;
+            if (line.IndexOf("404", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                line.IndexOf("Not Found", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                line.IndexOf("Exception:", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "NTRIP endpoint unavailable";
+            return line;
         }
 
         private static void mainloop()

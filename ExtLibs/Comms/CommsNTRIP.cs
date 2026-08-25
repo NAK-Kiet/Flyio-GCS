@@ -31,6 +31,11 @@ namespace MissionPlanner.Comms
         private IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
         private Uri remoteUri;
 
+        public string RemoteEndpoint
+        {
+            get { return remoteUri == null ? null : remoteUri.GetLeftPart(UriPartial.Path); }
+        }
+
         private int retrys = 3;
 
         public CommsNTRIP()
@@ -385,7 +390,7 @@ namespace MissionPlanner.Comms
 
                 client = new TcpClient();
 
-                throw new Exception("Bad ntrip Response\n\n" + line);
+                throw new Exception("Bad ntrip Response: " + line);
             }
 
             if (line.Contains("SOURCETABLE"))

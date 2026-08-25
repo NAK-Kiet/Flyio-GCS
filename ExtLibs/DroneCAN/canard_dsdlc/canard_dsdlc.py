@@ -71,7 +71,7 @@ def build_message(msg_name):
         
         output_file = os.path.join(build_dir, em.expand('@{from canard_dsdlc_helpers import *}'+template['output_file'], msg=msglocal))
         mkdir_p(os.path.dirname(output_file))
-        print(f'Doing {msg_name} {template['source_file']} {output_file} ')
+        print(f"Doing {msg_name} {template['source_file']} {output_file} ")
         with open(output_file, 'w') as f:
             f.write(output)
     print(f'Done {msg_name}')

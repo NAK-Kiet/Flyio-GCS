@@ -504,6 +504,10 @@ namespace MissionPlanner.Controls.BackstageView
                 }
             }
 
+            // Activation may populate grids, trees, and other controls dynamically.
+            // Reapply the host-provided shared theme after that population is complete.
+            BackstageViewPage.Theme(associatedPage.Page);
+
             try
             {
                 var newButton = this.pnlMenu.Controls.OfType<BackstageViewButton>().Single(b => b.Tag == associatedPage);

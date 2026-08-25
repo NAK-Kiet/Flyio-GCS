@@ -306,8 +306,8 @@ namespace MissionPlanner
                 StartPosition = FormStartPosition.CenterParent,
                 Text = title,
             };
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainV2));
-            try { form.Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon"); } catch { /* ignore */ }
+            if (Program.IconFile != null)
+                form.Icon = Icon.FromHandle(((Bitmap)Program.IconFile).GetHicon());
 
             // Layout constants
             int margin = 16;              // outer padding

@@ -1,4 +1,4 @@
-﻿using MissionPlanner.Controls;
+using MissionPlanner.Controls;
 
 namespace MissionPlanner.GCSViews
 {
@@ -237,7 +237,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.but_swarmrover, "but_swarmrover");
             this.but_swarmrover.Name = "but_swarmrover";
-            this.but_swarmrover.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.but_swarmrover.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.but_swarmrover.UseVisualStyleBackColor = true;
             this.but_swarmrover.Click += new System.EventHandler(this.but_swarmrover_Click);
             // 
@@ -245,7 +245,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.but_swarmplane, "but_swarmplane");
             this.but_swarmplane.Name = "but_swarmplane";
-            this.but_swarmplane.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.but_swarmplane.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.but_swarmplane.UseVisualStyleBackColor = true;
             this.but_swarmplane.Click += new System.EventHandler(this.but_swarmplane_Click);
             // 
@@ -253,7 +253,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.but_swarmseq, "but_swarmseq");
             this.but_swarmseq.Name = "but_swarmseq";
-            this.but_swarmseq.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.but_swarmseq.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.but_swarmseq.UseVisualStyleBackColor = true;
             this.but_swarmseq.Click += new System.EventHandler(this.but_swarmseq_Click);
             // 
@@ -261,7 +261,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.but_swarmlink, "but_swarmlink");
             this.but_swarmlink.Name = "but_swarmlink";
-            this.but_swarmlink.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.but_swarmlink.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.but_swarmlink.UseVisualStyleBackColor = true;
             this.but_swarmlink.Click += new System.EventHandler(this.but_swarmlink_Click);
             // 

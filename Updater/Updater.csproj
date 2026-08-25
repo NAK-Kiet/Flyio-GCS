@@ -86,6 +86,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe" sign /fd SHA256 /n "Michael Oborne" /t http://timestamp.sectigo.com/ "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent Condition="'$(SignUpdater)' == 'true'">"C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe" sign /fd SHA256 /n "Michael Oborne" /t http://timestamp.sectigo.com/ "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

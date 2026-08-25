@@ -18,7 +18,7 @@
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
   <Applications>
-		<Application Id="MissionPlanner" Executable="MissionPlanner.exe" EntryPoint="Windows.FullTrustApplication">
+		<Application Id="MissionPlanner" Executable="Flyio-GCS.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements DisplayName="Fly.io" Description="ArduPilot ground control station"
            Square150x150Logo="mpdesktop150.png" Square44x44Logo="mpdesktop44.png"  
            BackgroundColor="#FFFFFF" />

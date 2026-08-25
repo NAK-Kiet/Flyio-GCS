@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 using MissionPlanner.Controls;
 
 namespace MissionPlanner.GCSViews
@@ -298,7 +298,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.but_writewpfast, "but_writewpfast");
             this.but_writewpfast.Name = "but_writewpfast";
-            this.but_writewpfast.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.but_writewpfast.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.but_writewpfast.UseVisualStyleBackColor = true;
             this.but_writewpfast.Click += new System.EventHandler(this.but_writewpfast_Click);
             // 
@@ -306,7 +306,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.BUT_write, "BUT_write");
             this.BUT_write.Name = "BUT_write";
-            this.BUT_write.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_write.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_write.UseVisualStyleBackColor = true;
             this.BUT_write.Click += new System.EventHandler(this.BUT_write_Click);
             // 
@@ -314,7 +314,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.BUT_read, "BUT_read");
             this.BUT_read.Name = "BUT_read";
-            this.BUT_read.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_read.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_read.UseVisualStyleBackColor = true;
             this.BUT_read.Click += new System.EventHandler(this.BUT_read_Click);
             // 
@@ -443,7 +443,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.but_mincommands, "but_mincommands");
             this.but_mincommands.Name = "but_mincommands";
-            this.but_mincommands.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.but_mincommands.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.but_mincommands.UseVisualStyleBackColor = true;
             this.but_mincommands.Click += new System.EventHandler(this.but_mincommands_Click);
             // 
@@ -528,8 +528,8 @@ namespace MissionPlanner.GCSViews
             // 
             // Command
             // 
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(68)))), ((int)(((byte)(69)))));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(43)))), ((int)(((byte)(79)))));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(245)))), ((int)(((byte)(248)))));
             this.Command.DefaultCellStyle = dataGridViewCellStyle4;
             this.Command.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
             resources.ApplyResources(this.Command, "Command");
@@ -662,7 +662,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.BUT_Add, "BUT_Add");
             this.BUT_Add.Name = "BUT_Add";
-            this.BUT_Add.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_Add.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.toolTip1.SetToolTip(this.BUT_Add, resources.GetString("BUT_Add.ToolTip"));
             this.BUT_Add.UseVisualStyleBackColor = true;
             this.BUT_Add.Click += new System.EventHandler(this.BUT_Add_Click);
@@ -761,7 +761,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.BUT_loadwpfile, "BUT_loadwpfile");
             this.BUT_loadwpfile.Name = "BUT_loadwpfile";
-            this.BUT_loadwpfile.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_loadwpfile.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_loadwpfile.UseVisualStyleBackColor = true;
             this.BUT_loadwpfile.Click += new System.EventHandler(this.BUT_loadwpfile_Click);
             // 
@@ -769,7 +769,7 @@ namespace MissionPlanner.GCSViews
             // 
             resources.ApplyResources(this.BUT_saveWPFile, "BUT_saveWPFile");
             this.BUT_saveWPFile.Name = "BUT_saveWPFile";
-            this.BUT_saveWPFile.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(87)))), ((int)(((byte)(4)))));
+            this.BUT_saveWPFile.TextColorNotEnabled = System.Drawing.Color.FromArgb(((int)(((byte)(170)))), ((int)(((byte)(183)))), ((int)(((byte)(199)))));
             this.BUT_saveWPFile.UseVisualStyleBackColor = true;
             this.BUT_saveWPFile.Click += new System.EventHandler(this.BUT_saveWPFile_Click);
             // 
@@ -869,7 +869,7 @@ namespace MissionPlanner.GCSViews
             // MainMap
             // 
             resources.ApplyResources(this.MainMap, "MainMap");
-            this.MainMap.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(39)))), ((int)(((byte)(40)))));
+            this.MainMap.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(31)))), ((int)(((byte)(58)))));
             this.MainMap.Bearing = 0F;
             this.MainMap.CanDragMap = true;
             this.MainMap.ContextMenuStrip = this.contextMenuStrip1;

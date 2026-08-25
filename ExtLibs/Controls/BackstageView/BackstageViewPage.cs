@@ -17,6 +17,11 @@ namespace MissionPlanner.Controls.BackstageView
 
         public static event ThemeManager ApplyTheme;
 
+        public static void Theme(Control control)
+        {
+            ApplyTheme?.Invoke(control);
+        }
+
         private const int ButtonSpacing = 30;
 
         public bool Advanced { get; set; }
@@ -59,7 +64,9 @@ namespace MissionPlanner.Controls.BackstageView
                     _page.Location = new Point(0, 0);
                     _page.Dock = DockStyle.Fill;
                     _page.AutoScroll = true;
-                    ApplyTheme?.Invoke(_page);
+                    // The host wires this event to the existing ThemeManager. Pages are
+                    // created lazily, after the host's initial theme pass.
+                    Theme(_page);
                     _page.Enabled = true;
                 }
                 return _page;

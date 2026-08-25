@@ -1,4 +1,4 @@
-﻿using MissionPlanner.ArduPilot;
+using MissionPlanner.ArduPilot;
 using MissionPlanner.Controls;
 using MissionPlanner.Utilities;
 using System;
@@ -161,7 +161,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                         var textControls = Controls.Find(value, true);
                         if (textControls.Length > 0)
                         {
-                            textControls[0].BackColor = Color.FromArgb(0x43, 0x44, 0x45);
+                            textControls[0].BackColor = Color.FromArgb(0x13, 0x2B, 0x4F);
                         }
                     }
                     catch

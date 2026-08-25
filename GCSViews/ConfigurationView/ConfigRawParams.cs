@@ -39,12 +39,38 @@ namespace MissionPlanner.GCSViews.ConfigurationView
 
         // Used by Param Tree to filter by prefix
         private string filterPrefix = "";
+        private string filterGroup = "";
+        private string filterFamilyTab = "";
+
+        private readonly BufferedFlowLayoutPanel familySelector = new BufferedFlowLayoutPanel();
+        private Button selectedFamilyButton;
 
         private NaturalStringComparer naturalsorter = new NaturalStringComparer();
 
         public ConfigRawParams()
         {
             InitializeComponent();
+            InitializeFamilySelector();
+        }
+
+        private void InitializeFamilySelector()
+        {
+            familySelector.AutoSize = true;
+            familySelector.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            familySelector.Dock = DockStyle.Top;
+            familySelector.FlowDirection = FlowDirection.LeftToRight;
+            familySelector.Padding = new Padding(3);
+            familySelector.Visible = false;
+            familySelector.WrapContents = true;
+
+            var contentPanel = new Panel { Dock = DockStyle.Fill };
+            splitContainer1.Panel2.Controls.Remove(Params);
+            contentPanel.Controls.Add(Params);
+            contentPanel.Controls.Add(familySelector);
+            splitContainer1.Panel2.Controls.Add(contentPanel);
+            splitContainer1.Panel2.Controls.SetChildIndex(contentPanel, 0);
+
+            ThemeManager.ApplyThemeTo(familySelector);
         }
 
         public void Activate()
@@ -688,6 +714,10 @@ namespace MissionPlanner.GCSViews.ConfigurationView
         private void BuildTree()
         {
             treeView1.Nodes.Clear();
+            ClearFamilyTabs();
+            filterGroup = "";
+            filterFamilyTab = "";
+            filterPrefix = "";
             var currentNode = treeView1.Nodes.Add("All");
             string currentPrefix = "";
 
@@ -704,6 +734,23 @@ namespace MissionPlanner.GCSViews.ConfigurationView
 
             // Sort them again (because of the favorites, they may be out of order)
             commands.Sort(naturalsorter);
+
+            // Consolidated families are navigation aliases only. The grid and command list
+            // continue to contain the exact parameter names supplied by the vehicle.
+            var consolidatedGroups = commands
+                .Select(NormalizeParameterGroup)
+                .Where(group => group != null)
+                .Distinct()
+                .OrderBy(group => group, naturalsorter)
+                .ToList();
+
+            foreach (var group in consolidatedGroups)
+            {
+                var groupNode = currentNode.Nodes.Add(group);
+                groupNode.Tag = group;
+            }
+
+            commands = commands.Where(command => NormalizeParameterGroup(command) == null).ToList();
 
             for (int i = 0; i < commands.Count; i++)
             {
@@ -736,7 +783,190 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                 }
                 currentNode.Nodes.Add(param);
             }
+            treeView1.TreeViewNodeSorter = new NaturalTreeNodeComparer(naturalsorter);
+            treeView1.Sort();
             treeView1.TopNode.Expand();
+        }
+
+        private void BuildFamilyTabs(string group)
+        {
+            familySelector.SuspendLayout();
+            ClearFamilyTabs();
+
+            var tabs = Params.Rows.Cast<DataGridViewRow>()
+                .Select(row => row.Cells[Command.Index].Value == null
+                    ? null
+                    : GetParameterFamilyTab(group, row.Cells[Command.Index].Value.ToString()))
+                .Where(tab => tab != null)
+                .Distinct()
+                .OrderBy(tab => tab == "General" ? "" : tab, naturalsorter)
+                .ToList();
+
+            foreach (var tab in tabs)
+            {
+                var button = new Button
+                {
+                    AutoSize = false,
+                    BackColor = ThemeManager.ControlBGColor,
+                    FlatStyle = FlatStyle.Flat,
+                    ForeColor = ThemeManager.TextColor,
+                    Margin = new Padding(3),
+                    Size = new Size(104, 32),
+                    Tag = tab,
+                    Text = tab,
+                    UseVisualStyleBackColor = false
+                };
+                button.FlatAppearance.BorderColor = ThemeManager.ControlBorder;
+                button.FlatAppearance.BorderSize = 1;
+                button.Click += familySelectorButton_Click;
+                familySelector.Controls.Add(button);
+            }
+
+            familySelector.Visible = familySelector.Controls.Count > 0;
+            selectedFamilyButton = familySelector.Controls.OfType<Button>().FirstOrDefault();
+            filterFamilyTab = selectedFamilyButton == null
+                ? ""
+                : selectedFamilyButton.Tag as string ?? "";
+            UpdateFamilyButtonColors(null, selectedFamilyButton);
+            familySelector.ResumeLayout(true);
+        }
+
+        private void ClearFamilyTabs()
+        {
+            selectedFamilyButton = null;
+            while (familySelector.Controls.Count > 0)
+                familySelector.Controls[0].Dispose();
+            familySelector.Visible = false;
+        }
+
+        private static string GetParameterFamilyTab(string group, string parameterName)
+        {
+            if (NormalizeParameterGroup(parameterName) != group)
+                return null;
+
+            if (group == "RC" &&
+                (parameterName == "RCMAP" || parameterName.StartsWith("RCMAP_")))
+                return "RCMAP";
+
+            if (group == "RELAY" && parameterName == "RELAY_PIN")
+                return "RELAY1";
+
+            if (group == "RELAY" && parameterName.StartsWith("RELAY_PIN") &&
+                parameterName.Substring("RELAY_PIN".Length).All(char.IsDigit))
+                return "RELAY" + parameterName.Substring("RELAY_PIN".Length);
+
+            if (group == "FLTMODE")
+            {
+                var suffix = parameterName.Substring(group.Length);
+                return suffix.Length > 0 && suffix.All(char.IsDigit) ? parameterName : "General";
+            }
+
+            var index = group.Length;
+            if (index >= parameterName.Length || parameterName[index] == '_')
+                return "General";
+
+            var instanceStart = index;
+            while (index < parameterName.Length && char.IsLetterOrDigit(parameterName[index]))
+                index++;
+
+            if (index == instanceStart || index < parameterName.Length && parameterName[index] != '_')
+                return "General";
+
+            return group + parameterName.Substring(instanceStart, index - instanceStart);
+        }
+
+        private void familySelectorButton_Click(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            if (button == null || button == selectedFamilyButton)
+                return;
+
+            var previousButton = selectedFamilyButton;
+            selectedFamilyButton = button;
+            filterFamilyTab = button.Tag as string ?? "";
+            UpdateFamilyButtonColors(previousButton, button);
+            FilterTimerOnElapsed(null, null);
+        }
+
+        private static void UpdateFamilyButtonColors(Button previousButton, Button currentButton)
+        {
+            if (previousButton != null)
+                previousButton.BackColor = ThemeManager.ControlBGColor;
+            if (currentButton != null)
+                currentButton.BackColor = ThemeManager.Accent;
+        }
+
+        /// <summary>
+        /// Maps related parameter-name families to a single navigation group. This never
+        /// changes the real parameter name or value used by the grid and MAVLink operations.
+        /// </summary>
+        internal static string NormalizeParameterGroup(string parameterName)
+        {
+            if (string.IsNullOrEmpty(parameterName))
+                return null;
+
+            if (MatchesInstanceFamily(parameterName, "BARO")) return "BARO";
+            if (MatchesInstanceFamily(parameterName, "BATT")) return "BATT";
+            if (MatchesInstanceFamily(parameterName, "CAM")) return "CAM";
+            if (MatchesFlightModeFamily(parameterName)) return "FLTMODE";
+            if (MatchesInstanceFamily(parameterName, "GPS")) return "GPS";
+            if (MatchesInstanceFamily(parameterName, "MAV")) return "MAV";
+            if (MatchesInstanceFamily(parameterName, "OSD")) return "OSD";
+            if (MatchesRcFamily(parameterName)) return "RC";
+            if (MatchesInstanceFamily(parameterName, "RELAY")) return "RELAY";
+            if (MatchesInstanceFamily(parameterName, "RNGFND", true)) return "RNGFND";
+            if (MatchesInstanceFamily(parameterName, "RPM")) return "RPM";
+            if (MatchesInstanceFamily(parameterName, "SERIAL")) return "SERIAL";
+            if (MatchesInstanceFamily(parameterName, "SERVO")) return "SERVO";
+
+            return null;
+        }
+
+        private static bool MatchesRcFamily(string parameterName)
+        {
+            return parameterName == "RC" || parameterName.StartsWith("RC_") ||
+                   parameterName == "RCMAP" || parameterName.StartsWith("RCMAP_") ||
+                   MatchesInstanceFamily(parameterName, "RC");
+        }
+
+        private static bool MatchesFlightModeFamily(string parameterName)
+        {
+            const string prefix = "FLTMODE";
+            if (!parameterName.StartsWith(prefix))
+                return false;
+
+            if (parameterName.Length == prefix.Length || parameterName[prefix.Length] == '_')
+                return true;
+
+            for (var i = prefix.Length; i < parameterName.Length; i++)
+            {
+                if (!char.IsDigit(parameterName[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool MatchesInstanceFamily(string parameterName, string prefix,
+            bool allowAlphaNumericInstance = false)
+        {
+            if (!parameterName.StartsWith(prefix))
+                return false;
+
+            var index = prefix.Length;
+            if (index == parameterName.Length || parameterName[index] == '_')
+                return true;
+
+            var instanceStart = index;
+            while (index < parameterName.Length &&
+                   (char.IsDigit(parameterName[index]) ||
+                    allowAlphaNumericInstance && char.IsLetterOrDigit(parameterName[index])))
+            {
+                index++;
+            }
+
+            return index > instanceStart &&
+                   (index == parameterName.Length || parameterName[index] == '_');
         }
 
 
@@ -828,6 +1058,37 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             }
         }
 
+        private sealed class BufferedFlowLayoutPanel : FlowLayoutPanel
+        {
+            public BufferedFlowLayoutPanel()
+            {
+                DoubleBuffered = true;
+                SetStyle(ControlStyles.AllPaintingInWmPaint |
+                         ControlStyles.OptimizedDoubleBuffer, true);
+            }
+        }
+
+        private sealed class NaturalTreeNodeComparer : IComparer
+        {
+            private readonly NaturalStringComparer comparer;
+
+            public NaturalTreeNodeComparer(NaturalStringComparer comparer)
+            {
+                this.comparer = comparer;
+            }
+
+            public int Compare(object x, object y)
+            {
+                var left = x as TreeNode;
+                var right = y as TreeNode;
+                if (left == null || right == null)
+                    return 0;
+                if (left.Text == "All") return right.Text == "All" ? 0 : -1;
+                if (right.Text == "All") return 1;
+                return comparer.Compare(left.Text, right.Text);
+            }
+        }
+
 
 
         private void OnParamsOnSortCompare(object sender, DataGridViewSortCompareEventArgs args)
@@ -893,11 +1154,20 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             if (searchfor.Length >= 2 || searchfor.Length == 0)
             {
                 Regex filter = new Regex(searchfor.Replace("*", ".*").Replace("..*", ".*"), RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
+                var globalSearch = searchfor.Length >= 2;
 
                 foreach (DataGridViewRow row in Params.Rows)
                 {
                     string name = row.Cells[Command.Index].Value.ToString();
-                    if (name != filterPrefix.TrimEnd('_') && !name.StartsWith(filterPrefix))
+                    var outsideSelectedGroup = !globalSearch && !string.IsNullOrEmpty(filterGroup) &&
+                                               NormalizeParameterGroup(name) != filterGroup;
+                    var outsideSelectedTab = !globalSearch && !string.IsNullOrEmpty(filterGroup) &&
+                                             !string.IsNullOrEmpty(filterFamilyTab) &&
+                                             GetParameterFamilyTab(filterGroup, name) != filterFamilyTab;
+                    var outsideSelectedPrefix = !globalSearch && string.IsNullOrEmpty(filterGroup) &&
+                                                name != filterPrefix.TrimEnd('_') &&
+                                                !name.StartsWith(filterPrefix);
+                    if (outsideSelectedGroup || outsideSelectedTab || outsideSelectedPrefix)
                     {
                         row.Visible = false;
                         continue;
@@ -1125,9 +1395,17 @@ namespace MissionPlanner.GCSViews.ConfigurationView
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            filterGroup = treeView1.SelectedNode.Tag as string ?? "";
             string txt = treeView1.SelectedNode.Text + "_";
             if (txt == "All_") txt = "";
-            filterPrefix = txt;
+            filterPrefix = string.IsNullOrEmpty(filterGroup) ? txt : "";
+            filterFamilyTab = "";
+
+            if (string.IsNullOrEmpty(filterGroup))
+                ClearFamilyTabs();
+            else
+                BuildFamilyTabs(filterGroup);
+
             FilterTimerOnElapsed(null, null);
         }
 
@@ -1144,6 +1422,9 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                 but_collapse.Text = ">";
                 splitContainer1.Panel1Collapsed = true;
                 filterPrefix = "";
+                filterGroup = "";
+                filterFamilyTab = "";
+                ClearFamilyTabs();
                 FilterTimerOnElapsed(null, null);
             }
         }

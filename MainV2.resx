@@ -436,7 +436,7 @@
 </value>
   </data>
   <data name="MenuFlightPlanner.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>White</value>
+    <value>Magenta</value>
   </data>
   <data name="MenuFlightPlanner.Size" type="System.Drawing.Size, System.Drawing">
     <value>49, 47</value>
@@ -2687,7 +2687,7 @@
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Mission Planner - By Michael Oborne</value>
+    <value>Fly.io</value>
   </data>
   <data name="&gt;&gt;autoHideToolStripMenuItem.Name" xml:space="preserve">
     <value>autoHideToolStripMenuItem</value>

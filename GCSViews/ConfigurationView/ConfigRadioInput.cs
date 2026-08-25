@@ -1,4 +1,4 @@
-﻿using MissionPlanner.ArduPilot;
+using MissionPlanner.ArduPilot;
 using MissionPlanner.Controls;
 using MissionPlanner.Utilities;
 using System;
@@ -441,14 +441,14 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             if (normalreverse)
             {
                 ((HorizontalProgressBar2)progressbar).reverse = true;
-                ((HorizontalProgressBar2)progressbar).BackgroundColor = Color.FromArgb(148, 193, 31);
-                ((HorizontalProgressBar2)progressbar).ValueColor = Color.FromArgb(0x43, 0x44, 0x45);
+                ((HorizontalProgressBar2)progressbar).BackgroundColor = Color.FromArgb(0x13, 0x2B, 0x4F);
+                ((HorizontalProgressBar2)progressbar).ValueColor = Color.FromArgb(0xD7, 0x19, 0x20);
             }
             else
             {
                 ((HorizontalProgressBar2)progressbar).reverse = false;
-                ((HorizontalProgressBar2)progressbar).BackgroundColor = Color.FromArgb(0x43, 0x44, 0x45);
-                ((HorizontalProgressBar2)progressbar).ValueColor = Color.FromArgb(148, 193, 31);
+                ((HorizontalProgressBar2)progressbar).BackgroundColor = Color.FromArgb(0x13, 0x2B, 0x4F);
+                ((HorizontalProgressBar2)progressbar).ValueColor = Color.FromArgb(0xD7, 0x19, 0x20);
             }
 
             if (startup)

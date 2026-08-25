@@ -149,23 +149,10 @@ namespace DroneCAN
         /// Setup printing debug text to the console
         /// </summary>
         public void PrintDebugToConsole()
-        {
-            MessageReceived += (frame, msg, transferID) =>
-            {
-                if (msg.GetType() == typeof(DroneCAN.uavcan_protocol_debug_LogMessage))
-                {
-                    var dbg = msg as DroneCAN.uavcan_protocol_debug_LogMessage;
-
-                    Console.WriteLine("Node: {0} Level: {1} Source: {2} Text: {3}",frame.SourceNode, dbg.level.value, ASCIIEncoding.ASCII.GetString(dbg.source,0, dbg.source_len),ASCIIEncoding.ASCII.GetString(dbg.text,0, dbg.text_len));
-                } 
-                else if (msg.GetType() == typeof(DroneCAN.uavcan_protocol_debug_KeyValue))
-                {
-                    var dbg = msg as DroneCAN.uavcan_protocol_debug_KeyValue;
-
-                    Console.WriteLine("Node: {0} Key: {1} Value: {2}",frame.SourceNode, ASCIIEncoding.ASCII.GetString(dbg.key,0, dbg.key_len), dbg.value);
-                } 
-            };
-        }
+	{
+        // Legacy UAVCAN debug message types are not included
+        // in the current DroneCAN DSDL set.
+	}
 
         public enum Baud
         {
