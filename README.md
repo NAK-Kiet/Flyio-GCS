@@ -91,7 +91,7 @@ dotnet build .\MissionPlanner.csproj -c Release --no-restore
 The application is produced at:
 
 ```text
-bin\Release\net461\MissionPlanner.exe
+bin\Release\net461\Flyio-GCS.exe
 ```
 
 ## Run
@@ -99,10 +99,10 @@ bin\Release\net461\MissionPlanner.exe
 From the repository root in PowerShell:
 
 ```powershell
-.\bin\Release\net461\MissionPlanner.exe
+.\bin\Release\net461\Flyio-GCS.exe
 ```
 
-You can also open `bin\Release\net461` in File Explorer and double-click `MissionPlanner.exe`.
+You can also open `bin\Release\net461` in File Explorer and double-click `Flyio-GCS.exe`.
 
 ## Basic Usage
 
@@ -158,10 +158,10 @@ If package inputs have not changed and the repository has already been restored,
 
 ### Build files are locked
 
-If a build reports that `MissionPlanner.exe` or one of its DLLs cannot be copied because it is in use, close Fly.io GCS before rebuilding. If necessary, stop the process from PowerShell:
+If a build reports that `Flyio-GCS.exe` or one of its DLLs cannot be copied because it is in use, close Fly.io GCS before rebuilding. If necessary, stop the process from PowerShell:
 
 ```powershell
-Get-Process -Name MissionPlanner -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process -Name 'Flyio-GCS' -ErrorAction SilentlyContinue | Stop-Process -Force
 ```
 
 Then rerun the Release build.

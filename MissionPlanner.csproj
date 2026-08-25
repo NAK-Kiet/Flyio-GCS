@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <ApplicationIcon>Resources\Flyio.ico</ApplicationIcon>
+    <AssemblyName>Flyio-GCS</AssemblyName>
     <OutputType>Exe</OutputType>
     <StartupObject>MissionPlanner.Program</StartupObject>
     <Authors>Fly.io</Authors>
@@ -116,12 +117,9 @@
     <Reference Include="System.Speech" />
     <Reference Include="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="Updater, Version=1.0.7056.19890, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>Updater\bin\Release\Updater.exe</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Updater\Updater.csproj" />
     <ProjectReference Include="ExtLibs\7zip\7zip.csproj" />
     <ProjectReference Include="ExtLibs\alglibnet\alglibnet.csproj" />
     <ProjectReference Include="ExtLibs\Antenna\MissionPlanner.Antenna.csproj" />
