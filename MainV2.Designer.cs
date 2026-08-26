@@ -212,22 +212,22 @@ namespace MissionPlanner
             // 
             // MenuArduPilotPanel
             // 
-            this.MenuArduPilotPanel.BackColor = System.Drawing.Color.White;
-            this.MenuArduPilotPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MenuArduPilotPanel.BackColor = System.Drawing.Color.Transparent;
+            this.MenuArduPilotPanel.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.MenuArduPilotPanel.Controls.Add(this.MenuArduPilot);
             this.MenuArduPilotPanel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.MenuArduPilotPanel.LogoBackgroundColor = System.Drawing.Color.White;
+            this.MenuArduPilotPanel.LogoBackgroundColor = System.Drawing.Color.Transparent;
             this.MenuArduPilotPanel.Name = "MenuArduPilotPanel";
-            this.MenuArduPilotPanel.Padding = new System.Windows.Forms.Padding(6);
-            this.MenuArduPilotPanel.Size = new System.Drawing.Size(240, 60);
+            this.MenuArduPilotPanel.Padding = new System.Windows.Forms.Padding(0);
+            this.MenuArduPilotPanel.Size = new System.Drawing.Size(130, 60);
             this.MenuArduPilotPanel.Click += new System.EventHandler(this.MenuArduPilot_Click);
             // 
             // MenuArduPilot
             // 
-            this.MenuArduPilot.BackColor = System.Drawing.Color.White;
+            this.MenuArduPilot.BackColor = System.Drawing.Color.Transparent;
             this.MenuArduPilot.Cursor = System.Windows.Forms.Cursors.Hand;
             this.MenuArduPilot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MenuArduPilot.Image = global::MissionPlanner.Properties.Resources._0d92fed790a3a70170e61a86db103f399a595c70;
+            this.MenuArduPilot.Image = global::MissionPlanner.Properties.Resources.flyio_racing_drone_warrior_logo;
             this.MenuArduPilot.Name = "MenuArduPilot";
             this.MenuArduPilot.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.MenuArduPilot.TabStop = false;
@@ -237,11 +237,11 @@ namespace MissionPlanner
             // 
             this.MenuArduPilotHost.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.MenuArduPilotHost.AutoSize = false;
-            this.MenuArduPilotHost.BackColor = System.Drawing.Color.White;
-            this.MenuArduPilotHost.Margin = new System.Windows.Forms.Padding(0);
+            this.MenuArduPilotHost.BackColor = System.Drawing.Color.Transparent;
+            this.MenuArduPilotHost.Margin = new System.Windows.Forms.Padding(0, 0, 15, 0);
             this.MenuArduPilotHost.Name = "MenuArduPilotHost";
             this.MenuArduPilotHost.Padding = new System.Windows.Forms.Padding(0);
-            this.MenuArduPilotHost.Size = new System.Drawing.Size(240, 60);
+            this.MenuArduPilotHost.Size = new System.Drawing.Size(130, 60);
             // 
             // menu
             // 

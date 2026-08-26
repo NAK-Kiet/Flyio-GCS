@@ -14,7 +14,7 @@ The project respects upstream Mission Planner functionality, authorship, licensi
 - SIMULATION workspace for SITL workflows
 - Separate Install Firmware and Install Firmware Legacy workflows
 - Fly.io dark-navy interface, blue/cyan interaction states, and branding
-- HELP workspace with project and upstream information
+- HELP workspace with a clean white interface, project resources, shortcuts, updates, and upstream information
 - Embedded DRDC GCS integration
 - UAV and UGV support
 
@@ -29,6 +29,23 @@ The Fly.io interface uses a centralized dark-navy palette with these interaction
 - Pressed: `#0083B8`
 
 Operational and semantic colors are intentionally preserved. For example, green may still indicate healthy GPS, sensor, connection, calibration, or other successful status information; graph and map colors also retain their technical meaning.
+
+### HELP workspace
+
+The HELP workspace uses a clean, website-inspired white interface that is intentionally local to HELP; the operational Fly.io GCS workspaces retain the dark-navy application theme. Its presentation includes Segoe UI typography, black action buttons, dark underlined external links, gray secondary text, and light-gray cards.
+
+HELP provides:
+
+- Online Services for the DRDC GCS Dashboard and Brands & Partnerships
+- Quick Help keyboard shortcuts
+- System Updates controls and the upstream Mission Planner changelog
+- About & Open Source project repository information
+- Upstream ArduPilot and Mission Planner attribution, contributor links, and documentation
+- An animated **OUR COMMUNITY PARTNERS** marquee
+
+### Community Partners
+
+The HELP page includes a native WinForms Community Partners marquee built from repository-owned logo resources. The logos scroll continuously from left to right using a seamless repeated sequence. Original logo colors and aspect ratios are preserved, and the implementation requires no web, React, or browser-animation dependency.
 
 ## Requirements
 

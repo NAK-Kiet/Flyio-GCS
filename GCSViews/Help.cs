@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 namespace MissionPlanner.GCSViews
 {
+    [PreventTheming]
     public partial class Help : MyUserControl, IActivate
     {
         private const string GitHubUrl = "https://github.com/NAK-Kiet/Flyio-GCS";
@@ -15,6 +16,17 @@ namespace MissionPlanner.GCSViews
         private const int CommunityPartnersTimerInterval = 25;
         private const int CommunityPartnersPixelsPerTick = 1;
         private const int CommunityPartnerHorizontalMargin = 24;
+        private static readonly Color HelpPageBackground = Color.White;
+        private static readonly Color HelpCardBackground = Color.FromArgb(248, 249, 250);
+        private static readonly Color HelpInnerCardBackground = Color.White;
+        private static readonly Color HelpBorder = Color.FromArgb(218, 221, 225);
+        private static readonly Color HelpTextPrimary = Color.FromArgb(17, 17, 17);
+        private static readonly Color HelpTextSecondary = Color.FromArgb(75, 85, 99);
+        private static readonly Color HelpTextMuted = Color.FromArgb(107, 114, 128);
+        private static readonly Color HelpHeroAccent = Color.FromArgb(255, 90, 0);
+        private static readonly Color HelpButton = Color.Black;
+        private static readonly Color HelpButtonHover = Color.FromArgb(31, 31, 31);
+        private static readonly Color HelpButtonPressed = Color.FromArgb(51, 51, 51);
         private Timer communityPartnersTimer;
         private MarqueeViewport communityPartnersViewport;
         private MarqueeTrack communityPartnersTrack;
@@ -100,13 +112,14 @@ namespace MissionPlanner.GCSViews
                 Dock = DockStyle.Fill, Margin = new Padding(0)
             };
             copy.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            AddText(copy, "FLY.IO / DRDC GCS", 10F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 0, 0, 7));
-            AddText(copy, "Welcome to Fly.io", 24F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 0, 0, 8));
+            hero.BackColor = HelpPageBackground;
+            AddText(copy, "FLY.IO / DRDC GCS", 10F, FontStyle.Bold, HelpHeroAccent, new Padding(0, 0, 0, 7));
+            AddText(copy, "Welcome to Fly.io", 22F, FontStyle.Bold, HelpTextPrimary, new Padding(0, 0, 0, 8));
             AddText(copy, "Ground Control Station for UAV and UGV systems.", 12F, FontStyle.Bold,
-                ThemeManager.TextPrimary, new Padding(0, 0, 0, 9));
+                HelpTextPrimary, new Padding(0, 0, 0, 9));
             AddText(copy,
                 "Fly.io provides vehicle monitoring, mission planning, configuration, telemetry, embedded DRDC services, and system integration tools.",
-                10.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0));
+                10.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0));
             hero.Controls.Add(copy, 0, 0);
             AddContent(hero);
         }
@@ -159,9 +172,13 @@ namespace MissionPlanner.GCSViews
         {
             var section = CreateSection("SYSTEM & UPDATES", "Application maintenance and diagnostics.", true);
             var actions = CreateWrapPanel();
-            BUT_updatecheck.Size = new Size(170, 34);
-            BUT_betaupdate.Size = new Size(190, 34);
-            CHK_showconsole.Margin = new Padding(4, 8, 18, 4);
+            actions.AutoSize = false;
+            actions.Height = 42;
+            BUT_updatecheck.Size = new Size(165, 34);
+            BUT_betaupdate.Size = new Size(185, 34);
+            BUT_updatecheck.Margin = new Padding(0, 0, 8, 0);
+            BUT_betaupdate.Margin = new Padding(0, 0, 8, 0);
+            CHK_showconsole.Margin = new Padding(4, 7, 0, 0);
             actions.Controls.Add(BUT_updatecheck);
             actions.Controls.Add(BUT_betaupdate);
             actions.Controls.Add(CHK_showconsole);
@@ -189,25 +206,25 @@ namespace MissionPlanner.GCSViews
             AddSubheading(section, "PROJECT REPOSITORIES");
             AddLinkRow(section, "Project Repository — GitHub", GitHubUrl);
             AddText(section, "Project Repository — GitLab (SSH remote)", 9.5F, FontStyle.Bold,
-                ThemeManager.TextPrimary, new Padding(0, 5, 0, 2));
-            AddText(section, GitLabRemote, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 0, 0, 3));
+                HelpTextPrimary, new Padding(0, 5, 0, 2));
+            AddText(section, GitLabRemote, 9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 0, 0, 3));
             AddText(section,
                 "A browser URL is not shown because the configured private GitLab host does not provide a confirmed HTTP/HTTPS mapping in this repository.",
-                8.5F, FontStyle.Italic, ThemeManager.TextSecondary, new Padding(0, 0, 0, 12));
+                8.5F, FontStyle.Italic, HelpTextMuted, new Padding(0, 0, 0, 12));
 
             AddSubheading(section, "UPSTREAM MISSION PLANNER");
             AddLinkRow(section, "Upstream Mission Planner", "https://github.com/ArduPilot/MissionPlanner");
             AddLinkRow(section, "Upstream Contributors", "https://github.com/ArduPilot/MissionPlanner/graphs/contributors");
             AddText(section,
                 "Upstream Mission Planner contributors and community acknowledgements include Andrew Radford, Marooned, Ryan Beall, Tom Pittenger, and the Mission Planner contributor community.",
-                9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 5, 0, 8));
+                9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 5, 0, 8));
             AddSubheading(section, "OPEN-SOURCE ECOSYSTEM ACKNOWLEDGEMENTS");
             AddText(section,
                 "Libraries used by the upstream Mission Planner ecosystem include GMap.NET, SharpKML, SharpZipLib, IronPython, KMLib, OpenTK, ZedGraph, alglib, BouncyCastle, DotSpatial, LibVLC, and netDXF.",
-                9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 3, 0, 7));
+                9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 3, 0, 7));
             AddText(section,
                 "Organizations historically contributing to the upstream Mission Planner ecosystem include 3D Robotics, Falcon Unmanned, and UAV Solutions. These acknowledgements do not imply direct contribution to Fly.io.",
-                9.5F, FontStyle.Regular, ThemeManager.TextSecondary, new Padding(0, 0, 0, 12));
+                9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 0, 0, 12));
             AddSubheading(section, "ARDUPILOT DOCUMENTATION");
             AddInlineLinks(section, new[]
             {
@@ -220,21 +237,21 @@ namespace MissionPlanner.GCSViews
         private void BuildCommunityPartnersSection()
         {
             var section = CreateSurface(new Padding(20), new Padding(0, 0, 0, 14));
-            var heading = CreateLabel("OUR COMMUNITY PARTNERS", 13F, FontStyle.Bold, ThemeManager.TextPrimary);
+            var heading = CreateLabel("OUR COMMUNITY PARTNERS", 13F, FontStyle.Bold, HelpTextPrimary);
             heading.Name = "SectionHeading";
             heading.Margin = new Padding(0, 0, 0, 13);
             AddRow(section, heading);
 
             communityPartnersViewport = new MarqueeViewport
             {
-                BackColor = Color.White,
+                BackColor = HelpPageBackground,
                 Dock = DockStyle.Top,
                 Height = 88,
                 Margin = new Padding(0)
             };
             communityPartnersTrack = new MarqueeTrack
             {
-                BackColor = Color.White,
+                BackColor = HelpPageBackground,
                 Height = communityPartnersViewport.Height,
                 Location = Point.Empty
             };
@@ -339,7 +356,7 @@ namespace MissionPlanner.GCSViews
             var card = new HelpCard
             {
                 AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                BackColor = ThemeManager.ControlBackground, Dock = DockStyle.Top,
+                BackColor = HelpCardBackground, Dock = DockStyle.Top,
                 Margin = margin, Padding = padding, ColumnCount = 1
             };
             card.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -349,11 +366,11 @@ namespace MissionPlanner.GCSViews
         private HelpCard CreateSection(string title, string description, bool compact = false)
         {
             var section = CreateSurface(compact ? new Padding(18, 15, 18, 15) : new Padding(20), new Padding(0, 0, 0, 14));
-            var heading = CreateLabel(title, compact ? 11F : 13F, FontStyle.Bold, ThemeManager.TextPrimary);
+            var heading = CreateLabel(title, compact ? 11F : 13F, FontStyle.Bold, HelpTextPrimary);
             heading.Name = "SectionHeading";
             heading.Margin = new Padding(0, 0, 0, 3);
             AddRow(section, heading);
-            var intro = CreateLabel(description, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary);
+            var intro = CreateLabel(description, 9.5F, FontStyle.Regular, HelpTextSecondary);
             intro.Name = "SectionIntro";
             intro.Margin = new Padding(0, 0, 0, compact ? 9 : 13);
             AddRow(section, intro);
@@ -367,12 +384,12 @@ namespace MissionPlanner.GCSViews
             card.AutoSize = false;
             card.Dock = DockStyle.None;
             card.Height = 145;
-            card.BackColor = ThemeManager.PanelBackground;
+            card.BackColor = HelpInnerCardBackground;
             card.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             card.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             card.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            card.Controls.Add(CreateLabel(title, 11.5F, FontStyle.Bold, ThemeManager.TextPrimary), 0, 0);
-            var descriptionLabel = CreateLabel(description, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary);
+            card.Controls.Add(CreateLabel(title, 11.5F, FontStyle.Bold, HelpTextPrimary), 0, 0);
+            var descriptionLabel = CreateLabel(description, 9.5F, FontStyle.Regular, HelpTextSecondary);
             descriptionLabel.Dock = DockStyle.Fill;
             descriptionLabel.Margin = new Padding(0, 7, 0, 8);
             card.Controls.Add(descriptionLabel, 0, 1);
@@ -386,8 +403,8 @@ namespace MissionPlanner.GCSViews
             card.AutoSize = false;
             card.Dock = DockStyle.None;
             card.Height = 172;
-            card.BackColor = ThemeManager.PanelBackground;
-            AddText(card, title, 9.5F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 0, 0, 7));
+            card.BackColor = HelpInnerCardBackground;
+            AddText(card, title, 9.5F, FontStyle.Bold, HelpTextPrimary, new Padding(0, 0, 0, 7));
             var useTwoPairs = shortcuts.Length > 6;
             var grid = new TableLayoutPanel
             {
@@ -412,8 +429,8 @@ namespace MissionPlanner.GCSViews
                 var parts = shortcuts[index].Split('|');
                 var column = useTwoPairs && index >= rowsPerPair ? 2 : 0;
                 var row = useTwoPairs ? index % rowsPerPair : index;
-                grid.Controls.Add(CreateLabel(parts[0], 8.5F, FontStyle.Bold, ThemeManager.TextPrimary), column, row);
-                grid.Controls.Add(CreateLabel(parts[1], 8.5F, FontStyle.Regular, ThemeManager.TextSecondary), column + 1, row);
+                grid.Controls.Add(CreateLabel(parts[0], 8.5F, FontStyle.Bold, HelpTextPrimary), column, row);
+                grid.Controls.Add(CreateLabel(parts[1], 8.5F, FontStyle.Regular, HelpTextSecondary), column + 1, row);
             }
             AddRow(card, grid);
             return card;
@@ -450,19 +467,19 @@ namespace MissionPlanner.GCSViews
         {
             var row = facts.RowCount++;
             facts.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            facts.Controls.Add(CreateLabel(key, 9.5F, FontStyle.Bold, ThemeManager.TextPrimary), 0, row);
-            facts.Controls.Add(CreateLabel(value, 9.5F, FontStyle.Regular, ThemeManager.TextSecondary), 1, row);
+            facts.Controls.Add(CreateLabel(key, 9.5F, FontStyle.Bold, HelpTextPrimary), 0, row);
+            facts.Controls.Add(CreateLabel(value, 9.5F, FontStyle.Regular, HelpTextSecondary), 1, row);
         }
 
         private void AddSubheading(TableLayoutPanel section, string text)
         {
-            AddText(section, text, 9F, FontStyle.Bold, ThemeManager.TextPrimary, new Padding(0, 5, 0, 7));
+            AddText(section, text, 9F, FontStyle.Bold, HelpTextPrimary, new Padding(0, 5, 0, 7));
         }
 
         private void AddLinkRow(TableLayoutPanel card, string key, string url)
         {
             var row = CreateWrapPanel();
-            row.Controls.Add(CreateLabel(key + ":", 9.5F, FontStyle.Bold, ThemeManager.TextPrimary));
+            row.Controls.Add(CreateLabel(key + ":", 9.5F, FontStyle.Bold, HelpTextPrimary));
             row.Controls.Add(CreateLink(url, url));
             AddRow(card, row);
         }
@@ -496,11 +513,26 @@ namespace MissionPlanner.GCSViews
             var link = new LinkLabel
             {
                 AutoSize = true, BackColor = Color.Transparent, Font = new Font("Segoe UI", 9.5F, FontStyle.Regular),
-                LinkColor = ThemeManager.TextPrimary, ActiveLinkColor = ThemeManager.TextSecondary,
-                VisitedLinkColor = ThemeManager.TextPrimary, Margin = new Padding(0, 2, 22, 5), Text = text, Tag = url
+                LinkColor = HelpTextPrimary, ActiveLinkColor = Color.Black,
+                VisitedLinkColor = HelpTextPrimary, LinkBehavior = LinkBehavior.AlwaysUnderline,
+                Margin = new Padding(0, 2, 22, 5), Text = text, Tag = url
             };
             link.LinkClicked += ExternalLink_LinkClicked;
+            link.MouseEnter += HelpLink_MouseEnter;
+            link.MouseLeave += HelpLink_MouseLeave;
             return link;
+        }
+
+        private void HelpLink_MouseEnter(object sender, EventArgs e)
+        {
+            var link = sender as LinkLabel;
+            if (link != null) link.LinkColor = HelpTextSecondary;
+        }
+
+        private void HelpLink_MouseLeave(object sender, EventArgs e)
+        {
+            var link = sender as LinkLabel;
+            if (link != null) link.LinkColor = HelpTextPrimary;
         }
 
         private MyButton CreateActionButton(string text, EventHandler handler, int width)
@@ -513,15 +545,16 @@ namespace MissionPlanner.GCSViews
 
         private void StyleActionButton(MyButton button)
         {
-            button.BackColor = ThemeManager.ControlBackground;
-            button.BGGradTop = ThemeManager.Accent;
-            button.BGGradBot = ThemeManager.Accent;
-            button.ColorMouseOver = ThemeManager.AccentHover;
-            button.ColorMouseDown = ThemeManager.AccentPressed;
-            button.ColorNotEnabled = ThemeManager.ControlBackground;
-            button.Outline = ThemeManager.ControlBorder;
-            button.TextColor = ThemeManager.TextOnAccent;
-            button.TextColorNotEnabled = ThemeManager.TextSecondary;
+            button.BackColor = HelpPageBackground;
+            button.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            button.BGGradTop = HelpButton;
+            button.BGGradBot = HelpButton;
+            button.ColorMouseOver = HelpButtonHover;
+            button.ColorMouseDown = HelpButtonPressed;
+            button.ColorNotEnabled = HelpBorder;
+            button.Outline = HelpButton;
+            button.TextColor = Color.White;
+            button.TextColorNotEnabled = HelpTextMuted;
         }
 
         private void AddContent(Control control)
@@ -538,18 +571,24 @@ namespace MissionPlanner.GCSViews
 
         private void ApplyHelpTheme()
         {
-            BackColor = ThemeManager.PanelBackground;
-            helpScrollPanel.BackColor = ThemeManager.PanelBackground;
-            contentLayout.BackColor = ThemeManager.PanelBackground;
+            BackColor = HelpPageBackground;
+            helpScrollPanel.BackColor = HelpPageBackground;
+            contentLayout.BackColor = HelpPageBackground;
             if (communityPartnersViewport != null)
-                communityPartnersViewport.BackColor = Color.White;
+                communityPartnersViewport.BackColor = HelpPageBackground;
             if (communityPartnersTrack != null)
-                communityPartnersTrack.BackColor = Color.White;
+                communityPartnersTrack.BackColor = HelpPageBackground;
             CHK_showconsole.BackColor = Color.Transparent;
-            CHK_showconsole.ForeColor = ThemeManager.TextSecondary;
-            linkLabel1.LinkColor = ThemeManager.TextPrimary;
-            linkLabel1.ActiveLinkColor = ThemeManager.TextSecondary;
-            linkLabel1.VisitedLinkColor = ThemeManager.TextPrimary;
+            CHK_showconsole.ForeColor = HelpTextSecondary;
+            linkLabel1.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular);
+            linkLabel1.LinkColor = HelpTextPrimary;
+            linkLabel1.ActiveLinkColor = Color.Black;
+            linkLabel1.VisitedLinkColor = HelpTextPrimary;
+            linkLabel1.LinkBehavior = LinkBehavior.AlwaysUnderline;
+            linkLabel1.MouseEnter -= HelpLink_MouseEnter;
+            linkLabel1.MouseLeave -= HelpLink_MouseLeave;
+            linkLabel1.MouseEnter += HelpLink_MouseEnter;
+            linkLabel1.MouseLeave += HelpLink_MouseLeave;
             StyleActionButton(BUT_updatecheck);
             StyleActionButton(BUT_betaupdate);
         }
@@ -603,7 +642,7 @@ namespace MissionPlanner.GCSViews
             protected override void OnPaint(PaintEventArgs e)
             {
                 base.OnPaint(e);
-                using (var pen = new Pen(ThemeManager.ControlBorder))
+                using (var pen = new Pen(HelpBorder))
                     e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
             }
         }

@@ -1060,10 +1060,7 @@ namespace MissionPlanner
             }
 
             MenuArduPilot.Image = TrimTransparentPadding(
-                Properties.Resources._0d92fed790a3a70170e61a86db103f399a595c70);
-
-            if (Program.Logo2 != null)
-                MenuArduPilot.Image = TrimTransparentPadding(Program.Logo2);
+                Properties.Resources.flyio_racing_drone_warrior_logo);
 
             Application.DoEvents();
 
