@@ -12,6 +12,14 @@ namespace MissionPlanner.GCSViews
     {
         private const string GitHubUrl = "https://github.com/NAK-Kiet/Flyio-GCS";
         private const string GitLabRemote = "git@192.168.100.120:Kaine/flyio-gcs.git";
+        private const int CommunityPartnersTimerInterval = 25;
+        private const int CommunityPartnersPixelsPerTick = 1;
+        private const int CommunityPartnerHorizontalMargin = 24;
+        private Timer communityPartnersTimer;
+        private MarqueeViewport communityPartnersViewport;
+        private MarqueeTrack communityPartnersTrack;
+        private int communityPartnersSequenceWidth;
+        private int communityPartnersOffset;
 
         public Help()
         {
@@ -27,6 +35,7 @@ namespace MissionPlanner.GCSViews
                 BUT_betaupdate.Visible = false;
                 BUT_updatecheck.Visible = false;
             }
+            UpdateCommunityPartnersTimer();
         }
 
         public void BUT_updatecheck_Click(object sender, EventArgs e)
@@ -77,6 +86,7 @@ namespace MissionPlanner.GCSViews
             BuildShortcutSection();
             BuildUpdatesSection();
             BuildAboutSection();
+            BuildCommunityPartnersSection();
             contentLayout.ResumeLayout(true);
             ApplyHelpTheme();
         }
@@ -205,6 +215,123 @@ namespace MissionPlanner.GCSViews
                 new LinkItem("ArduCopter documentation", "https://ardupilot.org/copter"),
                 new LinkItem("ArduRover documentation", "https://ardupilot.org/rover")
             });
+        }
+
+        private void BuildCommunityPartnersSection()
+        {
+            var section = CreateSurface(new Padding(20), new Padding(0, 0, 0, 14));
+            var heading = CreateLabel("OUR COMMUNITY PARTNERS", 13F, FontStyle.Bold, ThemeManager.TextPrimary);
+            heading.Name = "SectionHeading";
+            heading.Margin = new Padding(0, 0, 0, 13);
+            AddRow(section, heading);
+
+            communityPartnersViewport = new MarqueeViewport
+            {
+                BackColor = Color.White,
+                Dock = DockStyle.Top,
+                Height = 88,
+                Margin = new Padding(0)
+            };
+            communityPartnersTrack = new MarqueeTrack
+            {
+                BackColor = Color.White,
+                Height = communityPartnersViewport.Height,
+                Location = Point.Empty
+            };
+            communityPartnersViewport.Controls.Add(communityPartnersTrack);
+
+            var images = new Image[]
+            {
+                Resources.community_partner_aerobyte,
+                Resources.community_partner_aerospace,
+                Resources.community_partner_dev,
+                Resources.community_partner_drdc,
+                Resources.community_partner_electronic,
+                Resources.community_partner_factoryio,
+                Resources.community_partner_factoryx,
+                Resources.community_partner_flyio,
+                Resources.community_partner_maker,
+                Resources.community_partner_racingdrone
+            };
+            var logoSizes = new[]
+            {
+                new Size(200, 80),
+                new Size(62, 52),
+                new Size(148, 52),
+                new Size(160, 88),
+                new Size(230, 72),
+                new Size(350, 88),
+                new Size(65, 52),
+                new Size(130, 72),
+                new Size(170, 64),
+                new Size(115, 88)
+            };
+
+            communityPartnersSequenceWidth = 0;
+            foreach (var size in logoSizes)
+                communityPartnersSequenceWidth += size.Width + CommunityPartnerHorizontalMargin * 2;
+
+            const int sequenceCopies = 3;
+            for (var copy = 0; copy < sequenceCopies; copy++)
+            {
+                var x = copy * communityPartnersSequenceWidth;
+                for (var index = 0; index < images.Length; index++)
+                {
+                    x += CommunityPartnerHorizontalMargin;
+                    var logoSize = logoSizes[index];
+                    communityPartnersTrack.Controls.Add(new PartnerLogoPictureBox
+                    {
+                        BackColor = Color.Transparent,
+                        Bounds = new Rectangle(x, (communityPartnersViewport.Height - logoSize.Height) / 2,
+                            logoSize.Width, logoSize.Height),
+                        Image = images[index],
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        TabStop = false
+                    });
+                    x += logoSize.Width + CommunityPartnerHorizontalMargin;
+                }
+            }
+            communityPartnersTrack.Width = communityPartnersSequenceWidth * sequenceCopies;
+            communityPartnersOffset = 0;
+            PositionCommunityPartnersTrack();
+            AddRow(section, communityPartnersViewport);
+            AddContent(section);
+
+            communityPartnersTimer = new Timer { Interval = CommunityPartnersTimerInterval };
+            communityPartnersTimer.Tick += CommunityPartnersTimer_Tick;
+            VisibleChanged += Help_VisibleChanged;
+            Disposed += Help_Disposed;
+        }
+
+        private void CommunityPartnersTimer_Tick(object sender, EventArgs e)
+        {
+            communityPartnersOffset += CommunityPartnersPixelsPerTick;
+            if (communityPartnersOffset >= communityPartnersSequenceWidth)
+                communityPartnersOffset -= communityPartnersSequenceWidth;
+            PositionCommunityPartnersTrack();
+        }
+
+        private void PositionCommunityPartnersTrack()
+        {
+            if (communityPartnersTrack != null)
+                communityPartnersTrack.Left = communityPartnersOffset - communityPartnersSequenceWidth;
+        }
+
+        private void Help_VisibleChanged(object sender, EventArgs e) { UpdateCommunityPartnersTimer(); }
+
+        private void UpdateCommunityPartnersTimer()
+        {
+            if (communityPartnersTimer == null) return;
+            if (Visible && !DesignMode) communityPartnersTimer.Start();
+            else communityPartnersTimer.Stop();
+        }
+
+        private void Help_Disposed(object sender, EventArgs e)
+        {
+            if (communityPartnersTimer == null) return;
+            communityPartnersTimer.Stop();
+            communityPartnersTimer.Dispose();
+            communityPartnersTimer = null;
         }
 
         private HelpCard CreateSurface(Padding padding, Padding margin)
@@ -414,6 +541,10 @@ namespace MissionPlanner.GCSViews
             BackColor = ThemeManager.PanelBackground;
             helpScrollPanel.BackColor = ThemeManager.PanelBackground;
             contentLayout.BackColor = ThemeManager.PanelBackground;
+            if (communityPartnersViewport != null)
+                communityPartnersViewport.BackColor = Color.White;
+            if (communityPartnersTrack != null)
+                communityPartnersTrack.BackColor = Color.White;
             CHK_showconsole.BackColor = Color.Transparent;
             CHK_showconsole.ForeColor = ThemeManager.TextSecondary;
             linkLabel1.LinkColor = ThemeManager.TextPrimary;
@@ -475,6 +606,33 @@ namespace MissionPlanner.GCSViews
                 using (var pen = new Pen(ThemeManager.ControlBorder))
                     e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
             }
+        }
+
+        [PreventTheming]
+        private sealed class MarqueeViewport : Panel
+        {
+            public MarqueeViewport()
+            {
+                DoubleBuffered = true;
+                SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer |
+                    ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true);
+            }
+        }
+
+        [PreventTheming]
+        private sealed class MarqueeTrack : Panel
+        {
+            public MarqueeTrack()
+            {
+                DoubleBuffered = true;
+                SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer |
+                    ControlStyles.UserPaint, true);
+            }
+        }
+
+        [PreventTheming]
+        private sealed class PartnerLogoPictureBox : PictureBox
+        {
         }
     }
 }

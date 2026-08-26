@@ -109,6 +109,56 @@ namespace MissionPlanner.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap flyio_racing_drone_warrior_logo {
+            get {
+                object obj = ResourceManager.GetObject("flyio_racing_drone_warrior_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        public static System.Drawing.Bitmap community_partner_aerobyte {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_aerobyte", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_aerospace {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_aerospace", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_dev {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_dev", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_drdc {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_drdc", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_electronic {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_electronic", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_factoryio {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_factoryio", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_factoryx {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_factoryx", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_flyio {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_flyio", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_maker {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_maker", resourceCulture))); }
+        }
+
+        public static System.Drawing.Bitmap community_partner_racingdrone {
+            get { return ((System.Drawing.Bitmap)(ResourceManager.GetObject("community_partner_racingdrone", resourceCulture))); }
+        }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
