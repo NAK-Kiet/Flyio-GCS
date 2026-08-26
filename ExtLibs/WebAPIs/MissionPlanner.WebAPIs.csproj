@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Program.cs" />
+    <Compile Remove="Dowding\**" />
+    <Compile Remove="Dronelogbook\**" />
     <Compile Remove="Dowding\bin\**" />
     <Compile Remove="Dowding\docs\**" />
     <Compile Remove="Dowding\packages\**" />

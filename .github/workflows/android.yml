@@ -1,12 +1,6 @@
 name: Android Build
 on: 
     workflow_dispatch:
-    pull_request:
-    push:
-        branches:
-            - master
-        tags:
-            - beta
 
 jobs:
   buildAAB:

@@ -7,10 +7,24 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 10
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate DroneCAN sources
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check --upgrade pip
+          python -m pip install --disable-pip-version-check dronecan empy==3.3.4
+          Push-Location ExtLibs\DroneCAN\canard_dsdlc
+          python canard_dsdlc.py ..\dsdl\dronecan ..\dsdl\com ..\dsdl\ardupilot ..\dsdl\cuav ..\dsdl\uavcan ..\dsdl\mppt ..\out
+          Pop-Location
 
       - name: Build
         shell: pwsh
@@ -55,10 +69,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 10
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Cache multiple paths
         uses: actions/cache@v4
@@ -66,6 +85,15 @@ jobs:
           path: |
             **/obj/**
           key: ${{ runner.os }}-buildDebug
+
+      - name: Generate DroneCAN sources
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check --upgrade pip
+          python -m pip install --disable-pip-version-check dronecan empy==3.3.4
+          Push-Location ExtLibs\DroneCAN\canard_dsdlc
+          python canard_dsdlc.py ..\dsdl\dronecan ..\dsdl\com ..\dsdl\ardupilot ..\dsdl\cuav ..\dsdl\uavcan ..\dsdl\mppt ..\out
+          Pop-Location
 
       - name: Build
         shell: pwsh
