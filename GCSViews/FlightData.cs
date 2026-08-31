@@ -427,6 +427,8 @@ namespace MissionPlanner.GCSViews
 
             tabControlactions.Multiline = Settings.Instance.GetBoolean("tabControlactions_Multiline", false);
 
+            InitializeFlyioOperationsLayout();
+
         }
 
         public void Activate()
@@ -2736,9 +2738,13 @@ namespace MissionPlanner.GCSViews
             if (Settings.Instance.ContainsKey("HudSwap") && Settings.Instance["HudSwap"] == "true")
                 SwapHud1AndMap();
 
-            if (Settings.Instance.ContainsKey("FlightSplitter"))
+            if (flyioWorkspaceHost == null && Settings.Instance.ContainsKey("FlightSplitter"))
             {
                 MainH.SplitterDistance = Settings.Instance.GetInt32("FlightSplitter");
+            }
+            else if (flyioWorkspaceHost != null)
+            {
+                MainH.SplitterDistance = 220;
             }
 
             if (Settings.Instance.ContainsKey("russian_hud"))
@@ -5141,6 +5147,16 @@ namespace MissionPlanner.GCSViews
             if (this.huddropout)
                 return;
 
+            // The Fly.io operations shell owns the map/HUD workspace. Keep the legacy
+            // command functional without reparenting those controls outside that shell.
+            if (flyioWorkspaceHost != null)
+            {
+                bool showHud = !flyioWorkspaceHost.Controls.Contains(hud1);
+                Settings.Instance["HudSwap"] = showHud ? "true" : "false";
+                ShowFlyioWorkspace(showHud ? (Control) hud1 : flyioMapWorkspace);
+                return;
+            }
+
             MainH.Panel2.SuspendLayout();
 
             if (this.SubMainLeft.Panel1.Controls.Contains(hud1))
@@ -5166,22 +5182,29 @@ namespace MissionPlanner.GCSViews
 
         void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
-            // Draw the background of the ListBox control for each item.
-            //e.DrawBackground();
-            // Define the default color of the brush as black.
-            Brush myBrush = Brushes.Black;
+            var tabs = sender as TabControl;
+            if (tabs == null || e.Index < 0 || e.Index >= tabs.TabPages.Count)
+                return;
 
-            LinearGradientBrush linear = new LinearGradientBrush(e.Bounds, Color.FromArgb(0xD7, 0x19, 0x20),
-                Color.FromArgb(0xE5, 0x2B, 0x32), LinearGradientMode.Vertical);
+            bool selected = e.Index == tabs.SelectedIndex;
+            Color background = selected ? FlyioAccent : FlyioSurface;
+            Color border = selected ? FlyioHover : FlyioDivider;
+            Rectangle bounds = e.Bounds;
 
-            e.Graphics.FillRectangle(linear, e.Bounds);
+            using (var backgroundBrush = new SolidBrush(background))
+            using (var borderPen = new Pen(border))
+            {
+                e.Graphics.FillRectangle(backgroundBrush, bounds);
+                e.Graphics.DrawRectangle(borderPen, bounds.X, bounds.Y,
+                    Math.Max(0, bounds.Width - 1), Math.Max(0, bounds.Height - 1));
+            }
 
-            // Draw the current item text based on the current Font
-            // and the custom brush settings.
-            e.Graphics.DrawString(((TabControl) sender).TabPages[e.Index].Text,
-                e.Font, myBrush, e.Bounds, StringFormat.GenericDefault);
-            // If the ListBox has focus, draw a focus rectangle around the selected item.
-            e.DrawFocusRectangle();
+            TextRenderer.DrawText(e.Graphics, tabs.TabPages[e.Index].Text, tabs.Font, bounds,
+                FlyioText, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter |
+                           TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine);
+
+            if (selected && tabs.Focused)
+                ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(bounds, -3, -3), FlyioText, background);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -5467,6 +5490,7 @@ namespace MissionPlanner.GCSViews
                     //Console.Write("bindingSourceHud ");
                     MainV2.comPort.MAV.cs.UpdateCurrentSettings(
                         bindingSourceHud.UpdateDataSource(MainV2.comPort.MAV.cs));
+                    UpdateFlyioOperationsStatus(MainV2.comPort.MAV.cs);
                     //Console.WriteLine("DONE ");
 
                     if (tabControlactions.SelectedTab == tabStatus)
