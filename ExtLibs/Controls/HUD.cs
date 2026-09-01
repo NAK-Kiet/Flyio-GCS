@@ -188,6 +188,9 @@ namespace MissionPlanner.Controls
         public bool displayspeed { get; set; }
 
         [System.ComponentModel.Browsable(true), DefaultValue(true)]
+        public bool displayspeedtext { get; set; }
+
+        [System.ComponentModel.Browsable(true), DefaultValue(true)]
         public bool displayalt { get; set; }
 
         [System.ComponentModel.Browsable(true), DefaultValue(true)]
@@ -267,7 +270,7 @@ namespace MissionPlanner.Controls
                     displayekf =
                         displayprearm =
                             displayheading =
-                                displayspeed =
+                                displayspeed = displayspeedtext =
                                     displayalt =
                                         displayconninfo =
                                             displayxtrack =
@@ -2554,6 +2557,8 @@ namespace MissionPlanner.Controls
                     graphicsObject.ResetTransform();
 
                     // extra text data
+                    if (displayspeedtext)
+                    {
 
                     if (_lowairspeed)
                     {
@@ -2575,6 +2580,7 @@ namespace MissionPlanner.Controls
                     {
                         drawstring(HUDT.GS + _groundspeed.ToString("0.0") + speedunit, font, fontsize, _whiteBrush,
                             1, scrollbg.Bottom + fontsize + 2 + 10);
+                    }
                     }
                 }
 

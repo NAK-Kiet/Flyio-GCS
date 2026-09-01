@@ -427,7 +427,7 @@ namespace MissionPlanner.GCSViews
 
             tabControlactions.Multiline = Settings.Instance.GetBoolean("tabControlactions_Multiline", false);
 
-            InitializeFlyioOperationsLayout();
+            ApplyFlyioLightTheme();
 
         }
 
@@ -2738,13 +2738,9 @@ namespace MissionPlanner.GCSViews
             if (Settings.Instance.ContainsKey("HudSwap") && Settings.Instance["HudSwap"] == "true")
                 SwapHud1AndMap();
 
-            if (flyioWorkspaceHost == null && Settings.Instance.ContainsKey("FlightSplitter"))
+            if (Settings.Instance.ContainsKey("FlightSplitter"))
             {
                 MainH.SplitterDistance = Settings.Instance.GetInt32("FlightSplitter");
-            }
-            else if (flyioWorkspaceHost != null)
-            {
-                MainH.SplitterDistance = 220;
             }
 
             if (Settings.Instance.ContainsKey("russian_hud"))
@@ -3310,6 +3306,9 @@ namespace MissionPlanner.GCSViews
         private void hud1_Resize(object sender, EventArgs e)
         {
             Console.WriteLine("HUD resize " + hud1.Width + " " + hud1.Height); // +"\n"+ System.Environment.StackTrace);
+
+            if (flyioResponsiveLayoutEnabled)
+                return;
 
             if (hud1.Parent == this.SubMainLeft.Panel1)
             {
@@ -5147,16 +5146,6 @@ namespace MissionPlanner.GCSViews
             if (this.huddropout)
                 return;
 
-            // The Fly.io operations shell owns the map/HUD workspace. Keep the legacy
-            // command functional without reparenting those controls outside that shell.
-            if (flyioWorkspaceHost != null)
-            {
-                bool showHud = !flyioWorkspaceHost.Controls.Contains(hud1);
-                Settings.Instance["HudSwap"] = showHud ? "true" : "false";
-                ShowFlyioWorkspace(showHud ? (Control) hud1 : flyioMapWorkspace);
-                return;
-            }
-
             MainH.Panel2.SuspendLayout();
 
             if (this.SubMainLeft.Panel1.Controls.Contains(hud1))
@@ -5182,29 +5171,7 @@ namespace MissionPlanner.GCSViews
 
         void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
-            var tabs = sender as TabControl;
-            if (tabs == null || e.Index < 0 || e.Index >= tabs.TabPages.Count)
-                return;
-
-            bool selected = e.Index == tabs.SelectedIndex;
-            Color background = selected ? FlyioAccent : FlyioSurface;
-            Color border = selected ? FlyioHover : FlyioDivider;
-            Rectangle bounds = e.Bounds;
-
-            using (var backgroundBrush = new SolidBrush(background))
-            using (var borderPen = new Pen(border))
-            {
-                e.Graphics.FillRectangle(backgroundBrush, bounds);
-                e.Graphics.DrawRectangle(borderPen, bounds.X, bounds.Y,
-                    Math.Max(0, bounds.Width - 1), Math.Max(0, bounds.Height - 1));
-            }
-
-            TextRenderer.DrawText(e.Graphics, tabs.TabPages[e.Index].Text, tabs.Font, bounds,
-                FlyioText, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter |
-                           TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine);
-
-            if (selected && tabs.Focused)
-                ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(bounds, -3, -3), FlyioText, background);
+            DrawFlyioLightTab(sender as TabControl, e);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -5490,7 +5457,7 @@ namespace MissionPlanner.GCSViews
                     //Console.Write("bindingSourceHud ");
                     MainV2.comPort.MAV.cs.UpdateCurrentSettings(
                         bindingSourceHud.UpdateDataSource(MainV2.comPort.MAV.cs));
-                    UpdateFlyioOperationsStatus(MainV2.comPort.MAV.cs);
+                    UpdateFlyioDataStatus(MainV2.comPort.MAV.cs);
                     //Console.WriteLine("DONE ");
 
                     if (tabControlactions.SelectedTab == tabStatus)
@@ -5508,6 +5475,7 @@ namespace MissionPlanner.GCSViews
                     {
                         MainV2.comPort.MAV.cs.UpdateCurrentSettings(
                             bindingSourceGaugesTab.UpdateDataSource(MainV2.comPort.MAV.cs));
+                        UpdateFlyioSixPack(MainV2.comPort.MAV.cs);
                     }
                     else if (tabControlactions.SelectedTab == tabPagePreFlight)
                     {
