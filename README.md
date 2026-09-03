@@ -30,6 +30,37 @@ The Fly.io interface uses a centralized dark-navy palette with these interaction
 
 Operational and semantic colors are intentionally preserved. For example, green may still indicate healthy GPS, sensor, connection, calibration, or other successful status information; graph and map colors also retain their technical meaning.
 
+## Fly.io DATA Workspace
+
+The DATA workspace presents live Mission Planner flight data in a responsive Fly.io dark-navy interface. The existing aviation HUD occupies the upper-left workspace, the selected DATA page appears below it, and the map fills the right side. A draggable splitter controls the balance between the left workspace and map while preserving a usable layout as the window is resized.
+
+All displayed flight values continue to come from the existing Mission Planner/MAVLink `CurrentState` telemetry pipeline. The interface does not substitute sample values or static dashboard data.
+
+The workspace includes:
+
+- An aviation-style HUD with a blue-sky, brown-earth artificial horizon
+- Modern Quick telemetry cards
+- A responsive six-instrument Gauges page
+- A map-provider selector backed by the available Mission Planner/GMap providers
+- Existing Follow, Grid, Location, and More map controls
+- Compact map information for latitude, longitude, altitude, heading, and satellite count
+- A bottom flight-status bar showing MODE, STATE/armed status, GPS, SAT, HDOP, VIBE, LINK, and RC information
+
+### Aviation Instruments
+
+The Gauges page uses responsive, vector-rendered Fly.io controls rather than static dashboard images. Its conventional six-pack arrangement is:
+
+| Row | Instruments |
+| --- | --- |
+| Top | Airspeed Indicator · Attitude Indicator · Altimeter |
+| Bottom | Turn Coordinator · Heading Indicator · Vertical Speed Indicator |
+
+The Airspeed Indicator uses airspeed telemetry, the Attitude Indicator uses roll and pitch, the Altimeter uses altitude, the Turn Coordinator uses supported turn-rate telemetry, the Heading Indicator uses heading/yaw, and the Vertical Speed Indicator uses vertical speed. The Heading Indicator has a fixed white aircraft reference while its compass card responds to heading. The Turn Coordinator includes an aircraft representation without inventing unavailable slip/skid telemetry.
+
+## Interface Design
+
+Fly.io GCS uses a dark-navy primary interface with Fly.io cyan (`#00ADEE`) for interaction and selection accents. Aviation-oriented instrument presentation keeps flight information readable without replacing its operational meaning. Semantic green indicates healthy states, yellow indicates caution, and red is reserved for warnings, errors, or states such as disarmed where applicable. The DATA workspace, HUD, gauges, map, and status areas resize together while retaining the draggable DATA/map split.
+
 ### HELP workspace
 
 The HELP workspace uses a clean, website-inspired white interface that is intentionally local to HELP; the operational Fly.io GCS workspaces retain the dark-navy application theme. Its presentation includes Segoe UI typography, black action buttons, dark underlined external links, gray secondary text, and light-gray cards.
@@ -63,29 +94,29 @@ Although the project targets .NET Framework 4.7.2, its existing Release configur
 
 ## Clone from GitHub
 
-Clone the development branch after cloning the repository:
+Clone the repository and use the `main` branch:
 
 ```powershell
 git clone https://github.com/NAK-Kiet/Flyio-GCS.git
 cd Flyio-GCS
-git switch fix/missing-dependencies
+git switch main
 ```
 
-Alternatively, clone only the development branch:
+Alternatively, clone only `main`:
 
 ```powershell
-git clone --branch fix/missing-dependencies --single-branch https://github.com/NAK-Kiet/Flyio-GCS.git
+git clone --branch main --single-branch https://github.com/NAK-Kiet/Flyio-GCS.git
 cd Flyio-GCS
 ```
 
 ## Clone from GitLab
 
-The configured GitLab repository uses SSH:
+The configured GitLab repository is internal/private and uses SSH:
 
 ```powershell
 git clone git@192.168.100.120:Kaine/flyio-gcs.git
 cd flyio-gcs
-git switch fix/missing-dependencies
+git switch main
 ```
 
 An SSH key authorized for this GitLab repository and network access to its host are required. The SSH remote is a Git transport address, not a browser URL.
@@ -160,10 +191,10 @@ Vehicle selectors retain light neutral icons in their normal state and use the c
 
 ## Updating
 
-From an existing clone on the development branch:
+From an existing clone on `main`:
 
 ```powershell
-git switch fix/missing-dependencies
+git switch main
 git pull
 dotnet restore .\MissionPlanner.csproj
 dotnet build .\MissionPlanner.csproj -c Release --no-restore
@@ -218,4 +249,4 @@ Mission Planner and ArduPilot remain the work of their respective upstream autho
 
 ## Project Status
 
-Fly.io GCS is under active development on the `fix/missing-dependencies` branch.
+Fly.io GCS is under active development on the `main` branch. The public repository is [NAK-Kiet/Flyio-GCS](https://github.com/NAK-Kiet/Flyio-GCS); an internal/private GitLab mirror is configured at `git@192.168.100.120:Kaine/flyio-gcs.git`.
