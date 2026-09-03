@@ -27,7 +27,7 @@ namespace MissionPlanner.GCSViews
                 Name = "flyioSixPackLayout",
                 Dock = DockStyle.Fill,
                 BackColor = FlyioDataBackground,
-                Padding = new Padding(2),
+                Padding = new Padding(3),
                 Margin = Padding.Empty,
                 ColumnCount = 3,
                 RowCount = 2
@@ -60,7 +60,7 @@ namespace MissionPlanner.GCSViews
 
         private static FlyioInstrument NewFlyioInstrument(FlyioInstrumentKind kind)
         {
-            return new FlyioInstrument(kind) { Dock = DockStyle.Fill };
+            return new FlyioInstrument(kind) { Dock = DockStyle.Fill, Margin = new Padding(2) };
         }
 
         private void UpdateFlyioSixPack(CurrentState state)

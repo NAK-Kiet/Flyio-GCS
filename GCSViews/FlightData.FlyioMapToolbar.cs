@@ -25,7 +25,7 @@ namespace MissionPlanner.GCSViews
                 Height = 52,
                 WrapContents = false,
                 AutoScroll = false,
-                BackColor = FlyioDataSurface,
+                BackColor = FlyioDataBackground,
                 Padding = new Padding(12, 10, 8, 8),
                 Margin = Padding.Empty
             };
@@ -46,7 +46,7 @@ namespace MissionPlanner.GCSViews
                 TextAlign = ContentAlignment.MiddleCenter,
                 Checked = CHK_autopan.Checked,
                 FlatStyle = FlatStyle.Flat,
-                BackColor = CHK_autopan.Checked ? FlyioDataAccent : FlyioDataSurface,
+                BackColor = CHK_autopan.Checked ? FlyioDataAccent : FlyioDataSecondarySurface,
                 ForeColor = CHK_autopan.Checked ? Color.White : FlyioDataText,
                 Font = CreateFlyioFont(8.5F, FontStyle.Bold),
                 Margin = new Padding(0, 0, 5, 0)
@@ -55,7 +55,7 @@ namespace MissionPlanner.GCSViews
             flyioFollowButton.CheckedChanged += (sender, args) =>
             {
                 CHK_autopan.Checked = flyioFollowButton.Checked;
-                flyioFollowButton.BackColor = flyioFollowButton.Checked ? FlyioDataAccent : FlyioDataSurface;
+                flyioFollowButton.BackColor = flyioFollowButton.Checked ? FlyioDataAccent : FlyioDataSecondarySurface;
                 flyioFollowButton.ForeColor = flyioFollowButton.Checked ? Color.White : FlyioDataText;
             };
 
@@ -95,7 +95,7 @@ namespace MissionPlanner.GCSViews
             {
                 Name = "flyioMapHost",
                 Dock = DockStyle.Fill,
-                BackColor = FlyioDataSurface,
+                BackColor = FlyioDataSecondarySurface,
                 Padding = new Padding(0, flyioMapToolbar.Height, 0, 0),
                 Margin = Padding.Empty
             };
@@ -116,7 +116,7 @@ namespace MissionPlanner.GCSViews
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Width = width,
                 Height = 32,
-                BackColor = FlyioDataSurface,
+                BackColor = FlyioDataSecondarySurface,
                 ForeColor = FlyioDataText,
                 FlatStyle = FlatStyle.Flat,
                 Font = CreateFlyioFont(9F),

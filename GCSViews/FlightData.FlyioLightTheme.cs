@@ -8,12 +8,12 @@ namespace MissionPlanner.GCSViews
 {
     public partial class FlightData
     {
-        private static readonly Color FlyioDataBackground = Color.FromArgb(245, 247, 250);
-        private static readonly Color FlyioDataSurface = Color.White;
-        private static readonly Color FlyioDataSecondarySurface = Color.FromArgb(240, 243, 246);
-        private static readonly Color FlyioDataBorder = Color.FromArgb(225, 230, 236);
-        private static readonly Color FlyioDataText = Color.FromArgb(23, 32, 51);
-        private static readonly Color FlyioDataSecondaryText = Color.FromArgb(102, 112, 133);
+        private static readonly Color FlyioDataBackground = Color.FromArgb(7, 23, 41);
+        private static readonly Color FlyioDataSurface = Color.FromArgb(13, 34, 59);
+        private static readonly Color FlyioDataSecondarySurface = Color.FromArgb(16, 41, 68);
+        private static readonly Color FlyioDataBorder = Color.FromArgb(23, 58, 94);
+        private static readonly Color FlyioDataText = Color.FromArgb(242, 245, 248);
+        private static readonly Color FlyioDataSecondaryText = Color.FromArgb(159, 176, 195);
         private static readonly Color FlyioDataAccent = Color.FromArgb(0, 173, 238);
         private static readonly Color FlyioDataHover = Color.FromArgb(37, 190, 244);
         private static readonly Color FlyioDataPressed = Color.FromArgb(0, 131, 184);
@@ -55,10 +55,12 @@ namespace MissionPlanner.GCSViews
             SubMainLeft.Panel1.BackColor = FlyioDataSurface;
             SubMainLeft.Panel2.BackColor = FlyioDataSurface;
             tableMap.BackColor = FlyioDataSurface;
+            SubMainLeft.Panel1.Padding = new Padding(6, 6, 6, 3);
+            SubMainLeft.Panel2.Padding = new Padding(6, 3, 6, 6);
 
             tabControlactions.DrawMode = TabDrawMode.OwnerDrawFixed;
             tabControlactions.Font = CreateFlyioFont(9F, FontStyle.Bold);
-            tabControlactions.Padding = new Point(12, 5);
+            tabControlactions.Padding = new Point(14, 7);
 
             ApplyFlyioLightThemeToChildren(SubMainLeft.Panel2);
             ApplyFlyioLightThemeToChildren(tableMap);
@@ -190,16 +192,16 @@ namespace MissionPlanner.GCSViews
                 return;
 
             bool selected = e.Index == tabs.SelectedIndex;
-            Color background = FlyioDataSurface;
-            Color foreground = selected ? FlyioDataPressed : FlyioDataText;
+            Color background = selected ? FlyioDataSecondarySurface : FlyioDataBackground;
+            Color foreground = selected ? FlyioDataText : FlyioDataSecondaryText;
 
             using (var backgroundBrush = new SolidBrush(background))
             using (var underlineBrush = new SolidBrush(FlyioDataAccent))
             {
                 e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
                 if (selected)
-                    e.Graphics.FillRectangle(underlineBrush, e.Bounds.Left + 6, e.Bounds.Bottom - 3,
-                        Math.Max(1, e.Bounds.Width - 12), 3);
+                    e.Graphics.FillRectangle(underlineBrush, e.Bounds.Left + 8, e.Bounds.Bottom - 3,
+                        Math.Max(1, e.Bounds.Width - 16), 3);
             }
 
             TextRenderer.DrawText(e.Graphics, tabs.TabPages[e.Index].Text, tabs.Font, e.Bounds,

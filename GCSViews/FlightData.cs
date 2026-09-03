@@ -417,10 +417,10 @@ namespace MissionPlanner.GCSViews
             MainV2.comPort.ParamListChanged += FlightData_ParentChanged;
 
             //HUD Theming, color setup
-            myhud.groundColor1 = ThemeManager.HudGroundTop;
-            myhud.groundColor2 = ThemeManager.HudGroundBot;
-            myhud.skyColor1 = ThemeManager.HudSkyTop;
-            myhud.skyColor2 = ThemeManager.HudSkyBot;
+            myhud.groundColor1 = Color.FromArgb(139, 90, 50);
+            myhud.groundColor2 = Color.FromArgb(139, 90, 50);
+            myhud.skyColor1 = Color.FromArgb(62, 142, 208);
+            myhud.skyColor2 = Color.FromArgb(62, 142, 208);
             myhud.hudcolor = ThemeManager.HudText;
 
             hud1.displayicons = Settings.Instance.GetBoolean("HUD_showicons", false);
@@ -3127,14 +3127,14 @@ namespace MissionPlanner.GCSViews
             if (groundColorToolStripMenuItem.Checked)
             {
                 // brown
-                hud1.groundColor1 = Color.FromArgb(147, 78, 1);
-                hud1.groundColor2 = Color.FromArgb(60, 33, 4);
+                hud1.groundColor1 = Color.FromArgb(139, 90, 50);
+                hud1.groundColor2 = Color.FromArgb(139, 90, 50);
             }
             else
             {
                 // green
-                hud1.groundColor1 = Color.FromArgb(0x9b, 0xb8, 0x24);
-                hud1.groundColor2 = Color.FromArgb(0x41, 0x4f, 0x07);
+                hud1.groundColor1 = Color.FromArgb(139, 90, 50);
+                hud1.groundColor2 = Color.FromArgb(139, 90, 50);
             }
 
             Settings.config["groundColorToolStripMenuItem"] = groundColorToolStripMenuItem.Checked.ToString();

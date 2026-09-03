@@ -1,7 +1,9 @@
 using System;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
+using MissionPlanner.Controls;
 using MissionPlanner.Utilities;
 
 namespace MissionPlanner.GCSViews
@@ -59,12 +61,15 @@ namespace MissionPlanner.GCSViews
 
             hud1.Margin = Padding.Empty;
             hud1.Dock = DockStyle.Fill;
+            hud1.Paint += DrawFlyioHudFrame;
             tabControlactions.Margin = Padding.Empty;
             tabControlactions.Dock = DockStyle.Fill;
             tabControlactions.Multiline = false;
             tabControlactions.SizeMode = TabSizeMode.Normal;
-            tabControlactions.ItemSize = new Size(0, 30);
-            tabControlactions.Padding = new Point(10, 4);
+            tabControlactions.ItemSize = new Size(0, 40);
+            tabControlactions.Padding = new Point(14, 7);
+
+            StyleFlyioQuickTelemetry();
 
             CreateFlyioMapInformationRow();
             CreateFlyioDataStatusBar();
@@ -74,6 +79,34 @@ namespace MissionPlanner.GCSViews
             MainH.SplitterMoved += FlyioMainSplitterMoved;
             SubMainLeft.SizeChanged += FlyioLeftPanelSizeChanged;
             ApplyFlyioResponsiveGeometry();
+        }
+
+        private void DrawFlyioHudFrame(object sender, PaintEventArgs e)
+        {
+            using (var border = new Pen(FlyioDataBorder))
+                e.Graphics.DrawRectangle(border, 0, 0, Math.Max(0, hud1.Width - 1), Math.Max(0, hud1.Height - 1));
+        }
+
+        private void StyleFlyioQuickTelemetry()
+        {
+            tableLayoutPanelQuick.BackColor = FlyioDataBackground;
+            tableLayoutPanelQuick.Padding = new Padding(3);
+            tableLayoutPanelQuick.Margin = Padding.Empty;
+
+            QuickView[] cards = { quickView1, quickView2, quickView3, quickView4, quickView5, quickView6 };
+            foreach (QuickView card in cards)
+            {
+                card.Dock = DockStyle.Fill;
+                card.Margin = new Padding(3);
+                card.BackColor = FlyioDataSurface;
+                card.ForeColor = FlyioDataSecondaryText;
+                card.Font = CreateFlyioFont(9F, FontStyle.Bold);
+                card.numberColor = FlyioDataText;
+                card.numberColorBackup = FlyioDataText;
+                card.ModernCardStyle = true;
+                card.MaximumValueFontSize = 36F;
+                card.CardBorderColor = FlyioDataBorder;
+            }
         }
 
         private void FlyioDataLoaded(object sender, EventArgs e)
@@ -172,14 +205,14 @@ namespace MissionPlanner.GCSViews
 
         private void CreateFlyioMapInformationRow()
         {
-            panel1.Height = 32;
+            panel1.Height = 38;
             if (tableMap.RowStyles.Count > 1)
             {
                 tableMap.RowStyles[1].SizeType = SizeType.Absolute;
-                tableMap.RowStyles[1].Height = 32;
+                tableMap.RowStyles[1].Height = 38;
             }
             tableMap.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
-            panel1.Padding = new Padding(8, 3, 8, 3);
+            panel1.Padding = new Padding(10, 4, 10, 4);
             panel1.BackColor = FlyioDataSurface;
 
             coords1.Visible = false;
@@ -222,7 +255,7 @@ namespace MissionPlanner.GCSViews
                 TextAlign = alignment,
                 BackColor = FlyioDataSurface,
                 ForeColor = FlyioDataSecondaryText,
-                Font = CreateFlyioFont(9F, FontStyle.Bold),
+                Font = CreateFlyioFont(9F, FontStyle.Regular),
                 AutoEllipsis = true
             };
         }
@@ -233,9 +266,9 @@ namespace MissionPlanner.GCSViews
             {
                 Name = "flyioDataStatusBar",
                 Dock = DockStyle.Bottom,
-                Height = 40,
-                BackColor = FlyioDataSurface,
-                Padding = new Padding(12, 6, 8, 5),
+                Height = 48,
+                BackColor = FlyioDataBackground,
+                Padding = new Padding(8, 5, 8, 5),
                 Margin = Padding.Empty,
                 ColumnCount = 8,
                 RowCount = 1,
@@ -244,6 +277,7 @@ namespace MissionPlanner.GCSViews
             foreach (float width in new[] { 17F, 11F, 15F, 10F, 12F, 12F, 12F, 11F })
                 flyioDataStatusBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, width));
             flyioDataStatusBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            flyioDataStatusBar.Paint += DrawFlyioStatusSeparators;
 
             flyioModeStatus = NewFlyioStatusLabel();
             flyioArmStatus = NewFlyioStatusLabel();
@@ -262,14 +296,28 @@ namespace MissionPlanner.GCSViews
             flyioDataStatusBar.BringToFront();
         }
 
+        private void DrawFlyioStatusSeparators(object sender, PaintEventArgs e)
+        {
+            using (var pen = new Pen(FlyioDataBorder))
+            {
+                e.Graphics.DrawLine(pen, 0, 0, flyioDataStatusBar.Width, 0);
+                int[] widths = flyioDataStatusBar.GetColumnWidths();
+                for (int column = 1; column < widths.Length; column++)
+                {
+                    int x = widths.Take(column).Sum();
+                    e.Graphics.DrawLine(pen, x, 8, x, flyioDataStatusBar.Height - 8);
+                }
+            }
+        }
+
         private Label NewFlyioStatusLabel()
         {
             return new Label
             {
                 Dock = DockStyle.Fill,
-                Margin = Padding.Empty,
+                Margin = new Padding(8, 0, 6, 0),
                 TextAlign = ContentAlignment.MiddleLeft,
-                BackColor = FlyioDataSurface,
+                BackColor = FlyioDataBackground,
                 ForeColor = FlyioDataText,
                 Font = CreateFlyioFont(9.25F, FontStyle.Bold),
                 AutoEllipsis = true
@@ -285,23 +333,23 @@ namespace MissionPlanner.GCSViews
             flyioMapLongitude.Text = "LON  " + state.lng.ToString("0.0000000", CultureInfo.InvariantCulture);
             flyioMapAltitude.Text = "ALT  " + state.alt.ToString("0", CultureInfo.InvariantCulture) + " " + CurrentState.AltUnit;
             flyioMapHeading.Text = "HDG: " + NormalizeHeading(state.yaw).ToString("000", CultureInfo.InvariantCulture) + "°";
-            flyioMapSatellites.Text = "Sats: " + state.satcount.ToString("0", CultureInfo.InvariantCulture);
+            flyioMapSatellites.Text = "SATS  " + state.satcount.ToString("0", CultureInfo.InvariantCulture);
 
-            flyioModeStatus.Text = "MODE: " + (string.IsNullOrWhiteSpace(state.mode) ? "UNKNOWN" : state.mode.ToUpperInvariant());
+            flyioModeStatus.Text = "MODE\r\n" + (string.IsNullOrWhiteSpace(state.mode) ? "UNKNOWN" : state.mode.ToUpperInvariant());
             flyioModeStatus.ForeColor = state.connected ? Color.FromArgb(32, 151, 94) : FlyioDataSecondaryText;
-            flyioArmStatus.Text = state.armed ? "ARMED" : "DISARMED";
-            flyioArmStatus.ForeColor = state.armed ? Color.FromArgb(211, 47, 47) : Color.FromArgb(32, 151, 94);
-            flyioGpsStatus.Text = "GPS: " + FormatGpsFix(state.gpsstatus);
+            flyioArmStatus.Text = "STATE\r\n" + (state.armed ? "ARMED" : "DISARMED");
+            flyioArmStatus.ForeColor = state.armed ? Color.FromArgb(32, 191, 107) : Color.FromArgb(235, 87, 87);
+            flyioGpsStatus.Text = "GPS\r\n" + FormatGpsFix(state.gpsstatus);
             flyioGpsStatus.ForeColor = state.gpsstatus >= 3 ? Color.FromArgb(32, 151, 94) :
                 state.gpsstatus >= 2 ? Color.FromArgb(245, 158, 11) : Color.FromArgb(211, 47, 47);
-            flyioSatelliteStatus.Text = "SAT: " + state.satcount.ToString("0", CultureInfo.InvariantCulture);
-            flyioHdopStatus.Text = "HDOP: " + state.gpshdop.ToString("0.0", CultureInfo.InvariantCulture);
+            flyioSatelliteStatus.Text = "SAT\r\n" + state.satcount.ToString("0", CultureInfo.InvariantCulture);
+            flyioHdopStatus.Text = "HDOP\r\n" + state.gpshdop.ToString("0.0", CultureInfo.InvariantCulture);
             float vibration = Math.Max(state.vibex, Math.Max(state.vibey, state.vibez));
-            flyioVibeStatus.Text = "VIBE: " + vibration.ToString("0.0", CultureInfo.InvariantCulture);
+            flyioVibeStatus.Text = "VIBE\r\n" + vibration.ToString("0.0", CultureInfo.InvariantCulture);
             flyioVibeStatus.ForeColor = vibration > 60 ? Color.FromArgb(211, 47, 47) :
                 vibration > 30 ? Color.FromArgb(245, 158, 11) : FlyioDataText;
-            flyioLinkStatus.Text = "LINK: " + state.linkqualitygcs.ToString(CultureInfo.InvariantCulture) + "%";
-            flyioRcStatus.Text = "RC: " + Math.Max(0, Math.Min(100, state.rxrssi)).ToString(CultureInfo.InvariantCulture) + "%";
+            flyioLinkStatus.Text = "LINK\r\n" + state.linkqualitygcs.ToString(CultureInfo.InvariantCulture) + "%";
+            flyioRcStatus.Text = "RC\r\n" + Math.Max(0, Math.Min(100, state.rxrssi)).ToString(CultureInfo.InvariantCulture) + "%";
         }
 
         private static int NormalizeHeading(float heading)

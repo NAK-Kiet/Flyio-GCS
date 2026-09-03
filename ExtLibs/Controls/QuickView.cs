@@ -41,6 +41,14 @@ namespace MissionPlanner.Controls
         private string _desc = "";
         private Color _numbercolor;
 
+        [DefaultValue(false)]
+        public bool ModernCardStyle { get; set; }
+
+        [DefaultValue(36F)]
+        public float MaximumValueFontSize { get; set; } = 36F;
+
+        public Color CardBorderColor { get; set; } = Color.FromArgb(23, 58, 94);
+
         [System.ComponentModel.Browsable(true)]
         public string numberformat
         {
@@ -73,16 +81,23 @@ namespace MissionPlanner.Controls
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e2)
         {
             var e = new SkiaGraphics(e2.Surface);
-            e2.Surface.Canvas.Clear();
+            e2.Surface.Canvas.Clear(BackColor.ToSKColor());
+            if (ModernCardStyle)
+            {
+                using (var border = new Pen(CardBorderColor))
+                    e.DrawRectangle(border, 0, 0, Math.Max(0, Width - 1), Math.Max(0, Height - 1));
+            }
             int y = 0;
             {
-                Size extent = e.MeasureString(desc, this.Font).ToSize();
+                string description = ModernCardStyle ? desc.ToUpperInvariant() : desc;
+                Size extent = e.MeasureString(description, this.Font).ToSize();
 
                 var mid = extent.Width / 2;
 
-                e.DrawString(desc, this.Font, new SolidBrush(this.ForeColor), this.Width / 2 - mid, 5);
+                e.DrawString(description, this.Font, new SolidBrush(this.ForeColor), this.Width / 2 - mid,
+                    ModernCardStyle ? 10 : 5);
 
-                y = extent.Height;
+                y = extent.Height + (ModernCardStyle ? 12 : 0);
             }
             //
             {
@@ -97,6 +112,9 @@ namespace MissionPlanner.Controls
                 newSize = (newSize * ratio);// * 0.75f; // pixel to points
 
                 newSize -= newSize % 5;
+
+                if (ModernCardStyle)
+                    newSize = Math.Min(newSize, MaximumValueFontSize);
 
                 if (newSize < 8 || newSize > 999999)
                     newSize = 8;

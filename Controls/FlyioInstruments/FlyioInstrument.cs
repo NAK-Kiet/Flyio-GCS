@@ -28,9 +28,9 @@ namespace MissionPlanner.Controls.FlyioInstruments
             Kind = kind;
             DoubleBuffered = true;
             ResizeRedraw = true;
-            BackColor = Color.White;
+            BackColor = Color.FromArgb(7, 23, 41);
             MinimumSize = new Size(82, 82);
-            Margin = new Padding(1);
+            Margin = new Padding(2);
         }
 
         internal FlyioInstrumentKind Kind { get; }
@@ -67,27 +67,29 @@ namespace MissionPlanner.Controls.FlyioInstruments
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
             Rectangle card = Rectangle.Inflate(ClientRectangle, -1, -1);
-            using (var cardBrush = new SolidBrush(Color.White))
-            using (var cardPen = new Pen(Color.FromArgb(217, 224, 231)))
+            using (var cardBrush = new SolidBrush(Color.FromArgb(7, 23, 41)))
+            using (var cardPen = new Pen(Color.FromArgb(23, 58, 94)))
             {
                 e.Graphics.FillRectangle(cardBrush, card);
                 e.Graphics.DrawRectangle(cardPen, card);
             }
 
-            float size = Math.Min(ClientSize.Width - 5F, ClientSize.Height - 18F);
+            float titleHeight = Math.Max(14F, Math.Min(19F, ClientSize.Height * 0.105F));
+            float size = Math.Min(ClientSize.Width - 10F, ClientSize.Height - titleHeight - 7F);
             if (size < 64F)
                 return;
 
-            var face = new RectangleF((ClientSize.Width - size) / 2F, 15F, size, size);
-            DrawTitle(e.Graphics, KindTitle(), new RectangleF(3, 0, ClientSize.Width - 6, 14));
+            float top = titleHeight + Math.Max(2F, (ClientSize.Height - titleHeight - size) / 2F);
+            var face = new RectangleF((ClientSize.Width - size) / 2F, top, size, size);
+            DrawTitle(e.Graphics, KindTitle(), new RectangleF(3, 1, ClientSize.Width - 6, titleHeight));
             DrawFace(e.Graphics, face);
         }
 
         private void DrawFace(Graphics graphics, RectangleF face)
         {
-            using (var faceBrush = new SolidBrush(Color.FromArgb(12, 18, 28)))
-            using (var bezelPen = new Pen(Color.FromArgb(24, 35, 46), Math.Max(5F, face.Width * 0.045F)))
-            using (var rimPen = new Pen(Color.FromArgb(82, 96, 112), Math.Max(1F, face.Width * 0.012F)))
+            using (var faceBrush = new SolidBrush(Color.FromArgb(8, 12, 18)))
+            using (var bezelPen = new Pen(Color.FromArgb(35, 42, 49), Math.Max(5F, face.Width * 0.05F)))
+            using (var rimPen = new Pen(Color.FromArgb(88, 101, 115), Math.Max(1F, face.Width * 0.009F)))
             {
                 graphics.FillEllipse(faceBrush, face);
                 graphics.DrawEllipse(bezelPen, RectangleF.Inflate(face, -2F, -2F));
@@ -142,7 +144,7 @@ namespace MissionPlanner.Controls.FlyioInstruments
         private void DrawTitle(Graphics graphics, string text, RectangleF bounds)
         {
             using (var font = CreateFont(Math.Max(7F, Math.Min(9F, Width / 35F)), FontStyle.Bold))
-            using (var brush = new SolidBrush(Color.FromArgb(23, 32, 51)))
+            using (var brush = new SolidBrush(Color.FromArgb(242, 245, 248)))
             using (var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                 graphics.DrawString(text, font, brush, bounds, format);
         }
@@ -192,8 +194,8 @@ namespace MissionPlanner.Controls.FlyioInstruments
             graphics.TranslateTransform(center.X, center.Y);
             graphics.RotateTransform(-primaryValue);
             float pitchOffset = Math.Max(-face.Height, Math.Min(face.Height, secondaryValue * face.Height / 45F));
-            using (var sky = new SolidBrush(Color.FromArgb(52, 132, 203)))
-            using (var ground = new SolidBrush(Color.FromArgb(132, 82, 48)))
+            using (var sky = new SolidBrush(Color.FromArgb(62, 142, 208)))
+            using (var ground = new SolidBrush(Color.FromArgb(139, 90, 50)))
             using (var whitePen = new Pen(Color.White, Math.Max(1.4F, face.Width * 0.012F)))
             using (var ladderPen = new Pen(Color.FromArgb(220, 255, 255, 255), 1F))
             {
@@ -219,7 +221,7 @@ namespace MissionPlanner.Controls.FlyioInstruments
                 PointF right = new PointF(top.X + face.Width * 0.025F, top.Y - face.Height * 0.04F);
                 graphics.DrawPolygon(rollPen, new[] { top, left, right });
             }
-            using (var aircraftPen = new Pen(Color.FromArgb(255, 205, 57), Math.Max(2F, face.Width * 0.018F)))
+            using (var aircraftPen = new Pen(Color.White, Math.Max(2F, face.Width * 0.018F)))
             {
                 graphics.DrawLine(aircraftPen, center.X - face.Width * 0.22F, center.Y, center.X - face.Width * 0.05F, center.Y);
                 graphics.DrawLine(aircraftPen, center.X + face.Width * 0.05F, center.Y, center.X + face.Width * 0.22F, center.Y);
@@ -253,12 +255,12 @@ namespace MissionPlanner.Controls.FlyioInstruments
                 DrawNeedle(graphics, center, radius * 0.82F, -90F + hundreds / 1000F * 360F, Color.White);
             }
             string digits = Math.Max(0, (int)Math.Round(primaryValue)).ToString("000000");
-            RectangleF drum = new RectangleF(face.Left + face.Width * 0.06F, face.Top + face.Height * 0.36F,
-                face.Width * 0.88F, face.Height * 0.30F);
+            RectangleF drum = new RectangleF(face.Left + face.Width * 0.18F, face.Top + face.Height * 0.40F,
+                face.Width * 0.64F, face.Height * 0.20F);
             using (var drumBrush = new SolidBrush(Color.FromArgb(5, 9, 15)))
             using (var borderPen = new Pen(Color.FromArgb(150, 160, 170), 1F))
             using (var digitBrush = new SolidBrush(Color.White))
-            using (var font = new Font("Consolas", Math.Max(10F, face.Width * 0.15F), FontStyle.Bold, GraphicsUnit.Point))
+            using (var font = new Font("Consolas", Math.Max(9F, face.Width * 0.095F), FontStyle.Bold, GraphicsUnit.Point))
             using (var unitFont = CreateFont(Math.Max(6F, face.Width * 0.055F), FontStyle.Regular))
             using (var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
             {
@@ -282,7 +284,7 @@ namespace MissionPlanner.Controls.FlyioInstruments
             using (var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
             {
                 string[] cardinals = { "N", "E", "S", "W" };
-                for (int degrees = 0; degrees < 360; degrees += 10)
+                for (int degrees = 0; degrees < 360; degrees += 5)
                 {
                     float angle = degrees - primaryValue - 90F;
                     DrawTick(graphics, center, radius, angle, degrees % 30 == 0 ? 0.12F : 0.06F, pen);
@@ -292,18 +294,30 @@ namespace MissionPlanner.Controls.FlyioInstruments
                         graphics.DrawString(cardinals[degrees / 90], font, brush,
                             new RectangleF(label.X - 12, label.Y - 10, 24, 20), format);
                     }
+                    else if (degrees % 30 == 0)
+                    {
+                        PointF label = Polar(center, radius * 0.72F, angle);
+                        graphics.DrawString((degrees / 10).ToString("00"), font, brush,
+                            new RectangleF(label.X - 13, label.Y - 9, 26, 18), format);
+                    }
                 }
                 using (var centerBrush = new SolidBrush(Color.FromArgb(220, 12, 24, 32)))
                     graphics.FillEllipse(centerBrush, center.X - face.Width * 0.23F, center.Y - face.Height * 0.12F,
                         face.Width * 0.46F, face.Height * 0.24F);
                 graphics.DrawString(((int)Math.Round((primaryValue + 360F) % 360F)).ToString("000") + "°",
                     valueFont, cyan, new RectangleF(face.Left, center.Y - face.Height * 0.09F, face.Width, face.Height * 0.18F), format);
+                using (var lubber = new Pen(Color.White, Math.Max(2F, face.Width * 0.014F)))
+                    graphics.DrawLine(lubber, center.X, face.Top + face.Height * 0.08F,
+                        center.X, face.Top + face.Height * 0.17F);
+                DrawAircraftSymbol(graphics, center, face.Width, false);
             }
         }
 
         private void DrawTurn(Graphics graphics, RectangleF face)
         {
             PointF center = Center(face);
+            // CurrentState.turnrate is the supported real turn-rate source. A standard
+            // three-degree/second rate is 0.0524 rad/s; no synthetic slip ball is drawn.
             float indicatedTurn = Math.Max(-30F, Math.Min(30F, primaryValue / 0.0524F * 20F));
             using (var white = new Pen(Color.White, Math.Max(2F, face.Width * 0.015F)))
             using (var textBrush = new SolidBrush(Color.FromArgb(205, 214, 226)))
@@ -313,10 +327,7 @@ namespace MissionPlanner.Controls.FlyioInstruments
                 GraphicsState state = graphics.Save();
                 graphics.TranslateTransform(center.X, center.Y);
                 graphics.RotateTransform(indicatedTurn);
-                graphics.DrawLine(white, -face.Width * 0.28F, 0, face.Width * 0.28F, 0);
-                graphics.DrawLine(white, -face.Width * 0.19F, 0, -face.Width * 0.09F, -face.Height * 0.07F);
-                graphics.DrawLine(white, face.Width * 0.19F, 0, face.Width * 0.09F, -face.Height * 0.07F);
-                graphics.DrawLine(white, 0, -face.Height * 0.08F, 0, face.Height * 0.08F);
+                DrawAircraftSymbol(graphics, PointF.Empty, face.Width, true);
                 graphics.Restore(state);
                 float referenceY = center.Y - face.Height * 0.19F;
                 graphics.DrawLine(white, center.X - face.Width * 0.27F, referenceY,
@@ -377,6 +388,27 @@ namespace MissionPlanner.Controls.FlyioInstruments
             {
                 graphics.DrawLine(pen, center, Polar(center, radius, angle));
                 graphics.FillEllipse(hub, center.X - 4, center.Y - 4, 8, 8);
+            }
+        }
+
+        private static void DrawAircraftSymbol(Graphics graphics, PointF center, float size, bool turnProfile)
+        {
+            float wing = size * (turnProfile ? 0.27F : 0.20F);
+            float body = size * (turnProfile ? 0.15F : 0.13F);
+            float tail = size * 0.075F;
+            using (var pen = new Pen(Color.White, Math.Max(1.5F, size * 0.012F))
+            {
+                StartCap = LineCap.Round,
+                EndCap = LineCap.Round,
+                LineJoin = LineJoin.Round
+            })
+            {
+                graphics.DrawLine(pen, center.X - wing, center.Y, center.X + wing, center.Y);
+                graphics.DrawLine(pen, center.X, center.Y - body, center.X, center.Y + body);
+                graphics.DrawLine(pen, center.X - tail, center.Y + body * 0.72F,
+                    center.X + tail, center.Y + body * 0.72F);
+                graphics.DrawLine(pen, center.X - wing, center.Y, center.X - body * 0.35F, center.Y - body * 0.18F);
+                graphics.DrawLine(pen, center.X + wing, center.Y, center.X + body * 0.35F, center.Y - body * 0.18F);
             }
         }
 
