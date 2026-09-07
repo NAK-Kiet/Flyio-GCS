@@ -244,14 +244,14 @@ namespace MissionPlanner.GCSViews
 
             communityPartnersViewport = new MarqueeViewport
             {
-                BackColor = HelpPageBackground,
+                BackColor = Color.White,
                 Dock = DockStyle.Top,
                 Height = 88,
                 Margin = new Padding(0)
             };
             communityPartnersTrack = new MarqueeTrack
             {
-                BackColor = HelpPageBackground,
+                BackColor = Color.White,
                 Height = communityPartnersViewport.Height,
                 Location = Point.Empty
             };
@@ -575,9 +575,9 @@ namespace MissionPlanner.GCSViews
             helpScrollPanel.BackColor = HelpPageBackground;
             contentLayout.BackColor = HelpPageBackground;
             if (communityPartnersViewport != null)
-                communityPartnersViewport.BackColor = HelpPageBackground;
+                communityPartnersViewport.BackColor = Color.White;
             if (communityPartnersTrack != null)
-                communityPartnersTrack.BackColor = HelpPageBackground;
+                communityPartnersTrack.BackColor = Color.White;
             CHK_showconsole.BackColor = Color.Transparent;
             CHK_showconsole.ForeColor = HelpTextSecondary;
             linkLabel1.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular);
