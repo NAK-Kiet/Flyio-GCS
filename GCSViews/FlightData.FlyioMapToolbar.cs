@@ -56,7 +56,7 @@ namespace MissionPlanner.GCSViews
             {
                 CHK_autopan.Checked = flyioFollowButton.Checked;
                 flyioFollowButton.BackColor = flyioFollowButton.Checked ? FlyioDataAccent : FlyioDataSecondarySurface;
-                flyioFollowButton.ForeColor = flyioFollowButton.Checked ? Color.White : FlyioDataText;
+                flyioFollowButton.ForeColor = flyioFollowButton.Checked ? Color.FromArgb(22, 28, 38) : FlyioDataText;
             };
 
             flyioProviderSelector = NewFlyioToolbarComboBox(220);

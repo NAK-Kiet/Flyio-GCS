@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("MissionPlanner")]
 [assembly: InternalsVisibleTo("Flyio-GCS")]
+[assembly: InternalsVisibleTo("Fly.io-GCS")]
 [assembly: InternalsVisibleTo("MissionPlannerLib")]
 
 namespace MissionPlanner

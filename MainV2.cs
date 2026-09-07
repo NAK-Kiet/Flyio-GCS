@@ -781,8 +781,8 @@ namespace MissionPlanner
 
             if (splash != null)
             {
-                this.Text = splash?.Text;
-                titlebar = splash?.Text;
+                this.Text = "Fly.io GCS";
+                titlebar = "Fly.io GCS";
             }
 
             if (!MONO) // windows only
@@ -3190,6 +3190,7 @@ namespace MissionPlanner
             MyView.AddScreen(new MainSwitcher.Screen("Simulation", Simulation, true));
             MyView.AddScreen(new MainSwitcher.Screen("Help", typeof(GCSViews.Help), false));
             MyView.AddScreen(new MainSwitcher.Screen("DRDCGCS", typeof(GCSViews.DRDCWebView), true));
+
 
             try
             {

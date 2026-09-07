@@ -22,6 +22,7 @@ namespace MissionPlanner
         public static void Main(string[] args)
         {
             Program.args = args;
+            Utilities.Settings.Instance.UserAgent = "Fly.io-GCS/" + Application.ProductVersion;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -75,7 +76,11 @@ namespace MissionPlanner
                     notext);
             };
 
-            Application.Run(new MainV2());
+            var mainWindow = new MainV2();
+            Splash.Close();
+            Splash.Dispose();
+            Splash = null;
+            Application.Run(mainWindow);
         }
 
         public static async void TraceMe(bool start = true)

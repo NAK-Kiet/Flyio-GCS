@@ -1942,7 +1942,7 @@ namespace MissionPlanner.GCSViews
 
             if (((CheckBox) sender).Checked)
             {
-                ((CheckBox) sender).BackColor = Color.Green;
+                ((CheckBox) sender).BackColor = ThemeManager.SelectedBackground;
 
                 if (list1item == null)
                 {
@@ -2442,7 +2442,7 @@ namespace MissionPlanner.GCSViews
 
             if (checkbox.Checked)
             {
-                checkbox.BackColor = Color.Green;
+                checkbox.BackColor = ThemeManager.SelectedBackground;
 
                 HUD.Custom cust = new HUD.Custom();
                 HUD.Custom.src = MainV2.comPort.MAV.cs;
@@ -3256,7 +3256,7 @@ namespace MissionPlanner.GCSViews
                 };
                 chk_box.CheckedChanged += chk_box_hud_UserItem_CheckedChanged;
                 if (chk_box.Checked)
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 selectform.Controls.Add(chk_box);
             }
 
@@ -3266,7 +3266,7 @@ namespace MissionPlanner.GCSViews
                 selectform.Controls.ForEach(a =>
                 {
                     if (a is CheckBox && ((CheckBox) a).Checked)
-                        ((CheckBox) a).BackColor = Color.Green;
+                        ((CheckBox) a).BackColor = ThemeManager.SelectedBackground;
                 });
             };
 
@@ -4638,7 +4638,7 @@ namespace MissionPlanner.GCSViews
                 };
                 chk_box.CheckedChanged += chk_box_quickview_CheckedChanged;
                 if (chk_box.Checked)
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 selectform.Controls.Add(chk_box);
             }
 
@@ -4649,7 +4649,7 @@ namespace MissionPlanner.GCSViews
                 selectform.Controls.ForEach(a =>
                 {
                     if (a is CheckBox && ((CheckBox) a).Checked)
-                        ((CheckBox) a).BackColor = Color.Green;
+                        ((CheckBox) a).BackColor = ThemeManager.SelectedBackground;
                 });
             };
 
@@ -5737,120 +5737,120 @@ namespace MissionPlanner.GCSViews
                 if (list1item != null && list1item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list2item != null && list2item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list3item != null && list3item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list4item != null && list4item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list5item != null && list5item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list6item != null && list6item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list7item != null && list7item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list8item != null && list8item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list9item != null && list9item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list10item != null && list10item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
                 if (list11item != null && list11item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list12item != null && list12item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list13item != null && list13item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list14item != null && list14item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list15item != null && list15item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list16item != null && list16item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list17item != null && list17item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list18item != null && list18item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list19item != null && list19item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (list20item != null && list20item.Name == field.name)
                 {
                     chk_box.Checked = true;
-                    chk_box.BackColor = Color.Green;
+                    chk_box.BackColor = ThemeManager.SelectedBackground;
                 }
 
                 if (CurrentState.GetGroupText(field.name) != CurrentState.GetGroupText(last.name))
@@ -5885,7 +5885,7 @@ namespace MissionPlanner.GCSViews
                 selectform.Controls.ForEach(a =>
                 {
                     if (a is CheckBox && ((CheckBox) a).Checked)
-                        ((CheckBox) a).BackColor = Color.Green;
+                        ((CheckBox) a).BackColor = ThemeManager.SelectedBackground;
                 });
             };
 

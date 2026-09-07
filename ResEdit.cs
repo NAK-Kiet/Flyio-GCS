@@ -319,7 +319,7 @@ namespace resedit
             try
             {
                 string fn = Settings.GetRunningDirectory() + ci +
-                            Path.DirectorySeparatorChar + "MissionPlanner.resources.dll";
+                            Path.DirectorySeparatorChar + typeof(MissionPlanner.MainV2).Assembly.GetName().Name + ".resources.dll";
                 if (File.Exists(fn))
                     thisAssembly = Assembly.LoadFile(fn);
                 else

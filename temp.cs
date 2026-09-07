@@ -1,4 +1,4 @@
-﻿using DotSpatial.Projections;
+using DotSpatial.Projections;
 using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
@@ -466,7 +466,7 @@ namespace MissionPlanner
                     {
                         var sb = new StringBuilder();
 
-                        sb.Append("#Shap to Poly - Mission Planner\r\n");
+                        sb.Append("#Shap to Poly - Fly.io GCS\r\n");
                         foreach (var point in feature.Geometry.Coordinates)
                         {
                             if (reproject)

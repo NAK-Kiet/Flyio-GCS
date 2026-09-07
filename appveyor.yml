@@ -22,7 +22,7 @@ build_script:
     
     rem del gdal dlls /s /f /q
 
-    7z a -tzip ..\..\..\MissionPlannerBeta.zip *
+    7z a -tzip ..\..\..\Fly.io-GCS-Windows.zip *
 
     cd ..
 
@@ -38,12 +38,12 @@ build_script:
 
     rem "%wix%\bin\candle" installer.wxs -ext WiXNetFxExtension -ext WixDifxAppExtension -ext WixUIExtension.dll -ext WixUtilExtension -ext WixIisExtension 
   
-    rem "%wix%\bin\light" installer.wixobj "%wix%\bin\difxapp_x86.wixlib" -sval -o MissionPlanner-latest.msi -ext WiXNetFxExtension -ext WixDifxAppExtension -ext WixUIExtension.dll -ext WixUtilExtension -ext WixIisExtension 
+    rem "%wix%\bin\light" installer.wixobj "%wix%\bin\difxapp_x86.wixlib" -sval -o Fly.io-GCS-Windows.msi -ext WiXNetFxExtension -ext WixDifxAppExtension -ext WixUIExtension.dll -ext WixUtilExtension -ext WixIisExtension 
 
 test: off
 artifacts:
 - path: MissionPlannerCov-int.zip
-- path: MissionPlannerBeta.zip
+- path: Fly.io-GCS-Windows.zip
 - path: checksums.txt
 - path: version.txt
 - path: ChangeLog.txt

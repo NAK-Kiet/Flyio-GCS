@@ -38,6 +38,11 @@ namespace MissionPlanner.Utilities
 
         public static void updateCheckMain(IProgressReporterDialogue frmProgressReporter)
         {
+            if (string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["UpdateLocation"]))
+            {
+                CustomMessageBox.Show("Fly.io GCS updates are not published yet. Use a reviewed Fly.io GCS release package when one becomes available.", "Fly.io GCS updates");
+                return;
+            }
             var t = Type.GetType("Mono.Runtime");
             MONO = (t != null);
 
@@ -120,7 +125,11 @@ namespace MissionPlanner.Utilities
                 baseurl = ConfigurationManager.AppSettings["BetaUpdateLocationVersion"];
 
             if (baseurl == "" || baseurl == null)
+            {
+                if (NotifyNoUpdate)
+                    CustomMessageBox.Show("No Fly.io GCS release feed is configured.", "Fly.io GCS updates");
                 return;
+            }
 
             string path = Path.GetDirectoryName(Application.ExecutablePath);
 

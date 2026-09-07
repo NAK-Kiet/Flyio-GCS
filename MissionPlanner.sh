@@ -1,2 +1,2 @@
-﻿#!/bin/sh
-mono Flyio-GCS.exe
+#!/bin/sh
+mono Fly.io-GCS.exe

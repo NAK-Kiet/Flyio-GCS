@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -28,42 +28,42 @@ namespace MissionPlanner.Controls
         bool inOnPaint = false;
 
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
-        [DefaultValue(typeof(Color), "0x94, 0xc1, 0x1f")]
+        [DefaultValue(typeof(Color), "0xED, 0xA6, 0x3B")]
         public Color BGGradTop { get { return _BGGradTop; } set { _BGGradTop = value; this.Invalidate(); } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
-        [DefaultValue(typeof(Color), "0xcd, 0xe2, 0x96")]
+        [DefaultValue(typeof(Color), "0xF5, 0xBC, 0x62")]
         public Color BGGradBot { get { return _BGGradBot; } set { _BGGradBot = value; this.Invalidate(); } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
-        [DefaultValue(typeof(Color), "73, 0x2b, 0x3a, 0x03")]
+        [DefaultValue(typeof(Color), "0x35, 0x40, 0x4E")]
         public Color ColorNotEnabled { get { return _ColorNotEnabled; } set { _ColorNotEnabled = value; this.Invalidate(); } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
-        [DefaultValue(typeof(Color), "73, 0x2b, 0x3a, 0x03")]
+        [DefaultValue(typeof(Color), "0xF5, 0xBC, 0x62")]
         public Color ColorMouseOver { get { return _ColorMouseOver; } set { _ColorMouseOver = value; this.Invalidate(); } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
-        [DefaultValue(typeof(Color), "150, 0x2b, 0x3a, 0x03")]
+        [DefaultValue(typeof(Color), "0xBB, 0x7C, 0x24")]
         public Color ColorMouseDown { get { return _ColorMouseDown; } set { _ColorMouseDown = value; this.Invalidate(); } }
 
         // i want to ignore forecolor
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
-        [DefaultValue(typeof(Color), "0x40, 0x57, 0x04")]
+        [DefaultValue(typeof(Color), "0x16, 0x1C, 0x26")]
         public Color TextColor { get { return _TextColor; } set { _TextColor = value; this.Invalidate(); } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
         public Color TextColorNotEnabled { get { return (_TextColorNotEnabled.IsEmpty) ? _TextColor : _TextColorNotEnabled; } set { _TextColorNotEnabled = value; this.Invalidate(); } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Colors")]
-        [DefaultValue(typeof(Color), "0x79, 0x94, 0x29")]
+        [DefaultValue(typeof(Color), "0x35, 0x40, 0x4E")]
         public Color Outline { get { return _Outline; } set { _Outline = value; this.Invalidate(); } }
 
         protected override Size DefaultSize => base.DefaultSize;
 
         public MyButton()
         {
-            _BGGradTop = Color.FromArgb(0x94, 0xc1, 0x1f);
-            _BGGradBot = Color.FromArgb(0xcd, 0xe2, 0x96);
-            _TextColor = Color.FromArgb(0x40, 0x57, 0x04);
-            _Outline = Color.FromArgb(0x79, 0x94, 0x29);
-            _ColorNotEnabled = Color.FromArgb(73, 0x2b, 0x3a, 0x03);
-            _ColorMouseOver = Color.FromArgb(73, 0x2b, 0x3a, 0x03);
-            _ColorMouseDown = Color.FromArgb(150, 0x2b, 0x3a, 0x03);
+            _BGGradTop = Color.FromArgb(0xED, 0xA6, 0x3B);
+            _BGGradBot = Color.FromArgb(0xF5, 0xBC, 0x62);
+            _TextColor = Color.FromArgb(0x16, 0x1C, 0x26);
+            _Outline = Color.FromArgb(0x35, 0x40, 0x4E);
+            _ColorNotEnabled = Color.FromArgb(0x35, 0x40, 0x4E);
+            _ColorMouseOver = Color.FromArgb(0xF5, 0xBC, 0x62);
+            _ColorMouseDown = Color.FromArgb(0xBB, 0x7C, 0x24);
         }
 
         protected override void OnPaint(PaintEventArgs pevent)

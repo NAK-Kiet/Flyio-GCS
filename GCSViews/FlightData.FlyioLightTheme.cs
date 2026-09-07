@@ -8,15 +8,15 @@ namespace MissionPlanner.GCSViews
 {
     public partial class FlightData
     {
-        private static readonly Color FlyioDataBackground = Color.FromArgb(7, 23, 41);
-        private static readonly Color FlyioDataSurface = Color.FromArgb(13, 34, 59);
-        private static readonly Color FlyioDataSecondarySurface = Color.FromArgb(16, 41, 68);
-        private static readonly Color FlyioDataBorder = Color.FromArgb(23, 58, 94);
+        private static readonly Color FlyioDataBackground = Color.FromArgb(22, 28, 38);
+        private static readonly Color FlyioDataSurface = Color.FromArgb(34, 43, 56);
+        private static readonly Color FlyioDataSecondarySurface = Color.FromArgb(39, 48, 61);
+        private static readonly Color FlyioDataBorder = Color.FromArgb(53, 64, 78);
         private static readonly Color FlyioDataText = Color.FromArgb(242, 245, 248);
         private static readonly Color FlyioDataSecondaryText = Color.FromArgb(159, 176, 195);
-        private static readonly Color FlyioDataAccent = Color.FromArgb(0, 173, 238);
-        private static readonly Color FlyioDataHover = Color.FromArgb(37, 190, 244);
-        private static readonly Color FlyioDataPressed = Color.FromArgb(0, 131, 184);
+        private static readonly Color FlyioDataAccent = Color.FromArgb(237, 166, 59);
+        private static readonly Color FlyioDataHover = Color.FromArgb(245, 188, 98);
+        private static readonly Color FlyioDataPressed = Color.FromArgb(187, 124, 36);
 
         private Font CreateFlyioFont(float size, FontStyle style = FontStyle.Regular)
         {

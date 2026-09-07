@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -61,13 +61,13 @@ namespace Updater
                         P.StartInfo.FileName = "mono";
                         P.StartInfo.Arguments =
                             " \"" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                            Path.DirectorySeparatorChar + "Flyio-GCS.exe\"";
+                            Path.DirectorySeparatorChar + "Fly.io-GCS.exe\"";
                     }
                     else
                     {
                         P.StartInfo.WorkingDirectory = path;
                         P.StartInfo.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                               Path.DirectorySeparatorChar + "Flyio-GCS.exe";
+                                               Path.DirectorySeparatorChar + "Fly.io-GCS.exe";
                         P.StartInfo.Arguments = "";
                     }
 

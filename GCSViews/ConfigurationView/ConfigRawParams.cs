@@ -541,7 +541,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                     }
                 }
 
-                Params[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.Green;
+                Params[e.ColumnIndex, e.RowIndex].Style.BackColor = ThemeManager.SelectedBackground;
                 log.InfoFormat("Queue change {0} = {1} ({2})", Params[Command.Index, e.RowIndex].Value, Params[e.ColumnIndex, e.RowIndex].Value, newvalue);
                 _changes[Params[Command.Index, e.RowIndex].Value] = newvalue;
 

@@ -1,0 +1,18 @@
+Fly.io GCS
+Fly.io Ground Control Station
+
+This product is derived from ArduPilot Mission Planner.
+Upstream project: https://github.com/ArduPilot/MissionPlanner
+Original authors and contributors retain their copyrights. Fly.io branding
+does not imply authorship of upstream or third-party components.
+
+The repository's COPYING.txt and source-file copyright/license notices
+remain authoritative. Preserve these notices when redistributing.
+This repository includes GPL-licensed software and third-party components
+under their respective licenses. Binary releases must be accompanied by
+the corresponding source or the source provision required by the applicable
+licenses. A product name or executable rename does not change licensing.
+
+The Help / About / Open source screen retains upstream acknowledgements.
+The package script includes license and notice files found in ExtLibs.
+Review the exact packaged dependency set and its notices before publication.

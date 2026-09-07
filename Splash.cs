@@ -11,6 +11,7 @@ namespace MissionPlanner
         public Splash()
         {
             InitializeComponent();
+            Text = "Fly.io GCS";
 
             string strVersion = typeof(Splash).GetType().Assembly.GetName().Version.ToString();
 

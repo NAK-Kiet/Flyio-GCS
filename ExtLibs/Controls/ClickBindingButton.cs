@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -50,13 +50,13 @@ namespace MissionPlanner.Controls
 
         public ClickBindingButton()
         {
-            _BGGradTop = Color.FromArgb(0x94, 0xc1, 0x1f);
-            _BGGradBot = Color.FromArgb(0xcd, 0xe2, 0x96);
-            _TextColor = Color.FromArgb(0x40, 0x57, 0x04);
-            _Outline = Color.FromArgb(0x79, 0x94, 0x29);
-            _ColorNotEnabled = Color.FromArgb(73, 0x2b, 0x3a, 0x03);
-            _ColorMouseOver = Color.FromArgb(73, 0x2b, 0x3a, 0x03);
-            _ColorMouseDown = Color.FromArgb(150, 0x2b, 0x3a, 0x03);
+            _BGGradTop = Color.FromArgb(0xED, 0xA6, 0x3B);
+            _BGGradBot = Color.FromArgb(0xF5, 0xBC, 0x62);
+            _TextColor = Color.FromArgb(0x16, 0x1C, 0x26);
+            _Outline = Color.FromArgb(0x35, 0x40, 0x4E);
+            _ColorNotEnabled = Color.FromArgb(0x35, 0x40, 0x4E);
+            _ColorMouseOver = Color.FromArgb(0xF5, 0xBC, 0x62);
+            _ColorMouseDown = Color.FromArgb(0xBB, 0x7C, 0x24);
         }
 
         /// <summary>

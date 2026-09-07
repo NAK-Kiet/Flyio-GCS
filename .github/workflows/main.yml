@@ -41,13 +41,13 @@ jobs:
           gci plugins | ForEach-Object {                 if (Test-Path $_.Name -PathType Leaf)                {                    Write-Host "Remove" $_.FullName   ;                 Remove-Item $_.FullName                            } else {                    Write-Host $_.Name                }            }
 
           copy version.txt ..\..\..\
-          7z a -tzip ..\..\..\MissionPlannerBeta.zip *
+          7z a -tzip ..\..\..\Fly.io-GCS-Windows.zip *
           cd ..
           .\md5sum.exe net461 > ..\..\checksums.txt
           
       - uses: actions/upload-artifact@v4
         with:
-          name: MissionPlannerBeta
+          name: Fly.io-GCS-Windows
           path: bin\Release\net461
           
       - uses: "marvinpinto/action-automatic-releases@v1.2.1"
@@ -58,7 +58,7 @@ jobs:
           prerelease: true
           title: "Beta Build"
           files: |
-            MissionPlannerBeta.zip
+            Fly.io-GCS-Windows.zip
             checksums.txt
             version.txt
             ChangeLog.txt
