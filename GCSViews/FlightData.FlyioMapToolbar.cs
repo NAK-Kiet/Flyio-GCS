@@ -23,7 +23,9 @@ namespace MissionPlanner.GCSViews
                 Name = "flyioMapToolbar",
                 Dock = DockStyle.Top,
                 Height = 52,
-                WrapContents = false,
+                WrapContents = true,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 AutoScroll = false,
                 BackColor = FlyioDataBackground,
                 Padding = new Padding(12, 10, 8, 8),
@@ -90,13 +92,19 @@ namespace MissionPlanner.GCSViews
             flyioMapToolbar.Controls.Add(flyioGridSelector);
             flyioMapToolbar.Controls.Add(location);
             flyioMapToolbar.Controls.Add(more);
+            // Reuse the real tuning checkbox and its existing graph handler.
+            CB_tuning.Visible = true;
+            CB_tuning.AutoSize = true;
+            CB_tuning.Text = "Tuning graph";
+            CB_tuning.Margin = new Padding(6, 8, 5, 0);
+            flyioMapToolbar.Controls.Add(CB_tuning);
 
             flyioMapHost = new Panel
             {
                 Name = "flyioMapHost",
                 Dock = DockStyle.Fill,
                 BackColor = FlyioDataSecondarySurface,
-                Padding = new Padding(0, flyioMapToolbar.Height, 0, 0),
+                Padding = new Padding(0, 60, 0, 0),
                 Margin = Padding.Empty
             };
             gMapControl1.Parent = flyioMapHost;

@@ -577,6 +577,17 @@ namespace MissionPlanner.Utilities
             protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e)
             {
                 var button = e.Item as ToolStripButton;
+                if (e.ToolStrip.Name == "MainMenu" && button != null &&
+                    button.Name != "MenuConnect" && button.Name != "MenuArduPilotHost")
+                {
+                    bool active = button.Enabled && (button.Checked || button.Selected || button.Pressed);
+                    var bounds = new Rectangle(1, 1, e.Item.Width - 3, e.Item.Height - 3);
+                    using (var brush = new SolidBrush(active ? ControlBackground : PanelBackground))
+                        e.Graphics.FillRectangle(brush, bounds);
+                    using (var pen = new Pen(active ? Accent : ControlBorder, button.Checked ? 2 : 1))
+                        e.Graphics.DrawRectangle(pen, bounds);
+                    return;
+                }
                 Color background;
                 if (e.Item.Pressed)
                     background = AccentPressed;

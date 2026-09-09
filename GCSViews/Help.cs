@@ -11,8 +11,7 @@ namespace MissionPlanner.GCSViews
     [PreventTheming]
     public partial class Help : MyUserControl, IActivate
     {
-        private const string GitHubUrl = "https://github.com/NAK-Kiet/Flyio-GCS";
-        private const string GitLabRemote = "git@192.168.100.120:Kaine/flyio-gcs.git";
+        private const string DrdcWebsiteUrl = "https://drdc-dev-web.drsys.asia/";
         private const int CommunityPartnersTimerInterval = 25;
         private const int CommunityPartnersPixelsPerTick = 1;
         private const int CommunityPartnerHorizontalMargin = 24;
@@ -133,9 +132,9 @@ namespace MissionPlanner.GCSViews
             var dashboard = CreateServiceCard("DRDC GCS Dashboard",
                 "Monitor UAV fleets, manage missions, and access embedded DRDC system services.",
                 "OPEN DASHBOARD", OpenDashboard_Click);
-            var partnerships = CreateServiceCard("Brands & Partnerships",
-                "Explore collaborative projects, products, partnerships, and related services.",
-                "VIEW PARTNERSHIPS", OpenPartnerships_Click);
+            var partnerships = CreateServiceCard("DRDC Website",
+                "Visit the official DRDC website for projects, services, partnerships, and organization information.",
+                "OPEN DRDC WEBSITE", OpenPartnerships_Click);
             var cards = new Control[] { dashboard, partnerships };
             host.Controls.Add(dashboard);
             host.Controls.Add(partnerships);
@@ -190,8 +189,8 @@ namespace MissionPlanner.GCSViews
 
         private void BuildAboutSection()
         {
-            var section = CreateSection("ABOUT & OPEN SOURCE",
-                "Product information, repositories, and upstream acknowledgements.");
+            var section = CreateSection("ABOUT FLY.IO GCS",
+                "Product information and upstream acknowledgements.");
             var facts = new TableLayoutPanel
             {
                 AutoSize = true, BackColor = Color.Transparent, ColumnCount = 2,
@@ -200,25 +199,21 @@ namespace MissionPlanner.GCSViews
             facts.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F));
             facts.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             AddFact(facts, "Product", "Fly.io Ground Control Station");
-            AddFact(facts, "Based on", "ArduPilot Mission Planner");
+            AddFact(facts, "Organization", "DRDC");
+            AddFact(facts, "Purpose", "Ground Control Station for UAV and UGV monitoring, mission planning, configuration, telemetry, simulation, and DRDC system integration.");
             AddRow(section, facts);
+            AddLinkRow(section, "DRDC Website", DrdcWebsiteUrl);
 
-            AddSubheading(section, "PROJECT REPOSITORIES");
-            AddLinkRow(section, "Project Repository — GitHub", GitHubUrl);
-            AddText(section, "Project Repository — GitLab (SSH remote)", 9.5F, FontStyle.Bold,
-                HelpTextPrimary, new Padding(0, 5, 0, 2));
-            AddText(section, GitLabRemote, 9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 0, 0, 3));
+            AddSubheading(section, "THIRD-PARTY / UPSTREAM ACKNOWLEDGEMENTS");
             AddText(section,
-                "A browser URL is not shown because the configured private GitLab host does not provide a confirmed HTTP/HTTPS mapping in this repository.",
-                8.5F, FontStyle.Italic, HelpTextMuted, new Padding(0, 0, 0, 12));
-
-            AddSubheading(section, "UPSTREAM MISSION PLANNER");
+                "Fly.io GCS is based on Mission Planner components from the ArduPilot ecosystem. Original authors retain their copyrights; applicable licenses and third-party notices remain in effect.",
+                9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 5, 0, 8));
             AddLinkRow(section, "Upstream Mission Planner", "https://github.com/ArduPilot/MissionPlanner");
             AddLinkRow(section, "Upstream Contributors", "https://github.com/ArduPilot/MissionPlanner/graphs/contributors");
             AddText(section,
                 "Upstream Mission Planner contributors and community acknowledgements include Andrew Radford, Marooned, Ryan Beall, Tom Pittenger, and the Mission Planner contributor community.",
                 9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 5, 0, 8));
-            AddSubheading(section, "OPEN-SOURCE ECOSYSTEM ACKNOWLEDGEMENTS");
+            AddSubheading(section, "DEPENDENCIES & COMMUNITY");
             AddText(section,
                 "Libraries used by the upstream Mission Planner ecosystem include GMap.NET, SharpKML, SharpZipLib, IronPython, KMLib, OpenTK, ZedGraph, alglib, BouncyCastle, DotSpatial, LibVLC, and netDXF.",
                 9.5F, FontStyle.Regular, HelpTextSecondary, new Padding(0, 3, 0, 7));
@@ -594,7 +589,7 @@ namespace MissionPlanner.GCSViews
         }
 
         private void OpenDashboard_Click(object sender, EventArgs e) { OpenUrl("https://drdt-dev-gcs-frontend.drsys.asia/en/login"); }
-        private void OpenPartnerships_Click(object sender, EventArgs e) { OpenUrl("https://aerobyte-dev-customer.drsys.asia/"); }
+        private void OpenPartnerships_Click(object sender, EventArgs e) { OpenUrl(DrdcWebsiteUrl); }
 
         private void ExternalLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

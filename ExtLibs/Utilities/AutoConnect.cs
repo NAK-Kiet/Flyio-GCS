@@ -59,7 +59,16 @@ namespace MissionPlanner.Utilities
 
         private static string SettingsName = "AutoConnect";
 
+        /// <summary>
+        /// Starts the legacy discovery listeners. Fly.io GCS supplies its own
+        /// receive-only listener and must leave 14550 to QGroundControl.
+        /// </summary>
         public static void Start()
+        {
+            Start(suppressInboundMavlink: true);
+        }
+
+        public static void Start(bool suppressInboundMavlink)
         {
             var config = Settings.Instance[SettingsName];
 
@@ -70,6 +79,13 @@ namespace MissionPlanner.Utilities
             }
 
             connectionInfos = config.FromJSON<List<ConnectionInfo>>();
+
+            if (suppressInboundMavlink)
+            {
+                connectionInfos.RemoveAll(info => info.Format == ConnectionFormat.MAVLink &&
+                    info.Protocol == ProtocolType.Udp && info.Direction == Direction.Inbound &&
+                    (info.Port == 14550 || info.Port == 14551));
+            }
 
             foreach (var connectionInfo in connectionInfos)
             {

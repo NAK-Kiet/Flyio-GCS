@@ -1,0 +1,21 @@
+[General]
+TcpServerPort = 0
+ReportStats = true
+DebugLogLevel = info
+
+[UdpEndpoint PX4]
+Mode = Server
+Address = 127.0.0.1
+Port = 14550
+
+[UdpEndpoint QGroundControl]
+Mode = Normal
+Address = @WINDOWS_HOST@
+Port = 14550
+
+[UdpEndpoint FlyioTelemetry]
+Mode = Normal
+Address = @WINDOWS_HOST@
+Port = 14551
+AllowSrcSysOut = 1
+BlockSrcSysIn = @BLOCKED_SOURCES@

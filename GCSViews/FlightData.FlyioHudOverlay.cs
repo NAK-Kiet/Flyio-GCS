@@ -43,6 +43,19 @@ namespace MissionPlanner.GCSViews
 
         private void DrawFlyioHudOverlay(HUD hud)
         {
+            if (flyioTelemetry != null)
+            {
+                var telemetry = flyioTelemetry.Snapshot();
+                using (var backing = new SolidBrush(Color.FromArgb(220, 8, 18, 30)))
+                using (var text = new SolidBrush(Color.White))
+                {
+                    hud.FillRectangle(backing, new RectangleF(0, hud.Height - 32, hud.Width, 32));
+                    hud.DrawString("GS " + TelemetryNumber(telemetry.Groundspeed) + " m/s   GPS " +
+                        (telemetry.GpsFix.HasValue ? FormatGpsFix(telemetry.GpsFix.Value) : "Unavailable") +
+                        "   BAT " + TelemetryNumber(telemetry.BatteryPercent, "0") + "%", 9F, text, 8, hud.Height - 24);
+                }
+                return;
+            }
             if (hud.Width < 260 || hud.Height < 180)
                 return;
 

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework><OutputType>Exe</OutputType><LangVersion>latest</LangVersion>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Utilities/FlyioTelemetry.cs" Link="FlyioTelemetry.cs" />
+    <Compile Include="Checks.cs.txt" />
+    <Reference Include="MAVLink"><HintPath>../../bin/Release/net461/MAVLink.dll</HintPath></Reference>
+    <Reference Include="Newtonsoft.Json"><HintPath>../../bin/Release/net461/Newtonsoft.Json.dll</HintPath></Reference>
+  </ItemGroup>
+</Project>

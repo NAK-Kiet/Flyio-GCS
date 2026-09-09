@@ -56,6 +56,10 @@
     <WarningsAsErrors>$(WarningsAsErrors);</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Generated review and team-package output must never become project inputs. -->
+    <Compile Remove="artifacts\**;release\**" />
+    <EmbeddedResource Remove="artifacts\**;release\**" />
+    <None Remove="artifacts\**;release\**" />
     <Compile Remove="APMPlannerXplanes\**" />
     <Compile Remove="ExtLibs\**" />
     <Compile Remove="MissionPlannerTests\**" />
@@ -96,6 +100,7 @@
     <EmbeddedResource Remove="packages\**" />
     <None Remove="packages\**" />
     <Compile Remove="web\**" />
+    <Compile Remove="tools\**" />
     <EmbeddedResource Remove="web\**" />
     <None Remove="web\**" />
     <Compile Remove="bin\**" />

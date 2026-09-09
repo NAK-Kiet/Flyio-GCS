@@ -669,6 +669,30 @@ namespace MissionPlanner
             }
 
             InitializeComponent();
+            var navigation = new[] { MenuFlightData, MenuFlightPlanner, MenuInitConfig,
+                MenuConfigTune, MenuSimulation, MenuHelp, MenuDRDCGCS };
+            var labels = new[] { "DATA", "PLAN", "SETUP", "CONFIG", "SIMULATION", "HELP", "DRDC" };
+            for (var index = 0; index < navigation.Length; index++)
+            {
+                var item = navigation[index];
+                item.Text = labels[index];
+                item.TextImageRelation = TextImageRelation.ImageAboveText;
+                item.AutoSize = false;
+                item.Width = index == 4 ? 94 : 76;
+                item.Height = 58;
+                item.Margin = new Padding(2, 0, 2, 0);
+                item.ImageTransparentColor = Color.Empty;
+            }
+            MenuFlightData.Checked = true;
+            var screenNames = new[] { "FlightData", "FlightPlanner", "HWConfig", "SWConfig",
+                "Simulation", "Help", "DRDCGCS" };
+            MainSwitcher.TrackingEventHandler updateNavigation = (page, title) =>
+            {
+                for (var index = 0; index < navigation.Length; index++)
+                    navigation[index].Checked = screenNames[index] == title;
+            };
+            MainSwitcher.Tracking += updateNavigation;
+            FormClosed += (sender, args) => MainSwitcher.Tracking -= updateNavigation;
 
             //Init Theme table and load BurntKermit as a default
             ThemeManager.thmColor = new ThemeColorTable(); //Init colortable
@@ -3400,6 +3424,9 @@ namespace MissionPlanner
                     }
                 });
             };
+            // Fly.io owns only the dedicated passive subscriber on UDP 14551.
+            // Do not let legacy AutoConnect bind 14550/14551 and collide with
+            // QGroundControl or the passive telemetry socket.
             AutoConnect.Start();
 
             BinaryLog.onFlightMode += (firmware, modeno) =>
@@ -4693,15 +4720,15 @@ namespace MissionPlanner
 
         private void MenuArduPilot_Click(object sender, EventArgs e)
         {
-            const string drdtGcsUrl = "https://drdt-dev-gcs-frontend.drsys.asia/en/login";
+            const string drdcWebsiteUrl = "https://drdc-dev-web.drsys.asia/";
 
             try
             {
-                System.Diagnostics.Process.Start(drdtGcsUrl);
+                System.Diagnostics.Process.Start(drdcWebsiteUrl);
             }
             catch
             {
-                CustomMessageBox.Show("Failed to open url " + drdtGcsUrl);
+                CustomMessageBox.Show("Failed to open url " + drdcWebsiteUrl);
             }
         }
 

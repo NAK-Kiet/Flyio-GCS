@@ -63,6 +63,14 @@ namespace MissionPlanner.Controls.FlyioInstruments
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            if (float.IsNaN(primaryValue) || float.IsNaN(secondaryValue) ||
+                float.IsInfinity(primaryValue) || float.IsInfinity(secondaryValue))
+            {
+                e.Graphics.Clear(BackColor);
+                TextRenderer.DrawText(e.Graphics, KindTitle() + "\r\nUnavailable", Font, ClientRectangle,
+                    Color.Gray, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                return;
+            }
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 

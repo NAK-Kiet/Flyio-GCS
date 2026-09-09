@@ -101,7 +101,7 @@ namespace MissionPlanner.Controls
             }
             //
             {
-                var numb = number.ToString(numberformat);
+                var numb = double.IsNaN(number) || double.IsInfinity(number) ? "—" : number.ToString(numberformat);
 
                 Size extent = e.MeasureString("0".PadLeft(numb.Length+1,'0'), new Font(this.Font.FontFamily, (float)newSize, this.Font.Style)).ToSize();
 

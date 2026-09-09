@@ -782,6 +782,11 @@ namespace MissionPlanner.GCSViews
             }
 
             ThemeManager.ApplyThemeTo(tabControlactions);
+            if (flyioHealthTab != null && !tabControlactions.TabPages.Contains(flyioHealthTab))
+            {
+                tabControlactions.TabPages.Insert(Math.Min(1, tabControlactions.TabPages.Count), flyioHealthTab);
+                if (flyioSitlEnabled.Checked) tabControlactions.SelectedTab = flyioHealthTab;
+            }
         }
 
         internal void BUT_run_script_Click(object sender, EventArgs e)
@@ -825,6 +830,7 @@ namespace MissionPlanner.GCSViews
 
         protected override void Dispose(bool disposing)
         {
+            if (disposing) { flyioTelemetryTimer?.Dispose(); flyioTelemetry?.Dispose(); }
             base.Dispose(disposing);
 
             MainV2.comPort.logreadmode = false;
@@ -5448,6 +5454,7 @@ namespace MissionPlanner.GCSViews
 
         private void updateBindingSourceWork()
         {
+            if (flyioSitlEnabled != null && flyioSitlEnabled.Checked) return;
             try
             {
                 if (this.Visible && !this.IsDisposed)

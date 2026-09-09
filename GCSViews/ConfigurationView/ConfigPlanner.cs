@@ -28,6 +28,14 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             startup = true;
 
             InitializeComponent();
+            CHK_mavdebug.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            chk_temp.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            // Keep the cache row below the diagnostic options at every font scale.
+            var cacheTop = Math.Max(CHK_mavdebug.Bottom, chk_temp.Bottom) + 16;
+            label13.Top = cacheTop + 3;
+            CMB_mapCache.Top = cacheTop;
+            BUT_mapCacheDir.Top = cacheTop;
+            AutoScroll = true;
             CMB_Layout.Items.Add(DisplayNames.Basic);
             CMB_Layout.Items.Add(DisplayNames.Advanced);
             CMB_Layout.Items.Add(DisplayNames.Custom);

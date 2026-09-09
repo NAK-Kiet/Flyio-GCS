@@ -40,13 +40,24 @@ namespace MissionPlanner.GCSViews
             MainH.Panel2MinSize = 420;
             MainH.Panel2.Padding = Padding.Empty;
 
-            // FlightData's nested splitter reserves Panel1 for the optional tuning graph.
-            // The Fly.io DATA presentation uses the full map row and exposes no tuning
-            // graph there, so the legacy panel must never reserve map width or height.
-            splitContainer1.Panel1Collapsed = true;
-            splitContainer1.IsSplitterFixed = true;
+            // Preserve the existing tuning toggle and graph when the workspace resizes.
+            splitContainer1.Panel1Collapsed = !CB_tuning.Checked;
+            splitContainer1.IsSplitterFixed = false;
             splitContainer1.Panel1MinSize = 0;
             splitContainer1.SplitterWidth = 1;
+            var graph = zg1.GraphPane;
+            graph.Fill = new ZedGraph.Fill(FlyioDataSurface);
+            graph.Chart.Fill = new ZedGraph.Fill(FlyioDataSurface);
+            graph.Title.FontSpec.FontColor = FlyioDataText;
+            graph.Legend.Fill = new ZedGraph.Fill(FlyioDataSurface);
+            graph.Legend.FontSpec.FontColor = FlyioDataText;
+            foreach (ZedGraph.Axis axis in new ZedGraph.Axis[] { graph.XAxis, graph.YAxis, graph.Y2Axis })
+            {
+                axis.Color = FlyioDataSecondaryText;
+                axis.Title.FontSpec.FontColor = FlyioDataText;
+                axis.Scale.FontSpec.FontColor = FlyioDataSecondaryText;
+                axis.MajorGrid.Color = FlyioDataBorder;
+            }
             splitContainer1.Margin = Padding.Empty;
             splitContainer1.Padding = Padding.Empty;
             splitContainer1.Panel2.Padding = Padding.Empty;
@@ -64,8 +75,8 @@ namespace MissionPlanner.GCSViews
             hud1.Paint += DrawFlyioHudFrame;
             tabControlactions.Margin = Padding.Empty;
             tabControlactions.Dock = DockStyle.Fill;
-            tabControlactions.Multiline = false;
-            tabControlactions.SizeMode = TabSizeMode.Normal;
+            tabControlactions.Multiline = true;
+            tabControlactions.SizeMode = TabSizeMode.FillToRight;
             tabControlactions.ItemSize = new Size(0, 40);
             tabControlactions.Padding = new Point(14, 7);
 
@@ -79,6 +90,26 @@ namespace MissionPlanner.GCSViews
             MainH.SplitterMoved += FlyioMainSplitterMoved;
             SubMainLeft.SizeChanged += FlyioLeftPanelSizeChanged;
             ApplyFlyioResponsiveGeometry();
+        }
+
+        private void InitializeFlyioHealthLayout()
+        {
+            var layout = flyioHealthTab.Controls.OfType<TableLayoutPanel>().Single();
+            layout.ColumnStyles.Clear();
+            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            // AutoSize determines height; the viewport determines wrapping width.
+            // Reserve scrollbar space so adding a wrapped line cannot oscillate layout.
+            layout.SizeChanged += (sender, args) =>
+            {
+                int width = Math.Max(1, layout.ClientSize.Width - layout.Padding.Horizontal -
+                    SystemInformation.VerticalScrollBarWidth);
+                foreach (Control child in layout.Controls)
+                {
+                    var maximum = new Size(Math.Max(1, width - child.Margin.Horizontal), 0);
+                    if (child.MaximumSize != maximum)
+                        child.MaximumSize = maximum;
+                }
+            };
         }
 
         private void DrawFlyioHudFrame(object sender, PaintEventArgs e)
@@ -167,12 +198,14 @@ namespace MissionPlanner.GCSViews
             flyioApplyingLayout = true;
             try
             {
-                if (!splitContainer1.Panel1Collapsed)
-                    splitContainer1.Panel1Collapsed = true;
-
                 int availableWidth = MainH.Width - MainH.SplitterWidth;
                 int left = (int)Math.Round(availableWidth * flyioMainSplitRatio);
-                int preferredLeftMinimum = availableWidth >= 940 ? 460 : MainH.Panel1MinSize;
+                float scale = DeviceDpi / 96F;
+                int preferredLeftMinimum = (int)Math.Round(
+                    (availableWidth >= 940 * scale ? 460 : 360) * scale);
+                preferredLeftMinimum = Math.Min(preferredLeftMinimum,
+                    Math.Max(1, availableWidth - MainH.Panel2MinSize));
+                MainH.Panel1MinSize = preferredLeftMinimum;
                 int maximumLeft = Math.Max(preferredLeftMinimum, availableWidth - MainH.Panel2MinSize);
                 left = Math.Max(preferredLeftMinimum, Math.Min(left, maximumLeft));
                 if (left > 0 && left < availableWidth && MainH.SplitterDistance != left)

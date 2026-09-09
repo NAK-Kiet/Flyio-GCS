@@ -1,0 +1,49 @@
+using System;
+using System.Linq;
+using System.Threading;
+using MissionPlanner.Utilities;
+class Checks
+{
+    static MAVLink.MavlinkParse encoder = new MAVLink.MavlinkParse();
+    static void Send(FlyioTelemetry t, MAVLink.MAVLINK_MSG_ID id, object value) => SendFrom(t, id, value, 1, 1);
+    static void SendFrom(FlyioTelemetry t, MAVLink.MAVLINK_MSG_ID id, object value, byte sysid, byte compid) =>
+        t.ProcessDatagram(encoder.GenerateMAVLinkPacket20(id, value, false, sysid, compid));
+    static void Assert(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+    static void Heartbeat(FlyioTelemetry t) => Send(t, MAVLink.MAVLINK_MSG_ID.HEARTBEAT,
+        new MAVLink.mavlink_heartbeat_t { autopilot = 12, type = 2, base_mode = 1, custom_mode = 3u << 16 });
+    static void Main(string[] args)
+    {
+        using (var t = new FlyioTelemetry())
+        {
+            if (args.Contains("--live"))
+            {
+                t.Start();
+                for (int i = 0; i < 30; i++) { Thread.Sleep(1000); Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(t.Snapshot())); }
+                return;
+            }
+            Assert(!t.Snapshot().Connected && !t.Snapshot().Latitude.HasValue, "startup has no fabricated position");
+            t.ProcessDatagram(new byte[] { 253, 40, 0 });
+            Heartbeat(t);
+            Assert(t.Snapshot().Connected && t.Snapshot().Mode == "Position", "CRC-valid heartbeat and PX4 mode");
+            var corrupt = encoder.GenerateMAVLinkPacket20(MAVLink.MAVLINK_MSG_ID.HEARTBEAT,
+                new MAVLink.mavlink_heartbeat_t { autopilot = 12 }, false, 1, 1);
+            corrupt[corrupt.Length - 1] ^= 1; t.ProcessDatagram(corrupt);
+            Assert(t.Snapshot().Rejected >= 2, "truncated packet and invalid CRC rejected");
+            Send(t, MAVLink.MAVLINK_MSG_ID.GLOBAL_POSITION_INT, new MAVLink.mavlink_global_position_int_t { lat = 473977430, lon = 85455940, hdg = 65535 });
+            Assert(!t.Snapshot().Latitude.HasValue, "global position alone cannot imply valid GPS");
+            Send(t, MAVLink.MAVLINK_MSG_ID.GPS_RAW_INT, new MAVLink.mavlink_gps_raw_int_t { fix_type = 3, satellites_visible = 10 });
+            Assert(t.Snapshot().Latitude == 47.397743 && !t.Snapshot().Heading.HasValue, "GPS gate and unknown heading sentinel");
+            SendFrom(t, MAVLink.MAVLINK_MSG_ID.HEARTBEAT, new MAVLink.mavlink_heartbeat_t { autopilot = 3, type = 2, base_mode = 1, custom_mode = 99u << 16 }, 2, 1);
+            SendFrom(t, MAVLink.MAVLINK_MSG_ID.GPS_RAW_INT, new MAVLink.mavlink_gps_raw_int_t { fix_type = 1, satellites_visible = 2 }, 2, 1);
+            Assert(t.Snapshot().Mode == "Position" && t.Snapshot().GpsFix == 3, "foreign system and component identity filtering");
+            Send(t, MAVLink.MAVLINK_MSG_ID.SYS_STATUS, new MAVLink.mavlink_sys_status_t { voltage_battery = 65535, battery_remaining = -1 });
+            Assert(!t.Snapshot().Voltage.HasValue && !t.Snapshot().BatteryPercent.HasValue, "unknown battery sentinels");
+            for (int i = 0; i < 4; i++) { Thread.Sleep(850); Heartbeat(t); }
+            Assert(t.Snapshot().Connected && !t.Snapshot().Latitude.HasValue, "GPS expires while heartbeat remains live");
+            Thread.Sleep(3100);
+            Assert(!t.Snapshot().Connected && !t.Snapshot().Armed.HasValue, "stale heartbeat clears live state");
+            Heartbeat(t);
+            Assert(t.Snapshot().Connected && !t.Snapshot().Latitude.HasValue, "reconnect does not restore stale GPS");
+        }
+    }
+}
