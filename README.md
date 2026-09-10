@@ -1,4 +1,4 @@
-﻿<p align="center">
+<p align="center">
   <img src="docs/assets/flyio-drone-header.gif" alt="Existing Fly.io simulation drone flying across a navy navigation grid" width="960">
 </p>
 
@@ -8,34 +8,57 @@
   <img src="Resources/CommunityPartners/Drdc.png" alt="DRDC" height="72">
 </p>
 
-# Fly.io GCS
+# FLY.IO GCS
 
 **Ground Control Station for UAV and UGV Systems**
 
 Mission Planning | Telemetry | Vehicle Configuration | Simulation | DRDC Integration
 
-![Windows • Native / Recommended](https://img.shields.io/badge/Windows%20%E2%80%A2%20Native%20%2F%20Recommended-165a44?style=flat-square) ![Target • net472](https://img.shields.io/badge/Target%20%E2%80%A2%20net472-1b2752?style=flat-square) ![Product • Fly.io GCS](https://img.shields.io/badge/Product%20%E2%80%A2%20Fly.io%20GCS-d85a00?style=flat-square)
+**Native Windows desktop** &nbsp;|&nbsp; **.NET Framework 4.7.2** &nbsp;|&nbsp; **Active Development**
 
-[Overview](#project-overview) · [Quick Start](#quick-start) · [Interface](#interface) · [Build and Run](#build-and-run) · [Troubleshooting](#troubleshooting)
+[Overview](#project-overview) · [Quick Start](#quick-start) · [Interface](#flyio-gcs-interface) · [Build and Run](#build-and-run) · [Troubleshooting](#troubleshooting)
 
-<details>
-<summary>Technology, platforms, and development context</summary>
+## Technology & Platforms
 
-| Group | Repository context |
+### Platforms
+
+| <img src="Assets/README/windows11.svg" alt="Windows logo" width="48"> | <img src="Assets/README/linux.svg" alt="Linux Tux logo" width="48"> | <img src="Assets/README/apple.svg" alt="Apple logo" width="48"> |
+| --- | --- | --- |
+| **Windows 10/11** | **Linux** | **macOS** |
+| Native / Recommended | Development / source workflow only | Development / source workflow only |
+| Windows desktop application | Not currently a native Linux release | Not currently a native macOS release |
+
+### Core Technology
+
+| <img src="Assets/README/csharp.svg" alt="C sharp logo" width="40"> C# | <img src="Assets/README/dot-net.svg" alt=".NET logo" width="40"> .NET Framework 4.7.2 | Windows Forms | MAVLink |
+| --- | --- | --- | --- |
+| Application language | Desktop build target: `net472` | Windows desktop interface | Vehicle communication protocol |
+
+### Development Tools
+
+| <img src="Assets/README/visualstudio.svg" alt="Visual Studio logo" width="40"> | <img src="Assets/README/vscode.svg" alt="Visual Studio Code logo" width="40"> | <img src="Assets/README/powershell.svg" alt="PowerShell logo" width="40"> | <img src="Assets/README/git.svg" alt="Git logo" width="40"> |
+| --- | --- | --- | --- |
+| **Visual Studio** | **Visual Studio Code** | **PowerShell** | **Git** |
+| Windows IDE option | Source editor option | Windows command workflow | Source version control |
+
+### Repository / Collaboration
+
+| <img src="Assets/README/github.svg" alt="GitHub logo" width="40"> GitHub | <img src="Assets/README/gitlab.svg" alt="GitLab logo" width="40"> GitLab |
 | --- | --- |
-| Platform | ![Windows 10/11 • Native](https://img.shields.io/badge/Windows%2010%2F11%20%E2%80%A2%20Native-263449?style=flat-square) ![Linux • Source workflows only](https://img.shields.io/badge/Linux%20%E2%80%A2%20Source%20workflows%20only-263449?style=flat-square) ![macOS • Source workflows only](https://img.shields.io/badge/macOS%20%E2%80%A2%20Source%20workflows%20only-263449?style=flat-square) |
-| Core technology | ![C#](https://img.shields.io/badge/C%23-263449?style=flat-square) ![.NET Framework 4.7.2](https://img.shields.io/badge/.NET%20Framework%204.7.2-263449?style=flat-square) ![WinForms](https://img.shields.io/badge/WinForms-263449?style=flat-square) ![MAVLink](https://img.shields.io/badge/MAVLink-263449?style=flat-square) |
-| Development tools | ![Visual Studio](https://img.shields.io/badge/Visual%20Studio-263449?style=flat-square) ![VS Code • Editor](https://img.shields.io/badge/VS%20Code%20%E2%80%A2%20Editor-263449?style=flat-square) ![PowerShell](https://img.shields.io/badge/PowerShell-263449?style=flat-square) ![Git](https://img.shields.io/badge/Git-263449?style=flat-square) |
-| Repository / collaboration | ![GitHub](https://img.shields.io/badge/GitHub-263449?style=flat-square) ![GitLab • Internal](https://img.shields.io/badge/GitLab%20%E2%80%A2%20Internal-263449?style=flat-square) |
-| Vehicle / GCS ecosystem | ![ArduPilot](https://img.shields.io/badge/ArduPilot-263449?style=flat-square) ![PX4 • Development context](https://img.shields.io/badge/PX4%20%E2%80%A2%20Development%20context-263449?style=flat-square) ![QGroundControl • Separate GCS](https://img.shields.io/badge/QGroundControl%20%E2%80%A2%20Separate%20GCS-263449?style=flat-square) |
+| Public project repository | Internal team collaboration |
 
-These are descriptive badges, not live build, release, or validation results. Visual Studio and VS Code are development options. Linux/macOS badges describe source workflows, not native desktop support. PX4 is not a required Fly.io GCS runtime dependency; QGroundControl is a separate GCS used in ecosystem/development context.
+### Vehicle / GCS Ecosystem
 
-</details>
+| ArduPilot | PX4 | QGroundControl |
+| --- | --- | --- |
+| Mission Planner heritage and vehicle ecosystem | Development/testing context only | Separate GCS |
+| Vehicle-specific compatibility must be validated | Not required to run Fly.io GCS | Not part of Fly.io GCS |
+
+VS Code allows source-code development but does **not** make the WinForms application native on Linux or macOS. Logos identify relevant tools and platforms; they do not indicate a passed build, certified compatibility, or endorsement. [Logo sources and attribution](Assets/README/ATTRIBUTION.md).
 
 ## Project Overview
 
-Fly.io GCS is a Windows desktop Ground Control Station for UAV and UGV systems used in DRDC research, development, and operational workflows. It provides vehicle monitoring, MAVLink telemetry, mission planning, vehicle configuration, simulation workspaces, and embedded DRDC access.
+Fly.io GCS is a customized and extended Windows desktop Ground Control Station built on the Mission Planner ecosystem, with a Fly.io-specific interface and project functionality. It supports UAV and UGV workflows where compatible with the connected vehicle, including vehicle telemetry, mission planning, mapping, configuration, simulation/testing, logs, vehicle connection, and DRDC/Fly.io project integration.
 
 Fly.io GCS originated from the ArduPilot Mission Planner codebase. It retains inherited components, namespaces, and internal project identifiers; the product was not written entirely from scratch. Function availability depends on the connected vehicle, autopilot, and configuration.
 
@@ -44,26 +67,37 @@ Fly.io GCS originated from the ArduPilot Mission Planner codebase. It retains in
 | Item | Current repository configuration |
 | --- | --- |
 | Product | Fly.io GCS |
+| Status | Active Development |
 | Executable | `Fly.io-GCS.exe` |
-| Primary OS | Windows 10/11 |
+| Primary OS | Windows 10/11 64-bit |
 | Build target | .NET Framework 4.7.2 / `net472` |
 | Historical output directory | `bin\Release\net461` |
 
 `net461` is the historical output folder name; the project targets `net472`. No release version or release date is asserted here. Obtain the approved package and its version/commit from the team.
 
-## Interface
+## Fly.io GCS Interface
 
-Approved current product screenshots are not yet available as tracked documentation assets. Local visual-review captures are not treated as approved release imagery.
+Seven primary areas, shown using the actual Fly.io navigation artwork already used by the project. These illustrations identify the workspaces; they are not screenshots or generated interface mockups.
 
-| Workspace | Screenshot status |
-| --- | --- |
-| DATA | Approved current screenshot needed |
-| PLAN | Approved current screenshot needed |
-| SETUP | Approved current screenshot needed |
-| CONFIG | Approved current screenshot needed |
-| SIMULATION | Approved current screenshot needed |
-| HELP | Approved current screenshot needed |
-| DRDC | Approved current screenshot needed; exclude private/session data |
+<table>
+<tr>
+<td align="center" width="50%"><img src="Assets/README/interface-data.svg" alt="DATA navigation artwork" width="400"><br><strong>DATA</strong><br>Real-Time Monitoring</td>
+<td align="center" width="50%"><img src="Assets/README/interface-plan.svg" alt="PLAN navigation artwork" width="400"><br><strong>PLAN</strong><br>Mission Planning</td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src="Assets/README/interface-setup.svg" alt="SETUP navigation artwork" width="400"><br><strong>SETUP</strong><br>Vehicle Setup</td>
+<td align="center" width="50%"><img src="Assets/README/interface-config.svg" alt="CONFIG navigation artwork" width="400"><br><strong>CONFIG</strong><br>Configuration</td>
+</tr>
+<tr>
+<td align="center" width="50%"><img src="Assets/README/interface-simulation.svg" alt="SIMULATION navigation artwork" width="400"><br><strong>SIMULATION</strong><br>SITL & Testing</td>
+<td align="center" width="50%"><img src="Assets/README/interface-help.svg" alt="HELP navigation artwork" width="400"><br><strong>HELP</strong><br>Documentation / Support</td>
+</tr>
+<tr>
+<td align="center" colspan="2"><img src="Assets/README/interface-drdc.svg" alt="DRDC navigation artwork" width="400"><br><strong>DRDC</strong><br>Special / Internal Tools</td>
+</tr>
+</table>
+
+Simulation/SITL workflows require the appropriate simulator and validated configuration. The DRDC area provides embedded service access subject to account and network permissions. Current full-interface screenshots remain pending approval; local debug/review captures are not included here.
 
 ## Main Features
 
@@ -132,16 +166,16 @@ Fly.io GCS acknowledges [Mission Planner](https://github.com/ArduPilot/MissionPl
 
 ## Quick Start
 
-### Team Users
+### I only want to use Fly.io GCS
 
-1. Obtain an approved Fly.io GCS release ZIP from the team.
+1. Obtain the approved Windows release ZIP from the team.
 2. Extract the **complete** archive.
-3. Keep all files and subdirectories together.
+3. Open the extracted folder; keep all files and subdirectories together.
 4. Run `Fly.io-GCS.exe`.
 
 Do **not** copy only `Fly.io-GCS.exe`. DLLs, configuration files, native dependencies, resources, WebView2-related files, localization resources, and other runtime content are needed.
 
-### Developers
+### Developer Clone
 
 Use a Windows development environment for the desktop build and execution. Install Git, a .NET SDK compatible with the repository workflow, and .NET Framework 4.7.2 targeting/reference assemblies. The existing build guide specifies .NET SDK 10 or newer. Visual Studio with desktop .NET tooling is an IDE option; VS Code is an editor option.
 
@@ -203,10 +237,10 @@ Then repeat the main build. These instructions describe the workflow; they are n
 
 | Platform | Run Fly.io GCS | Development | Status |
 | --- | --- | --- | --- |
-| Windows 10/11 x64 | Native | Yes | Recommended |
+| Windows 10/11 x64 | Yes, native | Yes | Native / Recommended |
 | Linux | Not native | Yes | Development only |
 | macOS | Not native | Yes | Development only |
-| Windows VM | Yes | Yes | Alternative |
+| Windows VM | Possible | Possible | Alternative for Linux/macOS users |
 
 Linux and macOS support source editing and development collaboration; desktop build/run validation uses Windows. VS Code is a development/editor environment and does not make a WinForms application run natively on Linux/macOS. A Windows VM needs appropriate USB/serial access and vehicle-specific validation.
 
