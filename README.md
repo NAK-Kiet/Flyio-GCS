@@ -1,344 +1,366 @@
-# FLY.IO GCS
+﻿<p align="center">
+  <img src="docs/assets/flyio-drone-header.gif" alt="Existing Fly.io simulation drone flying across a navy navigation grid" width="960">
+</p>
 
-Fly.io Ground Control Station for Drone Operations, Development, Monitoring,
-Mission Planning, Simulation, and System Integration.
+<p align="center">
+  <img src="Resources/Fly.io%20icon.png" alt="Fly.io" height="72">
+  &nbsp;&nbsp;&nbsp;
+  <img src="Resources/CommunityPartners/Drdc.png" alt="DRDC" height="72">
+</p>
 
-Fly.io GCS is the customized ground control station used for DRDC drone research,
-integration, and operational workflows. It is a Windows desktop ground control
-station for supported vehicles, telemetry, missions, configuration, simulation,
-and DRDC services.
+# Fly.io GCS
 
-## What the application provides
+**Ground Control Station for UAV and UGV Systems**
 
-| Page | Purpose |
+Mission Planning | Telemetry | Vehicle Configuration | Simulation | DRDC Integration
+
+![Windows • Native / Recommended](https://img.shields.io/badge/Windows%20%E2%80%A2%20Native%20%2F%20Recommended-165a44?style=flat-square) ![Target • net472](https://img.shields.io/badge/Target%20%E2%80%A2%20net472-1b2752?style=flat-square) ![Product • Fly.io GCS](https://img.shields.io/badge/Product%20%E2%80%A2%20Fly.io%20GCS-d85a00?style=flat-square)
+
+[Overview](#project-overview) · [Quick Start](#quick-start) · [Interface](#interface) · [Build and Run](#build-and-run) · [Troubleshooting](#troubleshooting)
+
+<details>
+<summary>Technology, platforms, and development context</summary>
+
+| Group | Repository context |
 | --- | --- |
-| **DATA** | Flight data, HUD, flight instruments, gauges, map, telemetry graph, connection controls, and vehicle status. |
-| **PLAN** | Mission planning, waypoint editing, map-based planning, and mission files. |
-| **SETUP** | Firmware, hardware, calibration, and vehicle setup workflows. |
-| **CONFIG** | Planner options, display settings, telemetry rates, parameters, and application configuration. |
-| **SIMULATION** | The existing simulation workspace and simulator selection controls. |
-| **HELP** | Product help, keyboard shortcuts, DRDC services, and upstream acknowledgements. |
-| **DRDC** | Embedded DRDC ground control service; sign-in requires an account. |
+| Platform | ![Windows 10/11 • Native](https://img.shields.io/badge/Windows%2010%2F11%20%E2%80%A2%20Native-263449?style=flat-square) ![Linux • Source workflows only](https://img.shields.io/badge/Linux%20%E2%80%A2%20Source%20workflows%20only-263449?style=flat-square) ![macOS • Source workflows only](https://img.shields.io/badge/macOS%20%E2%80%A2%20Source%20workflows%20only-263449?style=flat-square) |
+| Core technology | ![C#](https://img.shields.io/badge/C%23-263449?style=flat-square) ![.NET Framework 4.7.2](https://img.shields.io/badge/.NET%20Framework%204.7.2-263449?style=flat-square) ![WinForms](https://img.shields.io/badge/WinForms-263449?style=flat-square) ![MAVLink](https://img.shields.io/badge/MAVLink-263449?style=flat-square) |
+| Development tools | ![Visual Studio](https://img.shields.io/badge/Visual%20Studio-263449?style=flat-square) ![VS Code • Editor](https://img.shields.io/badge/VS%20Code%20%E2%80%A2%20Editor-263449?style=flat-square) ![PowerShell](https://img.shields.io/badge/PowerShell-263449?style=flat-square) ![Git](https://img.shields.io/badge/Git-263449?style=flat-square) |
+| Repository / collaboration | ![GitHub](https://img.shields.io/badge/GitHub-263449?style=flat-square) ![GitLab • Internal](https://img.shields.io/badge/GitLab%20%E2%80%A2%20Internal-263449?style=flat-square) |
+| Vehicle / GCS ecosystem | ![ArduPilot](https://img.shields.io/badge/ArduPilot-263449?style=flat-square) ![PX4 • Development context](https://img.shields.io/badge/PX4%20%E2%80%A2%20Development%20context-263449?style=flat-square) ![QGroundControl • Separate GCS](https://img.shields.io/badge/QGroundControl%20%E2%80%A2%20Separate%20GCS-263449?style=flat-square) |
 
-The DATA page includes standard Fly.io/Mission Planner vehicle workflows:
-MAVLink-compatible telemetry, heartbeat and vehicle state, flight mode, arm state,
-attitude, GPS and satellite information, heading, ground speed, battery data,
-status indicators, HUD instruments, gauges, an interactive map, and a tuning graph.
-Available values depend on the connected vehicle and telemetry stream.
+These are descriptive badges, not live build, release, or validation results. Visual Studio and VS Code are development options. Linux/macOS badges describe source workflows, not native desktop support. PX4 is not a required Fly.io GCS runtime dependency; QGroundControl is a separate GCS used in ecosystem/development context.
+
+</details>
+
+## Project Overview
+
+Fly.io GCS is a Windows desktop Ground Control Station for UAV and UGV systems used in DRDC research, development, and operational workflows. It provides vehicle monitoring, MAVLink telemetry, mission planning, vehicle configuration, simulation workspaces, and embedded DRDC access.
+
+Fly.io GCS originated from the ArduPilot Mission Planner codebase. It retains inherited components, namespaces, and internal project identifiers; the product was not written entirely from scratch. Function availability depends on the connected vehicle, autopilot, and configuration.
+
+## Current Release
+
+| Item | Current repository configuration |
+| --- | --- |
+| Product | Fly.io GCS |
+| Executable | `Fly.io-GCS.exe` |
+| Primary OS | Windows 10/11 |
+| Build target | .NET Framework 4.7.2 / `net472` |
+| Historical output directory | `bin\Release\net461` |
+
+`net461` is the historical output folder name; the project targets `net472`. No release version or release date is asserted here. Obtain the approved package and its version/commit from the team.
+
+## Interface
+
+Approved current product screenshots are not yet available as tracked documentation assets. Local visual-review captures are not treated as approved release imagery.
+
+| Workspace | Screenshot status |
+| --- | --- |
+| DATA | Approved current screenshot needed |
+| PLAN | Approved current screenshot needed |
+| SETUP | Approved current screenshot needed |
+| CONFIG | Approved current screenshot needed |
+| SIMULATION | Approved current screenshot needed |
+| HELP | Approved current screenshot needed |
+| DRDC | Approved current screenshot needed; exclude private/session data |
+
+## Main Features
+
+| Workspace | Available functionality |
+| --- | --- |
+| DATA | Telemetry, HUD, map, gauges, flight instruments, tuning graph, logs, vehicle state, and COM/baud connection controls. |
+| PLAN | Map-based mission planning, waypoint editing, and mission files. |
+| SETUP | Vehicle setup, hardware and calibration workflows. |
+| CONFIG | Application configuration, parameters, display options, and telemetry rates. |
+| SIMULATION | Existing simulation workspace and simulator selection controls. |
+| HELP | Product help, keyboard shortcuts, service links, and upstream acknowledgements. |
+| DRDC | Embedded WebView2 access to the configured DRDC service and its authentication flow. |
+
+MAVLink-compatible communication supports vehicle monitoring. Heartbeat, attitude, GPS, battery, mode, and other values depend on the connected system. The workspace inventory is not a claim that every hardware workflow has been validated.
+
+## Architecture
+
+```mermaid
+flowchart TB
+    V["Vehicle / Autopilot"] <-->|MAVLink| G["Fly.io GCS"]
+    G --- H["HUD / Instruments / Telemetry"]
+    G --- M["Map / Mission Planning"]
+    G --- C["Setup / Configuration"]
+    H --- O["Operator"]
+    M --- O
+    C --- O
+    G --- D["Embedded DRDC Web View"]
+```
+
+Future / Planned: additional DRDC service integrations are roadmap candidates, separate from the existing embedded view. No AI or autonomous-delivery service is presented as implemented.
+
+## DRDC Integration
+
+<img src="Resources/CommunityPartners/Drdc.png" alt="DRDC" width="180">
+
+Fly.io GCS provides embedded access to DRDC services. The [DRDC website](https://drdc-dev-web.drsys.asia/) is linked by HELP.
+
+The [configured DRDC dashboard sign-in](https://drdt-dev-gcs-frontend.drsys.asia/en/login) matches the HELP link and embedded DRDC view in this repository. Service availability was not independently verified during documentation preparation. Access requires an approved account and applicable network access.
+
+## Community & Partners
+
+### Project and organizational community
+
+The following existing assets are displayed by the Fly.io HELP page. Their inclusion acknowledges that community; it does not assert that every organization contributes directly to this repository or endorses each release.
+
+<table>
+<tr>
+<td align="center"><img src="Resources/CommunityPartners/Aerobyte.png" alt="Aerobyte" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/Aerospace.png" alt="Aerospace" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/Dev.png" alt="Dev" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/Drdc.png" alt="Drdc" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/Electronic.png" alt="Electronic" width="130"></td>
+</tr>
+<tr>
+<td align="center"><img src="Resources/CommunityPartners/Factoryio.png" alt="Factoryio" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/FactoryX.png" alt="FactoryX" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/Flyio.png" alt="Flyio" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/Maker.png" alt="Maker" width="130"></td>
+<td align="center"><img src="Resources/CommunityPartners/Racingdrone.png" alt="Racingdrone" width="130"></td>
+</tr>
+</table>
+
+### Open-source and technology ecosystem
+
+Fly.io GCS acknowledges [Mission Planner](https://github.com/ArduPilot/MissionPlanner) and the [ArduPilot ecosystem](https://ardupilot.org/ardupilot/), together with the third-party components identified in repository and release notices. PX4 and QGroundControl are development/ecosystem context, not organizational partnership claims.
 
 ## Quick Start
 
-### I only want to use Fly.io GCS
+### Team Users
 
-1. Obtain `Fly.io-GCS-Windows.zip`.
-2. Extract the complete ZIP.
-3. Open the extracted folder.
+1. Obtain an approved Fly.io GCS release ZIP from the team.
+2. Extract the **complete** archive.
+3. Keep all files and subdirectories together.
 4. Run `Fly.io-GCS.exe`.
 
-Do **not** copy only `Fly.io-GCS.exe`; supporting DLLs and resources are required.
+Do **not** copy only `Fly.io-GCS.exe`. DLLs, configuration files, native dependencies, resources, WebView2-related files, localization resources, and other runtime content are needed.
 
-### I want to develop Fly.io GCS
+### Developers
+
+Use a Windows development environment for the desktop build and execution. Install Git, a .NET SDK compatible with the repository workflow, and .NET Framework 4.7.2 targeting/reference assemblies. The existing build guide specifies .NET SDK 10 or newer. Visual Studio with desktop .NET tooling is an IDE option; VS Code is an editor option.
 
 ```powershell
 git clone --recurse-submodules https://github.com/NAK-Kiet/Flyio-GCS.git
 cd Flyio-GCS
 git submodule update --init --recursive
-dotnet restore MissionPlanner.csproj
-dotnet build MissionPlanner.csproj -c Release --no-restore
 ```
 
-## Use the Windows Release
+Run the restore and build commands in **Build and Run** below.
 
-Normal operators should not need to clone or compile the repository. The
-recommended workflow is:
+## Updating Fly.io GCS
 
-~~~text
-Fly.io-GCS-Windows.zip
-        |
-Extract the complete archive
-        |
-Open the extracted folder
-        |
-Run Fly.io-GCS.exe
-~~~
+Preserve important local changes before updating. Inspect the working tree and current branch; run the pull below when on `main` and ready to integrate `origin/main`.
 
-The package includes required DLLs, resources, configuration files, native
-dependencies, licenses, and notices. Do not distribute the EXE alone. Obtain
-Fly.io-GCS-Windows.zip from the DRDC team and keep the complete extracted archive
-together.
-
-~~~text
-Fly.io-GCS.exe
-~~~
-
-Do not copy only the executable. The application requires the supporting files in
-the package. The current development output is:
-
-~~~text
-bin\Release\net461\Fly.io-GCS.exe
-~~~
-
-The complete Windows package is the recommended operator distribution.
-
-## Platform support
-
-| OS | Fly.io GCS desktop | Development |
-| --- | --- | --- |
-| Windows 10/11 | Native / recommended | Supported development workflow. |
-| Linux | Not native | Clone and edit with Git and VS Code; use a Windows VM or remote Windows machine to run the desktop application. |
-| macOS | Not native | Clone and edit the source; use a Windows VM or remote Windows machine to run the desktop application. |
-
-VS Code is an editor and development environment. It does not make the Windows
-WinForms application run natively on Linux or macOS. Wine may be experimented
-with, but it is experimental and unvalidated; reliable serial, USB, graphics, or
-WebView2 operation under Wine is not promised.
-
-## Clone from GitHub
-
-Repository: <https://github.com/NAK-Kiet/Flyio-GCS>
-
-~~~powershell
-git clone --recurse-submodules https://github.com/NAK-Kiet/Flyio-GCS.git
-cd Flyio-GCS
-git submodule update --init --recursive
-code .
-~~~
-
-The `git submodule update --init --recursive` command is important because
-inherited Mission Planner dependencies and submodules may be required for a
-complete development checkout. The `code .` command requires Visual Studio Code
-and its command to be available in PATH. From a PowerShell prompt starting at the
-C drive:
-
-~~~powershell
-cd C:\
-git clone --recurse-submodules https://github.com/NAK-Kiet/Flyio-GCS.git
-cd Flyio-GCS
-git submodule update --init --recursive
-code .
-~~~
-
-## Clone from DRDC GitLab
-
-This is an **INTERNAL/PRIVATE** GitLab repository. Users need approved DRDC or
-internal network access to the private address `192.168.100.120`, GitLab
-repository permission, and a registered SSH public key.
-
-~~~powershell
-git clone --recurse-submodules git@192.168.100.120:Kaine/flyio-gcs.git Flyio-GCS
-cd Flyio-GCS
-git submodule update --init --recursive
-code .
-~~~
-
-Never place private key contents, passphrases, tokens, or passwords in this
-repository or its documentation.
-
-## Development requirements
-
-For source development, use Windows 10/11 with Git, PowerShell, NuGet network
-access, .NET SDK tooling for SDK-style .NET Framework projects, and .NET Framework
-4.7.2 targeting/reference assemblies. The currently validated repository workflow
-uses PowerShell or terminal commands with `dotnet restore` and `dotnet build`.
-Visual Studio can also be used with appropriate .NET desktop and .NET Framework
-tooling. VS Code is suitable for editing, Git operations, and terminal-based
-workflows. The desktop runtime remains Windows-native.
-
-## Build from source
-
-~~~powershell
-cd C:\Flyio-GCS
-dotnet restore MissionPlanner.csproj
-dotnet build MissionPlanner.csproj -c Release --no-restore
-~~~
-
-A successful build should report 0 Error(s) and produce:
-
-~~~text
-C:\Flyio-GCS\bin\Release\net461\Fly.io-GCS.exe
-~~~
-
-MissionPlanner.csproj targets net472 (.NET Framework 4.7.2), even though
-bin\Release\net461 is a historical output folder name. MissionPlanner.csproj,
-internal Mission Planner namespaces, and
-compatibility identifiers remain because Fly.io GCS originated from the Mission
-Planner codebase. The user-facing product is Fly.io GCS and the executable is
-Fly.io-GCS.exe.
-
-| Internal compatibility name | User-facing name |
-| --- | --- |
-| MissionPlanner.csproj | Fly.io GCS |
-| Mission Planner namespaces | Fly.io GCS desktop application |
-| bin\Release\net461\ | Windows Release output folder |
-| Fly.io-GCS.exe | Fly.io GCS executable |
-
-## Run from source
-
-~~~powershell
-cd C:\Flyio-GCS\bin\Release\net461
-.\Fly.io-GCS.exe
-~~~
-
-Or:
-
-~~~powershell
-Start-Process "C:\Flyio-GCS\bin\Release\net461\Fly.io-GCS.exe"
-~~~
-
-Close the application before rebuilding when files are locked. Do not distribute
-a development folder containing local settings, logs, caches, or build artifacts.
-
-## Update an existing clone safely
-
-~~~powershell
-cd C:\Flyio-GCS
+```powershell
 git status
 git branch --show-current
 git fetch origin
-~~~
-
-When the working tree is clean and the branch is main:
-
-~~~powershell
 git pull --ff-only origin main
-~~~
+git submodule update --init --recursive
+```
 
-If status shows important local changes, preserve or review them first. Do not
-blindly pull, reset, clean, or discard work to force an update.
+Do not pull blindly over local modifications. Review `git diff` and preserve work using the team's normal branch, commit, or stash workflow. If histories diverge, stop and review the branches; do not force an update with destructive reset/clean commands.
 
-## Connect a vehicle
+## Build and Run
 
-1. Connect telemetry or USB hardware and power the vehicle.
+From the repository root in Windows PowerShell:
+
+```powershell
+dotnet restore MissionPlanner.csproj --configfile .\nuget.config
+dotnet build MissionPlanner.csproj -c Release --no-restore
+```
+
+Expected executable:
+
+```text
+bin\Release\net461\Fly.io-GCS.exe
+```
+
+Launch the application or locate the complete output folder:
+
+```powershell
+Start-Process ".\bin\Release\net461\Fly.io-GCS.exe"
+explorer ".\bin\Release\net461"
+```
+
+`MissionPlanner.csproj` remains an inherited/internal project identifier required for compatibility. Its name does not change the user-facing product name, Fly.io GCS.
+
+If the build reports missing `Drivers\DriverCleanup.exe`, the existing build guide documents building that helper first:
+
+```powershell
+dotnet build ExtLibs/DriverCleanup/DriverCleanup.csproj -c Release
+```
+
+Then repeat the main build. These instructions describe the workflow; they are not a claim that this checkout has passed release verification.
+
+## Platform Compatibility
+
+| Platform | Run Fly.io GCS | Development | Status |
+| --- | --- | --- | --- |
+| Windows 10/11 x64 | Native | Yes | Recommended |
+| Linux | Not native | Yes | Development only |
+| macOS | Not native | Yes | Development only |
+| Windows VM | Yes | Yes | Alternative |
+
+Linux and macOS support source editing and development collaboration; desktop build/run validation uses Windows. VS Code is a development/editor environment and does not make a WinForms application run natively on Linux/macOS. A Windows VM needs appropriate USB/serial access and vehicle-specific validation.
+
+## Release Package Structure
+
+The EXE alone is **not** the complete application. Keep the complete approved Release package, including licenses and notices. Depending on the packaged dependency set, it contains:
+
+```text
+Fly.io-GCS.exe
+Fly.io-GCS.exe.config
+DLL dependencies and native libraries
+runtimes/
+x64/
+x86/
+plugins/
+WebView2-related runtime/support content
+localization resources
+map and application resources
+configuration files
+COPYING.txt
+NOTICE-Fly.io-GCS.txt
+third-party notices
+```
+
+This is an illustrative inventory, not a promise that every package has identical directories. Preserve the supplied hierarchy. WebView2 browser data may also be created at runtime; do not distribute personal browser/session data.
+
+## Repository Structure
+
+```text
+Flyio-GCS/
+├── GCSViews/              # Application workspaces
+├── Controls/              # WinForms controls and instruments
+├── Utilities/             # Shared application utilities
+├── Assets/                # Fly.io navigation artwork
+├── Properties/            # Settings, resources, manifests
+├── Resources/             # Icons, imagery, embedded resources
+├── ExtLibs/               # Inherited and third-party libraries
+├── run-scripts/           # Build, run, review, packaging helpers
+├── MissionPlanner.csproj  # Compatibility build entry point
+└── README.md
+```
+
+## Vehicle Connection
+
+1. Connect the telemetry or USB hardware.
 2. Start Fly.io GCS.
-3. Select the correct COM port and baud rate.
-4. Select **CONNECT**.
-5. Confirm a heartbeat and vehicle identification.
-6. Confirm attitude, GPS, battery, flight mode, and expected status telemetry.
-7. Complete normal pre-flight and command-safety checks before operating.
+3. Select the correct COM port or connection type.
+4. Select the baud rate when required.
+5. Connect.
+6. Verify a heartbeat.
+7. Verify the identified vehicle and vehicle state.
+8. Check attitude, GPS, battery, and flight mode against expected values.
+9. Perform normal operational safety checks before commanding the vehicle.
 
-Check physical connection, vehicle power, Windows device detection, telemetry
-hardware, COM port, baud rate, and MAVLink configuration before changing firmware.
-Test with the vehicle secured and follow the team's approved safety procedures.
-
-## PX4 and QGroundControl development context
-
-PX4 has been used during development and testing, but Fly.io GCS is not PX4-only.
-The custom PX4 SITL presentation is not shown in the normal DATA UI in the current
-release. PX4 is not required for normal Fly.io GCS operation.
-
-QGroundControl is a separate GCS. Multi-GCS MAVLink testing may require validated
-routing. This README does not change firmware or routing configuration.
-
-## Architecture
-
-~~~mermaid
-flowchart LR
-    V[Vehicle / Autopilot] -->|MAVLink| F[Fly.io GCS]
-    F --> H[HUD and flight instruments]
-    F --> M[Map and mission planning]
-    F --> C[Vehicle setup and configuration]
-    F --> D[DRDC services]
-    P[Future / Planned capabilities] -.-> F
-~~~
-
-The future/planned node is a planning marker, not an implemented feature.
-
-## Project structure
-
-| Path | Purpose |
-| --- | --- |
-| GCSViews\ | DATA, PLAN, SETUP, CONFIG, SIMULATION, HELP, and DRDC views. |
-| Controls\ | Reusable WinForms controls, instruments, quick views, and status widgets. |
-| Utilities\ | Shared utilities and Fly.io telemetry support code. |
-| Resources\ | Icons, imagery, themes, and embedded desktop resources. |
-| Assets\ | Fly.io navigation artwork used by the desktop interface. |
-| Properties\ | Application settings, resources, and manifest files. |
-| ExtLibs\ | Inherited and third-party libraries, including MAVLink and map components. |
-| tools\ | Development documentation, telemetry checks, and routing reference material. |
-| run-scripts\ | Desktop review, build, and packaging helpers. |
-| MissionPlanner.csproj | Compatibility project file used to build Fly.io GCS. |
+Available telemetry depends on the vehicle and stream. Secure the vehicle during testing and follow approved operational procedures. PX4 SITL is not a startup prerequisite.
 
 ## Troubleshooting
 
-### Fly.io-GCS.exe is missing
+| Symptom | Checks and next step |
+| --- | --- |
+| Application does not start | Confirm the complete package was extracted, the expected Windows/.NET environment is available, and inspect the error and application logs. |
+| Missing DLL | Re-extract the approved full archive; preserve native and localization subdirectories. Do not download arbitrary replacement DLLs. |
+| Build errors | Read the first error; check SDK/targeting assemblies and submodules. For missing DriverCleanup, use the helper build documented above. |
+| NuGet restore error | Run the explicit-config restore below; check configured feeds, network/proxy access, and the first restore error. Never paste credentials into an issue. |
+| Submodule error | Check repository access and run `git submodule update --init --recursive`. Report the failing submodule and error. |
+| Wrong COM port | Check Windows device detection, reconnect the device, and select its actual port and required baud rate. |
+| Telemetry not detected | Check vehicle power, cables/radio link, connection type, baud, heartbeat, and MAVLink settings. Close another application holding the serial port. |
+| DRDC view fails | Check network access, approved account access, and WebView2 availability; capture the displayed error without session secrets. |
+| Windows security warning | Confirm the package source and integrity with the team and follow organizational policy. Do not disable security controls blindly. |
+| Git pull conflict/local changes | Use `git status` and `git diff`, preserve work, and review branch divergence before retrying. |
 
-~~~powershell
-dotnet restore MissionPlanner.csproj
-dotnet build MissionPlanner.csproj -c Release --no-restore
-~~~
+NuGet restore command:
 
-### project.assets.json or NETSDK errors
+```powershell
+dotnet restore MissionPlanner.csproj --configfile .\nuget.config
+```
 
-~~~powershell
-dotnet restore MissionPlanner.csproj
-~~~
+## Feedback and Issue Reporting
 
-Inspect the first error, confirm NuGet connectivity and the .NET Framework 4.7.2
-targeting/reference assemblies, and do not replace dependencies just to suppress
-an error.
+Reports are welcome. Include enough context to reproduce the problem:
 
-### Git pull is blocked by local changes
+- Fly.io GCS version and/or commit.
+- Windows version.
+- Screenshot and exact error message.
+- Relevant logs.
+- Vehicle/autopilot and connection method.
+- Steps to reproduce.
+- Expected result and actual result.
 
-~~~powershell
-git status
-git diff
-~~~
+Use [GitHub issues](https://github.com/NAK-Kiet/Flyio-GCS/issues) for public, non-sensitive reports. Send internal material through approved team channels.
 
-Preserve important work; do not discard it blindly.
+Remove credentials, session data, private infrastructure details, and sensitive vehicle/location information before sharing screenshots or logs.
 
-### Vehicle is not detected
+## Known Limitations
 
-Check physical connection, vehicle power, Windows device detection, COM port,
-baud rate, telemetry hardware, and MAVLink configuration. Confirm another
-application does not have exclusive access to the serial port.
+- Windows is the current native desktop target; Linux/macOS are not native releases.
+- Some inherited Mission Planner names remain internally.
+- Hardware and vehicle behavior must be validated for the connected system.
+- Real vehicle validation is separate from UI checks and successful builds.
+- DRDC access depends on network availability and authorized account access.
+- Simulation and ecosystem compatibility do not imply every vehicle or autopilot combination is validated.
 
-## Release validation checklist
+## Roadmap
 
-- Release build completes with 0 Error(s).
-- Fly.io-GCS.exe exists at the expected output path.
-- The application launches from the Release package.
-- DATA, PLAN, SETUP, CONFIG, SIMULATION, HELP, and DRDC open.
-- HUD, map, connection controls, and telemetry views render.
-- Required DLLs, resources, configuration, licenses, and notices are included.
-- Telemetry checks pass for the tested cases.
-- The complete package launches outside the source tree.
+Future / Planned candidates for team prioritization, without committed dates or delivery promises:
 
-## DRDC
+- UI refinement and additional hardware validation.
+- Telemetry improvements based on validated test findings.
+- Packaging/installer evaluation and release automation.
+- Additional DRDC integrations and future platform evaluation.
 
-[DRDC website](https://drdc-dev-web.drsys.asia/)
+## Release Verification
 
-Fly.io GCS is developed for DRDC drone research, integration, and operational
-workflows. The HELP website card and clickable Fly.io brand open the official
-DRDC website. The embedded DRDC page retains its existing authentication flow.
+- [ ] Repository at approved commit
+- [ ] Release build succeeds with 0 errors
+- [ ] Fly.io-GCS.exe launches
+- [ ] DATA checked
+- [ ] PLAN checked
+- [ ] SETUP checked
+- [ ] CONFIG checked
+- [ ] SIMULATION checked
+- [ ] HELP checked
+- [ ] DRDC checked
+- [ ] Complete release package created
+- [ ] ZIP extracted and tested
+- [ ] Git refs verified where applicable
 
-## Repository links
+Record vehicle/telemetry validation separately for the tested hardware and operating conditions.
 
-- [GitHub repository](https://github.com/NAK-Kiet/Flyio-GCS)
-- [Internal/private DRDC GitLab](http://192.168.100.120:8082) — SSH clone:
-  git@192.168.100.120:Kaine/flyio-gcs.git
+## Internal Use and Confidentiality
 
-## License and attribution
+Fly.io/DRDC-specific non-public project materials, internal infrastructure, credentials, internal documents, and internal release packages are for authorized team members only. Use approved access and distribution channels.
 
-The user-facing product is **Fly.io GCS**. The repository also contains inherited
-Mission Planner and ArduPilot ecosystem code and other third-party components.
-Fly.io-specific or DRDC-specific work may have its own distribution policy, while
-inherited and third-party software retains its applicable licenses, copyrights,
-attribution, and source-distribution obligations.
+Unauthorized disclosure or distribution may result in organizational, contractual, disciplinary, or legal consequences where applicable.
 
-Required notices remain in the repository and release package:
+These organizational requirements do not override third-party or open-source licenses or their redistribution/source obligations.
 
-- [COPYING.txt](COPYING.txt)
-- [NOTICE-Fly.io-GCS.txt](NOTICE-Fly.io-GCS.txt)
-- source-file notices and packaged third-party notices
-- [Mission Planner](https://github.com/ArduPilot/MissionPlanner)
-- [Mission Planner contributors](https://github.com/ArduPilot/MissionPlanner/graphs/contributors)
-- [ArduPilot documentation](https://ardupilot.org/ardupilot/)
+## License and Attribution
 
-Product branding does not remove upstream legal attribution.
+The user-facing product is **Fly.io GCS**. Project-specific internal materials are subject to applicable organizational distribution and confidentiality requirements. Inherited and third-party code remains subject to its applicable third-party/open-source licenses; this repository is not described as wholly proprietary.
 
-## Screenshots
+Fly.io GCS is derived from [ArduPilot Mission Planner](https://github.com/ArduPilot/MissionPlanner). Original authors and contributors retain their copyrights. Preserve:
 
-The repository contains approved Fly.io navigation artwork in Assets\FlyioNav\.
-Release validation screenshots remain local review artifacts and are not treated
-as product documentation assets. Add screenshots only after approving stable,
-current captures of DATA, PLAN, SETUP, CONFIG, SIMULATION, HELP, and DRDC.
+- [COPYING.txt](COPYING.txt), containing GNU GPL version 3.
+- [NOTICE-Fly.io-GCS.txt](NOTICE-Fly.io-GCS.txt).
+- Mission Planner and ArduPilot attribution.
+- Source-file and packaged third-party license notices.
+
+Follow applicable corresponding-source and distribution obligations described in the notices. Product branding does not remove upstream attribution.
+
+## Contributors and Team
+
+Fly.io GCS is developed for DRDC workflows. Organizational attribution is used here without publishing private team details. See the [upstream Mission Planner contributors](https://github.com/ArduPilot/MissionPlanner/graphs/contributors) for inherited project contributions.
+
+## Further Documentation
+
+Existing helper instructions are in [run-scripts/README.md](run-scripts/README.md). Use the explicit NuGet configuration command in this README for restore. No root project changelog is currently present.
