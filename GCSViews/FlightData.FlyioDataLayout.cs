@@ -1,7 +1,9 @@
 using System;
 using System.Drawing;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MissionPlanner.Controls;
 using MissionPlanner.Utilities;
@@ -28,6 +30,48 @@ namespace MissionPlanner.GCSViews
         private Label flyioVibeStatus;
         private Label flyioLinkStatus;
         private Label flyioRcStatus;
+        private FlowLayoutPanel flyioDataNavigation;
+        private Font flyioDataControlFont;
+        private Font flyioDataButtonFont;
+        private Font flyioDataCompactFont;
+        private Dictionary<Control, TableLayoutPanelCellPosition> flyioActionCells;
+        private Dictionary<Control, Control[]> flyioLongListControls;
+        private bool flyioPolishingLayout;
+
+        // Only DATA uses this host. Keep the original TabControl API and events,
+        // but let the selected page occupy the native header area as well.
+        private sealed class FlyioDataTabControl : TabControl
+        {
+            [DllImport("user32.dll", CharSet = CharSet.Auto)]
+            private static extern IntPtr FindWindowEx(IntPtr parent, IntPtr after, string className, string title);
+            [DllImport("user32.dll")]
+            private static extern bool ShowWindow(IntPtr window, int command);
+
+            public override Rectangle DisplayRectangle => ClientRectangle;
+
+            protected override void OnLayout(LayoutEventArgs e)
+            {
+                base.OnLayout(e);
+                // Native single-line tabs create scroll arrows even though their
+                // headers are covered by the selected page. DATA uses buttons.
+                if (IsHandleCreated && Environment.OSVersion.Platform == PlatformID.Win32NT)
+                {
+                    IntPtr arrows = FindWindowEx(Handle, IntPtr.Zero, "msctls_updown32", null);
+                    if (arrows != IntPtr.Zero) ShowWindow(arrows, 0);
+                }
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                const int TcmAdjustRect = 0x1328;
+                if (m.Msg == TcmAdjustRect && !DesignMode)
+                {
+                    m.Result = IntPtr.Zero;
+                    return;
+                }
+                base.WndProc(ref m);
+            }
+        }
 
         private void InitializeFlyioDataLayout()
         {
@@ -35,7 +79,8 @@ namespace MissionPlanner.GCSViews
 
             MainH.FixedPanel = FixedPanel.None;
             MainH.BorderStyle = BorderStyle.None;
-            MainH.SplitterWidth = 1;
+            MainH.SplitterWidth = Math.Max(6, (int)Math.Round(6 * DeviceDpi / 96F));
+            StyleFlyioSplitter(MainH);
             MainH.Panel1MinSize = 360;
             MainH.Panel2MinSize = 420;
             MainH.Panel2.Padding = Padding.Empty;
@@ -75,10 +120,19 @@ namespace MissionPlanner.GCSViews
             hud1.Paint += DrawFlyioHudFrame;
             tabControlactions.Margin = Padding.Empty;
             tabControlactions.Dock = DockStyle.Fill;
-            tabControlactions.Multiline = true;
-            tabControlactions.SizeMode = TabSizeMode.FillToRight;
-            tabControlactions.ItemSize = new Size(0, 40);
-            tabControlactions.Padding = new Point(14, 7);
+            tabControlactions.Multiline = false;
+            flyioDataControlFont = new Font("Segoe UI", 8.25F);
+            flyioDataButtonFont = new Font("Segoe UI", 8.25F, FontStyle.Bold);
+            flyioDataCompactFont = new Font("Segoe UI", 6.5F, FontStyle.Bold);
+            Disposed += (sender, args) =>
+            {
+                flyioDataControlFont.Dispose();
+                flyioDataButtonFont.Dispose();
+                flyioDataCompactFont.Dispose();
+            };
+            InitializeFlyioDataNavigation();
+            InitializeFlyioDataScrolling();
+            InitializeFlyioPanelPolish();
 
             StyleFlyioQuickTelemetry();
 
@@ -90,6 +144,460 @@ namespace MissionPlanner.GCSViews
             MainH.SplitterMoved += FlyioMainSplitterMoved;
             SubMainLeft.SizeChanged += FlyioLeftPanelSizeChanged;
             ApplyFlyioResponsiveGeometry();
+        }
+
+        private void InitializeFlyioDataNavigation()
+        {
+            flyioDataNavigation = new FlowLayoutPanel
+            {
+                Name = "flyioDataNavigation",
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                WrapContents = true,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = FlyioDataBackground,
+                ContextMenuStrip = contextMenuStripactionstab
+            };
+            SubMainLeft.Panel2.Controls.Add(flyioDataNavigation);
+            flyioDataNavigation.SizeChanged += (sender, args) => SizeFlyioDataNavigation();
+            tabControlactions.BringToFront();
+            // Customize still operates on the original page collection/settings.
+            // The native multiline option has no meaning for this fixed header.
+            multiLineToolStripMenuItem.Visible = false;
+            tabControlactions.ControlAdded += FlyioDataTabsChanged;
+            tabControlactions.ControlRemoved += FlyioDataTabsChanged;
+            tabControlactions.SelectedIndexChanged += (sender, args) => UpdateFlyioDataNavigationSelection();
+            SyncFlyioDataNavigation();
+        }
+
+        private void FlyioDataTabsChanged(object sender, ControlEventArgs e)
+        {
+            SyncFlyioDataNavigation();
+        }
+
+        private void FlyioDataTabTextChanged(object sender, EventArgs e)
+        {
+            SyncFlyioDataNavigation();
+        }
+
+        private void SyncFlyioDataNavigation()
+        {
+            if (Disposing || IsDisposed || flyioDataNavigation.IsDisposed)
+                return;
+
+            flyioDataNavigation.SuspendLayout();
+            try
+            {
+                // ControlRemoved can run before the native tab count is updated.
+                // Parent membership already reflects the actual content controls.
+                var pages = tabControlactions.TabPages.Cast<TabPage>()
+                    .Where(page => page.Parent == tabControlactions).ToArray();
+                foreach (Button button in flyioDataNavigation.Controls.Cast<Button>().ToArray())
+                {
+                    var page = (TabPage)button.Tag;
+                    if (pages.Contains(page)) continue;
+                    page.TextChanged -= FlyioDataTabTextChanged;
+                    button.Dispose();
+                }
+
+                for (int index = 0; index < pages.Length; index++)
+                {
+                    TabPage page = pages[index];
+                    var button = flyioDataNavigation.Controls.Cast<Button>().FirstOrDefault(item => item.Tag == page);
+                    if (button == null)
+                    {
+                        button = new Button
+                        {
+                            Name = "flyioNavigate_" + page.Name,
+                            Tag = page,
+                            AutoSize = false,
+                            Padding = new Padding(FlyioPixels(4), 0, FlyioPixels(4), 0),
+                            Margin = new Padding(0, 0, FlyioPixels(4), FlyioPixels(4)),
+                            FlatStyle = FlatStyle.Flat,
+                            Font = flyioDataButtonFont,
+                            UseVisualStyleBackColor = false,
+                            ContextMenuStrip = contextMenuStripactionstab
+                        };
+                        button.Click += (sender, args) =>
+                        {
+                            if (tabControlactions.TabPages.Contains(page))
+                                tabControlactions.SelectedTab = page;
+                        };
+                        page.TextChanged += FlyioDataTabTextChanged;
+                        flyioDataNavigation.Controls.Add(button);
+                    }
+                    button.Text = page.Text;
+                    button.AccessibleName = page.Text;
+                    button.TabIndex = index;
+                    flyioDataNavigation.Controls.SetChildIndex(button, index);
+                }
+                flyioDataNavigation.Visible = pages.Length != 0;
+                SizeFlyioDataNavigation();
+                UpdateFlyioDataNavigationSelection();
+            }
+            finally
+            {
+                flyioDataNavigation.ResumeLayout(true);
+            }
+        }
+
+        private void UpdateFlyioDataNavigationSelection()
+        {
+            // Selection changes colors only: no reorder, font or size changes.
+            foreach (Button button in flyioDataNavigation.Controls)
+            {
+                bool selected = button.Tag == tabControlactions.SelectedTab;
+                button.BackColor = selected ? FlyioDataAccent : FlyioDataSecondarySurface;
+                button.ForeColor = selected ? FlyioDataBackground : FlyioDataText;
+                button.FlatAppearance.BorderColor = selected ? FlyioDataAccent : FlyioDataBorder;
+                button.AccessibleDescription = selected ? "Selected DATA page" : "Select DATA page";
+            }
+        }
+
+        private int FlyioPixels(int value) => (int)Math.Round(value * DeviceDpi / 96F);
+
+        private void SizeFlyioDataNavigation()
+        {
+            if (flyioDataNavigation == null || flyioDataNavigation.Controls.Count == 0)
+                return;
+
+            int gap = FlyioPixels(4);
+            int available = Math.Max(1, flyioDataNavigation.ClientSize.Width);
+            bool compact = available < FlyioPixels(300);
+            // WinForms can scale fonts after construction. Measure and lay out
+            // using the intended DATA font, including after a window resize.
+            foreach (Button button in flyioDataNavigation.Controls)
+            {
+                button.Font = compact ? flyioDataCompactFont : flyioDataButtonFont;
+                button.UseCompatibleTextRendering = compact;
+                int padding = FlyioPixels(compact ? 1 : 4);
+                button.Padding = new Padding(padding, 0, padding, 0);
+            }
+            int minimum = Math.Max(FlyioPixels(120), flyioDataNavigation.Controls.Cast<Button>()
+                .Max(button => TextRenderer.MeasureText(button.Text, button.Font).Width) + FlyioPixels(12));
+            int columns = Math.Max(1, available / (minimum + gap));
+            if (available >= FlyioPixels(200)) columns = Math.Max(2, columns);
+            if (compact && available >= FlyioPixels(210)) columns = Math.Max(3, columns);
+            var size = new Size(Math.Max(1, available / columns - gap), FlyioPixels(32));
+            flyioDataNavigation.SuspendLayout();
+            foreach (Button button in flyioDataNavigation.Controls)
+                if (button.Size != size) button.Size = size;
+            flyioDataNavigation.ResumeLayout(true);
+        }
+
+        private void StyleFlyioSplitter(SplitContainer split)
+        {
+            split.IsSplitterFixed = false;
+            split.Paint += (sender, args) =>
+            {
+                Rectangle bounds = split.SplitterRectangle;
+                bool hover = bounds.Contains(split.PointToClient(Cursor.Position));
+                using (var background = new SolidBrush(hover ? FlyioDataSecondarySurface : FlyioDataBackground))
+                using (var grip = new Pen(hover ? FlyioDataAccent : FlyioDataBorder, 2))
+                {
+                    args.Graphics.FillRectangle(background, bounds);
+                    int x = bounds.Left + bounds.Width / 2;
+                    int y = bounds.Top + bounds.Height / 2;
+                    if (split.Orientation == Orientation.Vertical)
+                        args.Graphics.DrawLine(grip, x, y - 18, x, y + 18);
+                    else
+                        args.Graphics.DrawLine(grip, x - 18, y, x + 18, y);
+                }
+            };
+            split.MouseMove += (sender, args) => split.Invalidate(split.SplitterRectangle);
+            split.MouseLeave += (sender, args) => split.Invalidate(split.SplitterRectangle);
+        }
+
+        private void InitializeFlyioDataScrolling()
+        {
+            foreach (TabPage page in tabControlactions.TabPages)
+                page.AutoScroll = true;
+            tabControlactions.ControlAdded += (sender, args) =>
+            {
+                if (args.Control is TabPage page) page.AutoScroll = true;
+            };
+
+            // Grow the list containers vertically without resizing the original
+            // Servo/Relay and Aux controls. The containing TabPage owns scrolling.
+            foreach (FlowLayoutPanel panel in new[] { flowLayoutPanelServos, flowLayoutPanel1 })
+            {
+                panel.FlowDirection = FlowDirection.TopDown;
+                panel.WrapContents = false;
+                panel.Dock = DockStyle.Top;
+                panel.AutoSize = true;
+                panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            }
+
+            // The viewport determines table width. Rows grow vertically, so the
+            // page scrolls without forcing a preferred-width horizontal scrollbar.
+            foreach (TableLayoutPanel panel in new[] { tableLayoutPanel1, tableLayoutPanel2, tableLayoutPaneltlogs })
+            {
+                panel.Dock = DockStyle.Top;
+                panel.AutoScroll = false;
+                panel.AutoSize = false;
+                panel.MinimumSize = Size.Empty;
+                panel.Margin = Padding.Empty;
+                panel.ColumnStyles.Clear();
+                for (int index = 0; index < panel.ColumnCount; index++)
+                    panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / panel.ColumnCount));
+            }
+        }
+
+        private void InitializeFlyioPanelPolish()
+        {
+            flyioActionCells = tableLayoutPanel1.Controls.Cast<Control>()
+                .ToDictionary(control => control, control => tableLayoutPanel1.GetCellPosition(control));
+            flyioLongListControls = new[] { flowLayoutPanelServos, flowLayoutPanel1 }
+                .SelectMany(list => list.Controls.Cast<Control>()).ToDictionary(row => row,
+                    row => row.Controls.Cast<Control>()
+                        .Where(child => !(row is AuxOptions) || child is Button || child is ComboBox)
+                        .OrderBy(child => child.Left).ToArray());
+            foreach (TabPage page in new[] { tabActions, tabScripts, tabPayload, tabTLogs, tablogbrowse, tabServo, tabAuxFunction })
+            {
+                page.Padding = new Padding(FlyioPixels(6));
+                PolishFlyioControls(page);
+                page.SizeChanged += (sender, args) => LayoutFlyioPanels();
+            }
+            foreach (ModifyandSet editor in new[] { modifyandSetAlt, modifyandSetSpeed, modifyandSetLoiterRad })
+            {
+                var flow = editor.Controls.OfType<FlowLayoutPanel>().Single();
+                flow.FlowDirection = FlowDirection.TopDown;
+                flow.WrapContents = false;
+                flow.AutoSize = false;
+                editor.AutoSize = false;
+                editor.Button.AutoSize = false;
+                editor.Button.Margin = new Padding(0, FlyioPixels(3), 0, 0);
+                editor.NumericUpDown.Margin = Padding.Empty;
+                editor.SizeChanged += (sender, args) =>
+                {
+                    editor.NumericUpDown.Width = editor.ClientSize.Width;
+                    editor.Button.Size = new Size(editor.ClientSize.Width,
+                        Math.Max(FlyioPixels(32), editor.Height - editor.NumericUpDown.Height - FlyioPixels(3)));
+                };
+            }
+            labelSelectedScript.TextChanged += (sender, args) => LayoutFlyioPanels();
+            labelScriptStatus.TextChanged += (sender, args) => LayoutFlyioPanels();
+            tabControlactions.SelectedIndexChanged += (sender, args) => LayoutFlyioPanels();
+            tabGauges.SizeChanged += (sender, args) => LayoutFlyioPanels();
+            // The legacy resize handler can reveal this gauge behind the six-pack.
+            Gvspeed.VisibleChanged += (sender, args) =>
+            {
+                if (flyioSixPackLayout != null && Gvspeed.Visible) Gvspeed.Visible = false;
+            };
+            LayoutFlyioPanels();
+        }
+
+        private void PolishFlyioControls(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                control.Font = control is Button ? flyioDataButtonFont : flyioDataControlFont;
+                control.Margin = new Padding(FlyioPixels(3));
+                if (control is Button button)
+                {
+                    button.AutoSize = false;
+                    button.MinimumSize = Size.Empty;
+                    button.Padding = new Padding(FlyioPixels(4), FlyioPixels(2), FlyioPixels(4), FlyioPixels(2));
+                }
+                PolishFlyioControls(control);
+            }
+        }
+
+        private void LayoutFlyioPanels()
+        {
+            if (flyioPolishingLayout || flyioDataControlFont == null) return;
+            flyioPolishingLayout = true;
+            try
+            {
+                LayoutFlyioTable(tableLayoutPanel1, 64);
+                LayoutFlyioTable(tableLayoutPanel2, 48);
+                LayoutFlyioTable(tableLayoutPaneltlogs, 48);
+                LayoutFlyioScripts();
+                LayoutFlyioPayload();
+                LayoutFlyioPlaybackSpeeds();
+                LayoutFlyioLongLists();
+                LayoutFlyioGaugeViewport();
+            }
+            finally { flyioPolishingLayout = false; }
+        }
+
+        private void LayoutFlyioTable(TableLayoutPanel table, int minimumRowHeight)
+        {
+            table.SuspendLayout();
+            if (table == tableLayoutPanel1) LayoutFlyioActionCells();
+            int rowHeight = FlyioPixels(minimumRowHeight);
+            int cellWidth = Math.Max(FlyioPixels(30), table.ClientSize.Width / table.ColumnCount - FlyioPixels(6));
+            using (var graphics = table.CreateGraphics())
+            {
+                foreach (Control child in table.Controls)
+                {
+                    child.Dock = DockStyle.Fill;
+                    if (child is Button)
+                        rowHeight = Math.Max(rowHeight, (int)Math.Ceiling(graphics.MeasureString(
+                            child.Text, child.Font, Math.Max(1, cellWidth - FlyioPixels(8))).Height) + FlyioPixels(14));
+                }
+            }
+            if (table == tableLayoutPaneltlogs)
+                foreach (Button button in table.Controls.OfType<Button>())
+                {
+                    button.Dock = DockStyle.Top;
+                    button.Height = rowHeight - button.Margin.Vertical;
+                }
+            table.RowStyles.Clear();
+            for (int row = 0; row < table.RowCount; row++)
+                table.RowStyles.Add(new RowStyle(SizeType.Absolute, rowHeight));
+            table.Height = rowHeight * table.RowCount;
+            table.ResumeLayout(true);
+            if (table.Parent is TabPage page)
+                page.AutoScrollMinSize = new Size(0, table.Height + page.Padding.Vertical);
+        }
+
+        private void LayoutFlyioActionCells()
+        {
+            bool compact = tableLayoutPanel1.Width < FlyioPixels(400);
+            tableLayoutPanel1.ColumnCount = compact ? 2 : 5;
+            tableLayoutPanel1.ColumnStyles.Clear();
+            for (int index = 0; index < tableLayoutPanel1.ColumnCount; index++)
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / tableLayoutPanel1.ColumnCount));
+            // Change only cell positions in the original table. Selector/action
+            // pairs stay together; the same controls retain all their handlers.
+            int nextRow = 4;
+            foreach (var cell in flyioActionCells.OrderBy(item => item.Value.Row).ThenBy(item => item.Value.Column))
+            {
+                tableLayoutPanel1.SetColumnSpan(cell.Key, 1);
+                if (!compact || cell.Value.Column < 2)
+                    tableLayoutPanel1.SetCellPosition(cell.Key, cell.Value);
+                else
+                    tableLayoutPanel1.SetCellPosition(cell.Key, new TableLayoutPanelCellPosition(0, nextRow++));
+                if (compact && cell.Value.Column >= 2) tableLayoutPanel1.SetColumnSpan(cell.Key, 2);
+            }
+            tableLayoutPanel1.RowCount = compact ? nextRow : 5;
+        }
+
+        private void LayoutFlyioScripts()
+        {
+            // Keep the existing controls and handlers; replace only their bounds.
+            int gap = FlyioPixels(6);
+            int width = Math.Max(1, tabScripts.ClientSize.Width - tabScripts.Padding.Horizontal - SystemInformation.VerticalScrollBarWidth);
+            int x = tabScripts.Padding.Left + tabScripts.AutoScrollPosition.X;
+            int y = tabScripts.Padding.Top + tabScripts.AutoScrollPosition.Y;
+            foreach (Label label in new[] { labelScriptStatus, labelSelectedScript })
+            {
+                label.MaximumSize = new Size(width, 0);
+                label.AutoSize = true;
+                label.Location = new Point(x, y);
+                y = label.Bottom + gap;
+            }
+            checkBoxRedirectOutput.AutoSize = true;
+            checkBoxRedirectOutput.Location = new Point(x, y);
+            y = checkBoxRedirectOutput.Bottom + gap;
+            var buttons = new[] { BUT_select_script, BUT_run_script, BUT_edit_selected, BUT_abort_script };
+            int buttonWidth = (width - gap) / 2;
+            int height = FlyioPixels(40);
+            for (int index = 0; index < buttons.Length; index++)
+                buttons[index].SetBounds(x + index % 2 * (buttonWidth + gap), y + index / 2 * (height + gap), buttonWidth, height);
+            tabScripts.AutoScrollMinSize = new Size(0, y - tabScripts.AutoScrollPosition.Y + 2 * (height + gap));
+        }
+
+        private void LayoutFlyioPayload()
+        {
+            int gap = FlyioPixels(6);
+            int width = Math.Max(1, tabPayload.ClientSize.Width - tabPayload.Padding.Horizontal - SystemInformation.VerticalScrollBarWidth);
+            int column = (width - gap) / 2;
+            int x = tabPayload.Padding.Left + tabPayload.AutoScrollPosition.X;
+            int y = tabPayload.Padding.Top + tabPayload.AutoScrollPosition.Y;
+            int row = FlyioPixels(82);
+            groupBoxPitch.SetBounds(x, y, column, row * 2 + gap);
+            groupBoxYaw.SetBounds(x + column + gap, y, column, row);
+            groupBoxRoll.SetBounds(x + column + gap, y + row + gap, column, row);
+            foreach (var group in new[] { groupBoxPitch, groupBoxYaw, groupBoxRoll })
+            {
+                var text = group.Controls.OfType<TextBox>().Single();
+                var track = group.Controls.OfType<TrackBar>().Single();
+                text.SetBounds(gap, FlyioPixels(20), Math.Max(FlyioPixels(40), group.Width - 2 * gap), text.PreferredHeight);
+                track.SetBounds(gap, text.Bottom + gap, Math.Max(1, group.Width - 2 * gap), Math.Max(1, group.Height - text.Bottom - 2 * gap));
+            }
+            int buttonY = y + 2 * (row + gap);
+            BUT_resetGimbalPos.SetBounds(x, buttonY, column, FlyioPixels(36));
+            BUT_GimbalVideo.SetBounds(x + column + gap, buttonY, column, FlyioPixels(36));
+            tabPayload.AutoScrollMinSize = new Size(0, buttonY - tabPayload.AutoScrollPosition.Y + FlyioPixels(42));
+        }
+
+        private void LayoutFlyioPlaybackSpeeds()
+        {
+            // Fit the seven existing speed buttons in their existing panel.
+            int gap = FlyioPixels(3);
+            label2.SetBounds(gap, 0, Math.Max(1, panel2.Width - gap * 2), FlyioPixels(18));
+            var buttons = new[] { BUT_speed1_10, BUT_speed1_4, BUT_speed1_2, BUT_speed1, BUT_speed2, BUT_speed5, BUT_speed10 };
+            int columns = Math.Max(1, panel2.Width / FlyioPixels(32));
+            int width = Math.Max(1, panel2.Width / columns - gap);
+            for (int index = 0; index < buttons.Length; index++)
+                buttons[index].SetBounds(index % columns * (width + gap), label2.Bottom + index / columns * FlyioPixels(28), width, FlyioPixels(25));
+            int requiredHeight = label2.Bottom + ((buttons.Length + columns - 1) / columns) * FlyioPixels(28) + gap * 2;
+            tableLayoutPaneltlogs.RowStyles[2].Height = Math.Max(tableLayoutPaneltlogs.RowStyles[2].Height, requiredHeight);
+            tableLayoutPaneltlogs.Height = (int)tableLayoutPaneltlogs.RowStyles.Cast<RowStyle>().Sum(row => row.Height);
+            tabTLogs.AutoScrollMinSize = new Size(0, tableLayoutPaneltlogs.Height + tabTLogs.Padding.Vertical);
+        }
+
+        private void LayoutFlyioLongLists()
+        {
+            int gap = FlyioPixels(4);
+            int height = FlyioPixels(32);
+            foreach (FlowLayoutPanel list in new[] { flowLayoutPanelServos, flowLayoutPanel1 })
+            {
+                list.SuspendLayout();
+                foreach (Control row in list.Controls)
+                {
+                    // Retain each composite control, its values and event wiring.
+                    // Aux's hidden legacy fields must remain hidden and untouched.
+                    var children = flyioLongListControls[row];
+                    int x = 0;
+                    int y = 0;
+                    int available = Math.Max(FlyioPixels(100), list.ClientSize.Width - gap * 2);
+                    foreach (Control child in children)
+                    {
+                        int width = child is ComboBox ? FlyioPixels(140) :
+                            child is Label ? FlyioPixels(48) : FlyioPixels(44);
+                        child.AutoSize = false;
+                        child.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                        if (x > 0 && x + width > available) { x = 0; y += height + gap; }
+                        child.SetBounds(x, y, Math.Min(width, available), height);
+                        if (child is Label label) label.TextAlign = ContentAlignment.MiddleLeft;
+                        x += width + gap;
+                    }
+                    row.Size = new Size(available, y + height);
+                    row.Margin = new Padding(gap, gap, 0, 0);
+                }
+                list.ResumeLayout(true);
+            }
+        }
+
+        private void LayoutFlyioGaugeViewport()
+        {
+            if (flyioSixPackLayout == null) return;
+            int columns = Math.Max(1, Math.Min(3, tabGauges.ClientSize.Width / FlyioPixels(140)));
+            int rows = (6 + columns - 1) / columns;
+            var instruments = new Control[] { flyioAirspeed, flyioAttitude, flyioAltimeter,
+                flyioTurn, flyioHeading, flyioVerticalSpeed };
+            flyioSixPackLayout.SuspendLayout();
+            flyioSixPackLayout.Dock = DockStyle.Top;
+            flyioSixPackLayout.ColumnCount = columns;
+            flyioSixPackLayout.RowCount = rows;
+            flyioSixPackLayout.ColumnStyles.Clear();
+            flyioSixPackLayout.RowStyles.Clear();
+            for (int column = 0; column < columns; column++)
+                flyioSixPackLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / columns));
+            int height = Math.Max(FlyioPixels(170),
+                (tabGauges.ClientSize.Height - tabGauges.Padding.Vertical - flyioSixPackLayout.Padding.Vertical) / rows);
+            for (int row = 0; row < rows; row++)
+                flyioSixPackLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, height));
+            for (int index = 0; index < instruments.Length; index++)
+                flyioSixPackLayout.SetCellPosition(instruments[index], new TableLayoutPanelCellPosition(index % columns, index / columns));
+            flyioSixPackLayout.Height = rows * height + flyioSixPackLayout.Padding.Vertical;
+            flyioSixPackLayout.ResumeLayout(true);
+            tabGauges.AutoScrollMinSize = new Size(0, flyioSixPackLayout.Height + tabGauges.Padding.Vertical);
         }
 
         private void InitializeFlyioHealthLayout()
@@ -124,6 +632,9 @@ namespace MissionPlanner.GCSViews
             tableLayoutPanelQuick.Padding = new Padding(3);
             tableLayoutPanelQuick.Margin = Padding.Empty;
 
+            var normalFont = CreateFlyioFont(9F, FontStyle.Bold);
+            var compactFont = CreateFlyioFont(7F, FontStyle.Bold);
+            Disposed += (sender, args) => { normalFont.Dispose(); compactFont.Dispose(); };
             QuickView[] cards = { quickView1, quickView2, quickView3, quickView4, quickView5, quickView6 };
             foreach (QuickView card in cards)
             {
@@ -131,7 +642,12 @@ namespace MissionPlanner.GCSViews
                 card.Margin = new Padding(3);
                 card.BackColor = FlyioDataSurface;
                 card.ForeColor = FlyioDataSecondaryText;
-                card.Font = CreateFlyioFont(9F, FontStyle.Bold);
+                card.Font = normalFont;
+                card.SizeChanged += (sender, args) =>
+                {
+                    card.Font = card.ClientSize.Width < FlyioPixels(150) ? compactFont : normalFont;
+                    card.Invalidate();
+                };
                 card.numberColor = FlyioDataText;
                 card.numberColorBackup = FlyioDataText;
                 card.ModernCardStyle = true;
@@ -325,8 +841,24 @@ namespace MissionPlanner.GCSViews
                 flyioHdopStatus, flyioVibeStatus, flyioLinkStatus, flyioRcStatus };
             for (int index = 0; index < statuses.Length; index++)
                 flyioDataStatusBar.Controls.Add(statuses[index], index, 0);
+            var normalFont = CreateFlyioFont(9.25F, FontStyle.Bold);
+            var compactFont = CreateFlyioFont(8F, FontStyle.Bold);
+            Disposed += (sender, args) => { normalFont.Dispose(); compactFont.Dispose(); };
+            flyioDataStatusBar.SizeChanged += (sender, args) =>
+            {
+                bool compact = flyioDataStatusBar.ClientSize.Width < FlyioPixels(800);
+                foreach (Control status in statuses)
+                {
+                    status.Font = compact ? compactFont : normalFont;
+                    status.Margin = compact
+                        ? new Padding(FlyioPixels(3), 0, FlyioPixels(3), 0)
+                        : new Padding(FlyioPixels(8), 0, FlyioPixels(6), 0);
+                }
+            };
             Controls.Add(flyioDataStatusBar);
             flyioDataStatusBar.BringToFront();
+            // Docking runs in reverse z-order: reserve the bottom bar before Fill.
+            MainH.BringToFront();
         }
 
         private void DrawFlyioStatusSeparators(object sender, PaintEventArgs e)

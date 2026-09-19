@@ -14,6 +14,8 @@ namespace MissionPlanner.GCSViews
         private ComboBox flyioProviderSelector;
         private ComboBox flyioGridSelector;
         private Panel flyioMapHost;
+        private Button flyioZoomOut;
+        private Button flyioZoomIn;
         private bool flyioProviderSelectionChanging;
 
         private void InitializeFlyioMapToolbar()
@@ -42,16 +44,16 @@ namespace MissionPlanner.GCSViews
             {
                 Appearance = Appearance.Button,
                 AutoSize = false,
-                Width = 76,
-                Height = 32,
+                Width = FlyioPixels(76),
+                Height = FlyioPixels(32),
                 Text = "Follow",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Checked = CHK_autopan.Checked,
                 FlatStyle = FlatStyle.Flat,
                 BackColor = CHK_autopan.Checked ? FlyioDataAccent : FlyioDataSecondarySurface,
                 ForeColor = CHK_autopan.Checked ? Color.White : FlyioDataText,
-                Font = CreateFlyioFont(8.5F, FontStyle.Bold),
-                Margin = new Padding(0, 0, 5, 0)
+                Font = flyioDataButtonFont,
+                Margin = new Padding(0, 0, FlyioPixels(5), 0)
             };
             flyioFollowButton.FlatAppearance.BorderColor = FlyioDataBorder;
             flyioFollowButton.CheckedChanged += (sender, args) =>
@@ -61,14 +63,14 @@ namespace MissionPlanner.GCSViews
                 flyioFollowButton.ForeColor = flyioFollowButton.Checked ? Color.FromArgb(22, 28, 38) : FlyioDataText;
             };
 
-            flyioProviderSelector = NewFlyioToolbarComboBox(220);
+            flyioProviderSelector = NewFlyioToolbarComboBox(180);
             flyioProviderSelector.DisplayMember = "Name";
             flyioProviderSelector.ValueMember = "Name";
             flyioProviderSelector.DataSource = GMapProviders.List.ToArray();
             SyncFlyioProviderSelector(gMapControl1.MapProvider);
             flyioProviderSelector.SelectedValueChanged += FlyioProviderSelectorChanged;
 
-            flyioGridSelector = NewFlyioToolbarComboBox(108);
+            flyioGridSelector = NewFlyioToolbarComboBox(94);
             flyioGridSelector.Items.AddRange(new object[] { "Grid: Off", "Tile Grid" });
             flyioGridSelector.SelectedIndex = gMapControl1.ShowTileGridLines ? 1 : 0;
             flyioGridSelector.SelectedIndexChanged += (sender, args) =>
@@ -77,14 +79,14 @@ namespace MissionPlanner.GCSViews
                 gMapControl1.Invalidate();
             };
 
-            var location = NewFlyioToolbarButton("Location", 82);
+            var location = NewFlyioToolbarButton("Location", 76);
             location.Click += (sender, args) =>
             {
                 if (MainV2.comPort.MAV.cs.lat != 0 || MainV2.comPort.MAV.cs.lng != 0)
                     gMapControl1.Position = new GMap.NET.PointLatLng(MainV2.comPort.MAV.cs.lat, MainV2.comPort.MAV.cs.lng);
             };
 
-            var more = NewFlyioToolbarButton("More", 66);
+            var more = NewFlyioToolbarButton("More", 76);
             more.Click += (sender, args) => contextMenuStripMap.Show(more, new Point(0, more.Height));
 
             flyioMapToolbar.Controls.Add(flyioFollowButton);
@@ -95,9 +97,35 @@ namespace MissionPlanner.GCSViews
             // Reuse the real tuning checkbox and its existing graph handler.
             CB_tuning.Visible = true;
             CB_tuning.AutoSize = true;
-            CB_tuning.Text = "Tuning graph";
+            CB_tuning.Text = "Tuning";
+            CB_tuning.Font = flyioDataControlFont;
+            toolTip1.SetToolTip(CB_tuning, "Show tuning graph");
             CB_tuning.Margin = new Padding(6, 8, 5, 0);
             flyioMapToolbar.Controls.Add(CB_tuning);
+
+            // Retain legacy controls and their synchronization handlers, but expose
+            // larger zoom buttons in the DATA toolbar instead of the narrow slider.
+            TRK_zoom.Visible = false;
+            Zoomlevel.Visible = false;
+            label1.Visible = false;
+            flyioZoomOut = NewFlyioToolbarButton("\u2212", 40);
+            flyioZoomIn = NewFlyioToolbarButton("+", 40);
+            flyioZoomOut.Name = "flyioZoomOut";
+            flyioZoomIn.Name = "flyioZoomIn";
+            flyioZoomOut.AccessibleName = "Zoom out";
+            flyioZoomIn.AccessibleName = "Zoom in";
+            toolTip1.SetToolTip(flyioZoomOut, "Zoom out");
+            toolTip1.SetToolTip(flyioZoomIn, "Zoom in");
+            flyioZoomOut.Click += (sender, args) => ChangeFlyioMapZoom(-1);
+            flyioZoomIn.Click += (sender, args) => ChangeFlyioMapZoom(1);
+            var zoomButtons = new FlowLayoutPanel
+            {
+                AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                WrapContents = false, Margin = Padding.Empty, Padding = Padding.Empty
+            };
+            zoomButtons.Controls.Add(flyioZoomOut);
+            zoomButtons.Controls.Add(flyioZoomIn);
+            flyioMapToolbar.Controls.Add(zoomButtons);
 
             flyioMapHost = new Panel
             {
@@ -113,8 +141,18 @@ namespace MissionPlanner.GCSViews
             splitContainer1.Panel2.Controls.Add(flyioMapHost);
             flyioMapHost.SendToBack();
             flyioMapToolbar.BringToFront();
+            // Reserve the full toolbar height before the map fills the remainder.
+            gMapControl1.BringToFront();
             gMapControl1.OnMapTypeChanged += FlyioMapTypeChanged;
             Load += (sender, args) => SyncFlyioProviderSelector(gMapControl1.MapProvider);
+        }
+
+        private void ChangeFlyioMapZoom(int delta)
+        {
+            gMapControl1.Zoom = Math.Max(gMapControl1.MinZoom,
+                Math.Min(gMapControl1.MaxZoom, gMapControl1.Zoom + delta));
+            // OnMapZoomChanged keeps both legacy controls synchronized.
+            UpdateOverlayVisibility();
         }
 
         private ComboBox NewFlyioToolbarComboBox(int width)
@@ -122,13 +160,13 @@ namespace MissionPlanner.GCSViews
             return new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = width,
-                Height = 32,
+                Width = FlyioPixels(width),
+                Height = FlyioPixels(32),
                 BackColor = FlyioDataSecondarySurface,
                 ForeColor = FlyioDataText,
                 FlatStyle = FlatStyle.Flat,
-                Font = CreateFlyioFont(9F),
-                Margin = new Padding(0, 1, 5, 0)
+                Font = flyioDataControlFont,
+                Margin = new Padding(0, FlyioPixels(3), FlyioPixels(5), 0)
             };
         }
 
@@ -137,13 +175,14 @@ namespace MissionPlanner.GCSViews
             var button = new Button
             {
                 Text = text,
-                Width = width,
-                Height = 32,
+                Width = FlyioPixels(width),
+                Height = FlyioPixels(32),
                 BackColor = FlyioDataSurface,
                 ForeColor = FlyioDataText,
                 FlatStyle = FlatStyle.Flat,
-                Font = CreateFlyioFont(9F, FontStyle.Bold),
-                Margin = new Padding(0, 0, 5, 0)
+                Font = flyioDataButtonFont,
+                Padding = new Padding(FlyioPixels(4), 0, FlyioPixels(4), 0),
+                Margin = new Padding(0, 0, FlyioPixels(5), 0)
             };
             button.FlatAppearance.BorderColor = FlyioDataBorder;
             button.FlatAppearance.MouseOverBackColor = FlyioDataSecondarySurface;
