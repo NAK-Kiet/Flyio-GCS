@@ -89,19 +89,23 @@ namespace MissionPlanner.GCSViews
             splitContainer1.Panel1Collapsed = !CB_tuning.Checked;
             splitContainer1.IsSplitterFixed = false;
             splitContainer1.Panel1MinSize = 0;
-            splitContainer1.SplitterWidth = 1;
+            splitContainer1.SplitterWidth = Math.Max(6, FlyioPixels(6));
+            StyleFlyioSplitter(splitContainer1);
             var graph = zg1.GraphPane;
-            graph.Fill = new ZedGraph.Fill(FlyioDataSurface);
-            graph.Chart.Fill = new ZedGraph.Fill(FlyioDataSurface);
-            graph.Title.FontSpec.FontColor = FlyioDataText;
-            graph.Legend.Fill = new ZedGraph.Fill(FlyioDataSurface);
-            graph.Legend.FontSpec.FontColor = FlyioDataText;
+            graph.Fill = new ZedGraph.Fill(Color.White);
+            graph.Chart.Fill = new ZedGraph.Fill(Color.White);
+            graph.Title.FontSpec.FontColor = Color.Black;
+            graph.Legend.Fill = new ZedGraph.Fill(Color.White);
+            graph.Legend.FontSpec.FontColor = Color.Black;
             foreach (ZedGraph.Axis axis in new ZedGraph.Axis[] { graph.XAxis, graph.YAxis, graph.Y2Axis })
             {
-                axis.Color = FlyioDataSecondaryText;
-                axis.Title.FontSpec.FontColor = FlyioDataText;
-                axis.Scale.FontSpec.FontColor = FlyioDataSecondaryText;
-                axis.MajorGrid.Color = FlyioDataBorder;
+                axis.Color = Color.Black;
+                axis.MajorTic.Color = Color.Black;
+                axis.MinorTic.Color = Color.Black;
+                axis.Title.FontSpec.FontColor = Color.Black;
+                axis.Scale.FontSpec.FontColor = Color.Black;
+                axis.MajorGrid.Color = Color.LightGray;
+                axis.MinorGrid.Color = Color.LightGray;
             }
             splitContainer1.Margin = Padding.Empty;
             splitContainer1.Padding = Padding.Empty;
