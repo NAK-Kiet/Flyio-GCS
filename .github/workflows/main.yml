@@ -42,8 +42,15 @@ jobs:
 
           copy version.txt ..\..\..\
           7z a -tzip ..\..\..\Fly.io-GCS-Windows.zip *
+          
           cd ..
-          .\md5sum.exe net461 > ..\..\checksums.txt
+
+          Get-ChildItem .\net461 -File -Recurse |
+            Sort-Object FullName |
+            ForEach-Object {
+              $hash = Get-FileHash $_.FullName -Algorithm MD5
+              "$($hash.Hash.ToLower())  $($_.FullName.Substring((Get-Location).Path.Length + 1))"
+            } | Set-Content ..\..\checksums.txt
           
       - uses: actions/upload-artifact@v4
         with:
