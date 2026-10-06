@@ -174,13 +174,22 @@ namespace MissionPlanner.MsgBox
                     };
                     linklbl.Click += (sender, args) =>
                     {
+                        var target = ((LinkLabel)sender).Tag.ToString();
+
+                        if (!target.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                            !target.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Show("Refusing to open non-http(s) link: " + target);
+                            return;
+                        }
+
                         try
                         {
-                            System.Diagnostics.Process.Start(((LinkLabel)sender).Tag.ToString());
+                            System.Diagnostics.Process.Start(target);
                         }
                         catch (Exception)
                         {
-                            Show("Failed to open link " + ((LinkLabel)sender).Tag.ToString());
+                            Show("Failed to open link " + target);
                         }
                     };
 
