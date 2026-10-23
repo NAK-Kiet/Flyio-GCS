@@ -30,7 +30,7 @@ namespace MissionPlanner.GCSViews
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 AutoScroll = false,
                 BackColor = FlyioDataBackground,
-                Padding = new Padding(12, 10, 8, 8),
+                Padding = new Padding(FlyioPixels(8)),
                 Margin = Padding.Empty
             };
             flyioMapToolbar.Paint += (sender, args) =>
@@ -132,9 +132,96 @@ namespace MissionPlanner.GCSViews
                 Name = "flyioMapHost",
                 Dock = DockStyle.Fill,
                 BackColor = FlyioDataSecondarySurface,
-                Padding = new Padding(0, 60, 0, 0),
+                Padding = Padding.Empty,
                 Margin = Padding.Empty
             };
+            // Move retained top overlays with the map before removing its old inset.
+            // Bottom-anchored legacy labels remain in Panel2 with their existing bindings.
+            distanceBar1.Parent = gMapControl1;
+            distanceBar1.Dock = DockStyle.Top;
+            distanceBar1.Height = FlyioPixels(22);
+            but_disablejoystick.Parent = gMapControl1;
+            but_disablejoystick.Location = new Point(FlyioPixels(4), distanceBar1.Height + FlyioPixels(4));
+            windDir1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            windDir1.Dock = DockStyle.None;
+            windDir1.MinimumSize = Size.Empty;
+            windDir1.MaximumSize = Size.Empty;
+            windDir1.BackColor = FlyioDataSecondarySurface;
+            windDir1.TelemetryAvailable = false;
+            windDir1.AccessibleName = "Wind";
+            flyioMapToolbar.Controls.Add(windDir1);
+
+            // Equal-height slots center native combo boxes and the checkbox without
+            // forcing a native combo-box height or changing existing event handlers.
+            Control[] toolbarControls = { flyioFollowButton, flyioProviderSelector,
+                flyioGridSelector, location, more, CB_tuning, zoomButtons, windDir1 };
+            int[] logicalWidths = { 76, 180, 94, 76, 76, 0, 85, 40 };
+            var slots = toolbarControls.Select(control => new Panel
+            {
+                BackColor = FlyioDataBackground,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                TabStop = false
+            }).ToArray();
+            for (int index = 0; index < toolbarControls.Length; index++)
+            {
+                Control control = toolbarControls[index];
+                Panel slot = slots[index];
+                control.Margin = Padding.Empty;
+                slot.Controls.Add(control);
+                flyioMapToolbar.Controls.Add(slot);
+            }
+            Action layoutToolbar = () =>
+            {
+                flyioMapToolbar.SuspendLayout();
+                flyioMapToolbar.Padding = new Padding(FlyioPixels(8));
+                int rowHeight = Math.Max(FlyioPixels(40), Math.Max(
+                    flyioProviderSelector.PreferredHeight, CB_tuning.PreferredSize.Height));
+                flyioZoomOut.Size = flyioZoomIn.Size = new Size(FlyioPixels(40), FlyioPixels(32));
+                flyioZoomOut.Margin = new Padding(0, 0, FlyioPixels(5), 0);
+                flyioZoomIn.Margin = Padding.Empty;
+                for (int index = 0; index < toolbarControls.Length; index++)
+                {
+                    Control control = toolbarControls[index];
+                    int width = logicalWidths[index] == 0 ? control.PreferredSize.Width : FlyioPixels(logicalWidths[index]);
+                    if (control == windDir1) control.Size = new Size(width, FlyioPixels(40));
+                    else if (control is Button || control == flyioFollowButton)
+                        control.Size = new Size(width, FlyioPixels(32));
+                    else control.Width = width;
+                    slots[index].Size = new Size(width, rowHeight);
+                    slots[index].Margin = new Padding(0, 0, FlyioPixels(6), FlyioPixels(4));
+                    control.Location = new Point(0, Math.Max(0, (rowHeight - control.Height) / 2));
+                }
+                distanceBar1.Height = FlyioPixels(22);
+                but_disablejoystick.Location = new Point(FlyioPixels(4), distanceBar1.Height + FlyioPixels(4));
+                flyioMapToolbar.ResumeLayout(true);
+            };
+            Load += (sender, args) => layoutToolbar();
+            flyioMapToolbar.DpiChangedAfterParent += (sender, args) => layoutToolbar();
+            layoutToolbar();
+
+            // Read existing packet metadata only. Passive telemetry currently supplies
+            // no wind; neither a disconnected default nor an old sample is calm wind.
+            var windAvailabilityTimer = new Timer(components) { Interval = 500 };
+            windAvailabilityTimer.Tick += (sender, args) =>
+            {
+                var mav = MainV2.comPort.MAV;
+                var wind = mav.getPacketLast((uint)MAVLink.MAVLINK_MSG_ID.WIND);
+                bool available = flyioTelemetry == null && mav.cs.connected && wind != null &&
+                    (DateTime.UtcNow - wind.rxtime).TotalSeconds >= 0 &&
+                    (DateTime.UtcNow - wind.rxtime).TotalSeconds <= 5 &&
+                    !double.IsNaN(windDir1.Speed) && !double.IsInfinity(windDir1.Speed) &&
+                    !double.IsNaN(windDir1.Direction) && !double.IsInfinity(windDir1.Direction);
+                windDir1.TelemetryAvailable = available;
+                string description = available ? "Wind: " + windDir1.Speed.ToString("0.0") + " " + CurrentState.SpeedUnit
+                    : "Wind unavailable: no recent wind telemetry";
+                if (windDir1.AccessibleDescription != description)
+                {
+                    windDir1.AccessibleDescription = description;
+                    toolTip1.SetToolTip(windDir1, description);
+                }
+            };
+            windAvailabilityTimer.Start();
             gMapControl1.Parent = flyioMapHost;
             gMapControl1.Dock = DockStyle.Fill;
             flyioMapHost.Controls.Add(flyioMapToolbar);

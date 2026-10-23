@@ -2919,7 +2919,7 @@ namespace MissionPlanner
                                                 log.Warn("Mode not found bm:" + hb.base_mode + " cm:" + hb.custom_mode);
                                         }
 
-                                        _mode = hb.custom_mode;
+
                                     }
 
                                 try

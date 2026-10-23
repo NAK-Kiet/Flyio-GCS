@@ -669,9 +669,12 @@ namespace MissionPlanner
             }
 
             InitializeComponent();
+            var menuGazebo = new ToolStripButton { Name = "MenuGazebo", Text = "GAZEBO", ToolTipText = "Gazebo simulation dashboard" };
+            MainMenu.Items.Insert(MainMenu.Items.IndexOf(MenuHelp), menuGazebo);
+            menuGazebo.Click += (sender, args) => MyView.ShowScreen("Gazebo");
             var navigation = new[] { MenuFlightData, MenuFlightPlanner, MenuInitConfig,
-                MenuConfigTune, MenuSimulation, MenuHelp, MenuDRDCGCS };
-            var labels = new[] { "DATA", "PLAN", "SETUP", "CONFIG", "SIMULATION", "HELP", "DRDC" };
+                MenuConfigTune, MenuSimulation, menuGazebo, MenuHelp, MenuDRDCGCS };
+            var labels = new[] { "DATA", "PLAN", "SETUP", "CONFIG", "SIMULATION", "GAZEBO", "HELP", "DRDC" };
             for (var index = 0; index < navigation.Length; index++)
             {
                 var item = navigation[index];
@@ -683,9 +686,28 @@ namespace MissionPlanner
                 item.Margin = new Padding(2, 0, 2, 0);
                 item.ImageTransparentColor = Color.Empty;
             }
+            Action layoutNavigation = () =>
+            {
+                float scale = DeviceDpi / 96F;
+                MainMenu.SuspendLayout();
+                MainMenu.ImageScalingSize = new Size((int)Math.Round(45 * scale), (int)Math.Round(39 * scale));
+                foreach (var item in navigation)
+                {
+                    item.Width = Math.Max((int)Math.Round(76 * scale), TextRenderer.MeasureText(item.Text, item.Font).Width + (int)Math.Round(16 * scale));
+                    item.Height = Math.Max((int)Math.Round(58 * scale), MainMenu.ImageScalingSize.Height + item.Font.Height + (int)Math.Round(6 * scale));
+                    item.Margin = new Padding((int)Math.Round(2 * scale), 0, (int)Math.Round(2 * scale), 0);
+                    item.ImageAlign = ContentAlignment.TopCenter;
+                    item.TextAlign = ContentAlignment.BottomCenter;
+                }
+                MainMenu.ResumeLayout(true);
+            };
+            Load += (sender, args) => layoutNavigation();
+            DpiChanged += (sender, args) => layoutNavigation();
+            menuGazebo.Image = GCSViews.GazeboDashboard.CreateNavigationIcon();
+            FormClosed += (sender, args) => menuGazebo.Image?.Dispose();
             MenuFlightData.Checked = true;
             var screenNames = new[] { "FlightData", "FlightPlanner", "HWConfig", "SWConfig",
-                "Simulation", "Help", "DRDCGCS" };
+                "Simulation", "Gazebo", "Help", "DRDCGCS" };
             MainSwitcher.TrackingEventHandler updateNavigation = (page, title) =>
             {
                 for (var index = 0; index < navigation.Length; index++)
@@ -3217,6 +3239,7 @@ namespace MissionPlanner
             MyView.AddScreen(new MainSwitcher.Screen("HWConfig", typeof(GCSViews.InitialSetup), false));
             MyView.AddScreen(new MainSwitcher.Screen("SWConfig", typeof(GCSViews.SoftwareConfig), false));
             MyView.AddScreen(new MainSwitcher.Screen("Simulation", Simulation, true));
+            MyView.AddScreen(new MainSwitcher.Screen("Gazebo", typeof(GCSViews.GazeboDashboard), true));
             MyView.AddScreen(new MainSwitcher.Screen("Help", typeof(GCSViews.Help), false));
             MyView.AddScreen(new MainSwitcher.Screen("DRDCGCS", typeof(GCSViews.DRDCWebView), true));
 

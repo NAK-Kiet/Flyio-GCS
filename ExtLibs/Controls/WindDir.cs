@@ -26,6 +26,16 @@ namespace MissionPlanner.Controls
 
         double maxspeed = 10;
 
+        private bool telemetryAvailable = true;
+
+        // Presentation only; existing direction/speed bindings and calculations are unchanged.
+        [DefaultValue(true)]
+        public bool TelemetryAvailable
+        {
+            get { return telemetryAvailable; }
+            set { if (telemetryAvailable == value) return; telemetryAvailable = value; Invalidate(); }
+        }
+
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Options")]
         public double Direction { get { return _direction; } set { if (_direction == (value + 180)) return; _direction = (value + 180); this.Invalidate(); } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Options")]
@@ -57,6 +67,16 @@ namespace MissionPlanner.Controls
                 _direction = _direction % 360;
 
             base.OnPaint(e);
+
+            if (!TelemetryAvailable || double.IsNaN(Speed) || double.IsInfinity(Speed) ||
+                double.IsNaN(Direction) || double.IsInfinity(Direction))
+            {
+                using (var unavailablePen = new Pen(SystemColors.GrayText, 1))
+                    e.Graphics.DrawEllipse(unavailablePen, 1, 1, Width - 3, Height - 3);
+                TextRenderer.DrawText(e.Graphics, "\u2014", Font, ClientRectangle, SystemColors.GrayText,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                return;
+            }
 
             Rectangle outside = new Rectangle(1,1,this.Width - 3, this.Height -3);
 

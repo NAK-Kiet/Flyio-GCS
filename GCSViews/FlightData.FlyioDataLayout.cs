@@ -115,7 +115,7 @@ namespace MissionPlanner.GCSViews
 
             SubMainLeft.FixedPanel = FixedPanel.None;
             SubMainLeft.BorderStyle = BorderStyle.None;
-            SubMainLeft.SplitterWidth = 1;
+            SubMainLeft.SplitterWidth = Math.Max(4, FlyioPixels(4));
             SubMainLeft.Panel1MinSize = 180;
             SubMainLeft.Panel2MinSize = 180;
 
@@ -127,7 +127,7 @@ namespace MissionPlanner.GCSViews
             tabControlactions.Multiline = false;
             flyioDataControlFont = new Font("Segoe UI", 8.25F);
             flyioDataButtonFont = new Font("Segoe UI", 8.25F, FontStyle.Bold);
-            flyioDataCompactFont = new Font("Segoe UI", 6.5F, FontStyle.Bold);
+            flyioDataCompactFont = new Font("Segoe UI", 8.25F, FontStyle.Bold);
             Disposed += (sender, args) =>
             {
                 flyioDataControlFont.Dispose();
@@ -165,7 +165,11 @@ namespace MissionPlanner.GCSViews
                 ContextMenuStrip = contextMenuStripactionstab
             };
             SubMainLeft.Panel2.Controls.Add(flyioDataNavigation);
-            flyioDataNavigation.SizeChanged += (sender, args) => SizeFlyioDataNavigation();
+            flyioDataNavigation.SizeChanged += (sender, args) =>
+            {
+                SizeFlyioDataNavigation();
+                FlyioLeftPanelSizeChanged(sender, args);
+            };
             tabControlactions.BringToFront();
             // Customize still operates on the original page collection/settings.
             // The native multiline option has no meaning for this fixed header.
@@ -282,9 +286,9 @@ namespace MissionPlanner.GCSViews
             int minimum = Math.Max(FlyioPixels(120), flyioDataNavigation.Controls.Cast<Button>()
                 .Max(button => TextRenderer.MeasureText(button.Text, button.Font).Width) + FlyioPixels(12));
             int columns = Math.Max(1, available / (minimum + gap));
-            if (available >= FlyioPixels(200)) columns = Math.Max(2, columns);
-            if (compact && available >= FlyioPixels(210)) columns = Math.Max(3, columns);
-            var size = new Size(Math.Max(1, available / columns - gap), FlyioPixels(32));
+
+
+            var size = new Size(Math.Max(1, available / columns - gap), Math.Max(FlyioPixels(34), flyioDataButtonFont.Height + FlyioPixels(12)));
             flyioDataNavigation.SuspendLayout();
             foreach (Button button in flyioDataNavigation.Controls)
                 if (button.Size != size) button.Size = size;
@@ -637,13 +641,13 @@ namespace MissionPlanner.GCSViews
             tableLayoutPanelQuick.Margin = Padding.Empty;
 
             var normalFont = CreateFlyioFont(9F, FontStyle.Bold);
-            var compactFont = CreateFlyioFont(7F, FontStyle.Bold);
+            var compactFont = CreateFlyioFont(8.5F, FontStyle.Bold);
             Disposed += (sender, args) => { normalFont.Dispose(); compactFont.Dispose(); };
             QuickView[] cards = { quickView1, quickView2, quickView3, quickView4, quickView5, quickView6 };
             foreach (QuickView card in cards)
             {
                 card.Dock = DockStyle.Fill;
-                card.Margin = new Padding(3);
+                card.Margin = new Padding(FlyioPixels(4));
                 card.BackColor = FlyioDataSurface;
                 card.ForeColor = FlyioDataSecondaryText;
                 card.Font = normalFont;
@@ -655,7 +659,7 @@ namespace MissionPlanner.GCSViews
                 card.numberColor = FlyioDataText;
                 card.numberColorBackup = FlyioDataText;
                 card.ModernCardStyle = true;
-                card.MaximumValueFontSize = 36F;
+                card.MaximumValueFontSize = 30F;
                 card.CardBorderColor = FlyioDataBorder;
             }
         }
@@ -746,7 +750,7 @@ namespace MissionPlanner.GCSViews
 
             int availableHeight = SubMainLeft.Height - SubMainLeft.SplitterWidth;
             int preferredHudMinimum = availableHeight >= 510 ? 230 : SubMainLeft.Panel1MinSize;
-            int preferredTabsMinimum = availableHeight >= 510 ? 280 : SubMainLeft.Panel2MinSize;
+            int preferredTabsMinimum = Math.Max(SubMainLeft.Panel2MinSize, (flyioDataNavigation?.Height ?? 0) + FlyioPixels(160));
             int widescreenHeight = Math.Max(preferredHudMinimum,
                 (int)Math.Round(SubMainLeft.Width * 0.44F));
             int maximumHud = Math.Max(preferredHudMinimum, availableHeight - preferredTabsMinimum);
@@ -819,15 +823,15 @@ namespace MissionPlanner.GCSViews
             {
                 Name = "flyioDataStatusBar",
                 Dock = DockStyle.Bottom,
-                Height = 48,
+                Height = FlyioPixels(48),
                 BackColor = FlyioDataBackground,
-                Padding = new Padding(8, 5, 8, 5),
+                Padding = new Padding(FlyioPixels(8), FlyioPixels(5), FlyioPixels(8), FlyioPixels(5)),
                 Margin = Padding.Empty,
                 ColumnCount = 8,
                 RowCount = 1,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.None
             };
-            foreach (float width in new[] { 17F, 11F, 15F, 10F, 12F, 12F, 12F, 11F })
+            foreach (float width in new[] { 14F, 11F, 14F, 9F, 12F, 12F, 14F, 14F })
                 flyioDataStatusBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, width));
             flyioDataStatusBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             flyioDataStatusBar.Paint += DrawFlyioStatusSeparators;
@@ -848,9 +852,9 @@ namespace MissionPlanner.GCSViews
             var normalFont = CreateFlyioFont(9.25F, FontStyle.Bold);
             var compactFont = CreateFlyioFont(8F, FontStyle.Bold);
             Disposed += (sender, args) => { normalFont.Dispose(); compactFont.Dispose(); };
-            flyioDataStatusBar.SizeChanged += (sender, args) =>
+            EventHandler sizeStatusBar = (sender, args) =>
             {
-                bool compact = flyioDataStatusBar.ClientSize.Width < FlyioPixels(800);
+                bool compact = flyioDataStatusBar.ClientSize.Width < FlyioPixels(1000);
                 foreach (Control status in statuses)
                 {
                     status.Font = compact ? compactFont : normalFont;
@@ -858,7 +862,13 @@ namespace MissionPlanner.GCSViews
                         ? new Padding(FlyioPixels(3), 0, FlyioPixels(3), 0)
                         : new Padding(FlyioPixels(8), 0, FlyioPixels(6), 0);
                 }
+                flyioDataStatusBar.Padding = new Padding(FlyioPixels(8), FlyioPixels(5), FlyioPixels(8), FlyioPixels(5));
+                flyioDataStatusBar.Height = Math.Max(FlyioPixels(48),
+                    (compact ? compactFont : normalFont).Height * 2 + flyioDataStatusBar.Padding.Vertical + FlyioPixels(4));
             };
+            flyioDataStatusBar.SizeChanged += sizeStatusBar;
+            flyioDataStatusBar.DpiChangedAfterParent += sizeStatusBar;
+            sizeStatusBar(null, EventArgs.Empty);
             Controls.Add(flyioDataStatusBar);
             flyioDataStatusBar.BringToFront();
             // Docking runs in reverse z-order: reserve the bottom bar before Fill.
@@ -873,15 +883,15 @@ namespace MissionPlanner.GCSViews
                 int[] widths = flyioDataStatusBar.GetColumnWidths();
                 for (int column = 1; column < widths.Length; column++)
                 {
-                    int x = widths.Take(column).Sum();
-                    e.Graphics.DrawLine(pen, x, 8, x, flyioDataStatusBar.Height - 8);
+                    int x = flyioDataStatusBar.DisplayRectangle.Left + widths.Take(column).Sum();
+                    e.Graphics.DrawLine(pen, x, FlyioPixels(8), x, flyioDataStatusBar.Height - FlyioPixels(8));
                 }
             }
         }
 
         private Label NewFlyioStatusLabel()
         {
-            return new Label
+            var label = new Label
             {
                 Dock = DockStyle.Fill,
                 Margin = new Padding(8, 0, 6, 0),
@@ -891,6 +901,8 @@ namespace MissionPlanner.GCSViews
                 Font = CreateFlyioFont(9.25F, FontStyle.Bold),
                 AutoEllipsis = true
             };
+            label.TextChanged += (sender, args) => toolTip1.SetToolTip(label, label.Text.Replace("\r\n", ": "));
+            return label;
         }
 
         private void UpdateFlyioDataStatus(CurrentState state)
