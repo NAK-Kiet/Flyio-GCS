@@ -154,7 +154,7 @@ The following existing assets are displayed by the Fly.io HELP page. Their inclu
 <tr>
 <td align="center"><img src="Resources/CommunityPartners/Factoryio.png" alt="Factoryio" width="130"></td>
 <td align="center"><img src="Resources/CommunityPartners/FactoryX.png" alt="FactoryX" width="130"></td>
-<td align="center"><img src="Resources/CommunityPartners/Flyio.png" alt="Flyio" width="130"></td>
+<td align="center"><img src="Resources/flyio-logo.png" alt="Fly.io" width="130"></td>
 <td align="center"><img src="Resources/CommunityPartners/Maker.png" alt="Maker" width="130"></td>
 <td align="center"><img src="Resources/CommunityPartners/Racingdrone.png" alt="Racingdrone" width="130"></td>
 </tr>

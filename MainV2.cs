@@ -1105,8 +1105,7 @@ namespace MissionPlanner
                 this.Icon = Icon.FromHandle(((Bitmap) Program.IconFile).GetHicon());
             }
 
-            MenuArduPilot.Image = TrimTransparentPadding(
-                Properties.Resources.flyio_racing_drone_warrior_logo);
+            MenuArduPilot.Image = Properties.Resources.flyio_racing_drone_warrior_logo;
 
             Application.DoEvents();
 
